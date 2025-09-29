@@ -8,7 +8,7 @@
 }
 
 .App {
-  max-width: 1200px; /* Increased max-width for the new layout */
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
   text-align: left;
@@ -95,7 +95,6 @@
   background-color: #4a4a4a;
 }
 
-
 /* Project View Layout */
 .back-button {
   margin-bottom: 1rem;
@@ -123,58 +122,79 @@
   gap: 1.5rem;
 }
 
-/* Budget Tracker Styles */
-.budget-tracker, .component-browser {
+/* Component Browser & Other Sidebar Widgets */
+.project-summary,
+.wire-calculator,
+.component-browser {
   background-color: #2f2f2f;
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 8px;
+  border: 1px solid #444;
 }
 
-.project-summary h3, .component-browser h3 {
+.project-summary h3,
+.wire-calculator h3,
+.component-browser h3 {
   margin-top: 0;
   border-bottom: 1px solid #555;
-  padding-bottom: 0.5rem;
+  padding-bottom: 1rem;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
 }
 
-.filter-info {
-  font-size: 0.85rem;
-  font-style: italic;
-  color: #a0a0a0;
-  text-align: center;
-  margin: -0.5rem 0 1rem 0;
+/* Project Summary Styles */
+.summary-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .summary-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 1.1rem;
-  margin-bottom: 0.75rem;
+  background-color: #3a3a3a;
+  padding: 0.75rem;
+  border-radius: 6px;
 }
 
-.selected-components-list h4 {
-  margin-bottom: 0.5rem;
-  border-top: 1px solid #555;
-  padding-top: 1rem;
-}
-
-.selected-components-list li {
-  font-size: 0.9rem;
+.summary-item span {
   color: #ccc;
 }
 
+.summary-item strong {
+  color: #fff;
+  font-weight: bold;
+}
+
+.selected-components-list h4 {
+  margin-bottom: 0.75rem;
+  font-size: 1.2rem;
+  border-top: 1px solid #555;
+  padding-top: 1.5rem;
+}
+
+.selected-components-list ul {
+  list-style-position: inside;
+  padding-left: 0.5rem;
+}
+
+.selected-components-list li {
+  font-size: 1rem;
+  color: #ddd;
+  margin-bottom: 0.5rem;
+}
+
+.no-items-message {
+  font-style: italic;
+  color: #a0a0a0;
+  text-align: center;
+  padding: 1rem 0;
+}
+
 /* Wire Gauge Calculator Styles */
-.wire-calculator {
-  background-color: #2f2f2f;
-  padding: 1rem;
-  border-radius: 8px;
-}
-
-.wire-calculator h3 {
-  margin-top: 0;
-  border-bottom: 1px solid #555;
-  padding-bottom: 0.5rem;
-}
-
 .calculator-inputs {
   display: flex;
   flex-direction: column;
@@ -209,6 +229,15 @@
   background-color: #1a1a1a;
   padding: 0.75rem;
   border-radius: 6px;
+}
+
+/* Component Browser Styles */
+.filter-info {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #a0a0a0;
+  text-align: center;
+  margin: -0.5rem 0 1rem 0;
 }
 
 .component-list {
@@ -269,4 +298,3 @@
   background-color: #0056b3;
   transform: translateY(-2px);
 }
-
