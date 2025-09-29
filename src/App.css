@@ -323,3 +323,27 @@
 .fuse-result {
   margin-top: 0.75rem;
 }
+
+/* Component Browser Filter Styles */
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  flex-grow: 1;
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.category-select {
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+}
