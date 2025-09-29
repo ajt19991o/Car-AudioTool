@@ -1,19 +1,7 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import {
-  type Node,
-  type Edge,
-  useNodesState,
-  useEdgesState,
-  addEdge,
-  type Connection,
-  MarkerType,
-} from 'reactflow';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import './App.css';
-import WiringDiagram from './components/WiringDiagram';
-import ComponentBrowser from './components/ComponentBrowser';
 import ProjectSummary from './components/ProjectSummary';
 import WireGaugeCalculator from './components/WireGaugeCalculator';
-import CustomNode from './components/CustomNode';
 import { BudgetPlanner, TutorialsPanel, SafetyChecklistPanel } from './components/SidebarPanels';
 import VehicleFitmentPanel from './components/VehicleFitmentPanel';
 import VehicleSetupControls from './components/VehicleSetupControls';
@@ -25,226 +13,6 @@ import vehicleSpecsData from './data/vehicle_specs.json';
 import corporationMapData from './data/corporationMap.json';
 import { fetchAllMakes, fetchModelsForMake } from './services/nhtsa';
 import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
-
-type NodeKind = 'power' | 'ground' | 'signal' | 'remote' | 'device' | 'accessory';
-
-const baseNodes: Node[] = [
-  {
-    id: 'battery',
-    type: 'custom',
-    data: {
-      label: 'Battery +12V',
-      subtitle: 'Engine bay, primary source',
-      hint: 'Use 4 AWG OFC cable and a weatherproof grommet when routing into the cabin.',
-      kind: 'power',
-    },
-    position: { x: -320, y: 0 },
-  },
-  {
-    id: 'main-fuse',
-    type: 'custom',
-    data: {
-      label: 'Main ANL Fuse Holder',
-      subtitle: '150A within 18" of battery',
-      hint: 'Mount solidly and crimp lugs with adhesive heat-shrink for corrosion protection.',
-      kind: 'power',
-    },
-    position: { x: -60, y: 20 },
-  },
-  {
-    id: 'distribution',
-    type: 'custom',
-    data: {
-      label: 'Power Distribution Block',
-      subtitle: 'Cabin mounting plate',
-      hint: 'Split primary feed into equal-length leads for each amplifier.',
-      kind: 'power',
-    },
-    position: { x: 220, y: 120 },
-  },
-  {
-    id: 'primary-amp',
-    type: 'custom',
-    data: {
-      label: 'Primary Amplifier',
-      subtitle: 'Secured to amp rack',
-      hint: 'Connect power/ground with 4 AWG, torque terminals, and keep airflow clear.',
-      kind: 'device',
-    },
-    position: { x: 220, y: 300 },
-  },
-  {
-    id: 'head-unit',
-    type: 'custom',
-    data: {
-      label: 'Head Unit / DSP',
-      subtitle: 'Factory dash or aftermarket chassis',
-      hint: 'Feed RCA / Toslink to amplifiers and provide ACC remote output.',
-      kind: 'device',
-    },
-    position: { x: -320, y: 260 },
-  },
-  {
-    id: 'remote-lead',
-    type: 'custom',
-    data: {
-      label: 'Remote Turn-On Lead',
-      subtitle: '18 AWG blue wire',
-      hint: 'Route alongside signal cables; relay if multiple amplifiers are triggered.',
-      kind: 'remote',
-    },
-    position: { x: -40, y: 280 },
-  },
-  {
-    id: 'ground-point',
-    type: 'custom',
-    data: {
-      label: 'Chassis Ground',
-      subtitle: 'Bare metal within 18" of amp',
-      hint: 'Sand paint, use star washer, and torque bolt to spec.',
-      kind: 'ground',
-    },
-    position: { x: 220, y: 460 },
-  },
-];
-
-const EDGE_COLORS = {
-  power: '#ef4444',
-  distribution: '#f97316',
-  signal: '#0ea5e9',
-  remote: '#6366f1',
-  ground: '#334155',
-};
-
-const createEdgeStyle = (kind: keyof typeof EDGE_COLORS, dashed = false) => ({
-  stroke: EDGE_COLORS[kind],
-  strokeWidth: kind === 'signal' || kind === 'remote' ? 1.6 : 2.2,
-  strokeDasharray: dashed ? '6 3' : undefined,
-});
-
-const baseEdges: Edge[] = [
-  {
-    id: 'battery-main-fuse',
-    source: 'battery',
-    target: 'main-fuse',
-    label: '0/4 AWG OFC power feed',
-    labelStyle: { fill: EDGE_COLORS.distribution, fontWeight: 600 },
-    style: createEdgeStyle('distribution'),
-    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.distribution, width: 16, height: 16 },
-    data: { kind: 'power' },
-  },
-  {
-    id: 'main-fuse-distribution',
-    source: 'main-fuse',
-    target: 'distribution',
-    label: 'Run through firewall with grommet',
-    labelStyle: { fill: EDGE_COLORS.distribution, fontWeight: 600 },
-    style: createEdgeStyle('distribution'),
-    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.distribution, width: 16, height: 16 },
-    data: { kind: 'power' },
-  },
-  {
-    id: 'distribution-amp',
-    source: 'distribution',
-    target: 'primary-amp',
-    label: '4 AWG to amplifier',
-    labelStyle: { fill: EDGE_COLORS.power, fontWeight: 600 },
-    style: createEdgeStyle('power'),
-    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.power, width: 16, height: 16 },
-    data: { kind: 'power' },
-  },
-  {
-    id: 'headunit-remote',
-    source: 'head-unit',
-    target: 'remote-lead',
-    label: 'Remote turn-on (ACC)',
-    style: createEdgeStyle('remote', true),
-    labelStyle: { fill: EDGE_COLORS.remote, fontWeight: 600 },
-    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.remote, width: 14, height: 14 },
-    data: { kind: 'remote' },
-  },
-  {
-    id: 'remote-amp',
-    source: 'remote-lead',
-    target: 'primary-amp',
-    label: '18 AWG remote lead',
-    style: createEdgeStyle('remote', true),
-    labelStyle: { fill: EDGE_COLORS.remote, fontWeight: 600 },
-    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.remote, width: 14, height: 14 },
-    data: { kind: 'remote' },
-  },
-  {
-    id: 'amp-ground',
-    source: 'primary-amp',
-    target: 'ground-point',
-    label: '4 AWG chassis ground',
-    labelStyle: { fill: EDGE_COLORS.ground, fontWeight: 600 },
-    style: createEdgeStyle('ground'),
-    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.ground, width: 16, height: 16 },
-    data: { kind: 'ground' },
-  },
-  {
-    id: 'headunit-amp-signal',
-    source: 'head-unit',
-    target: 'primary-amp',
-    label: 'RCA / Fiber signal bundle',
-    style: createEdgeStyle('signal', true),
-    labelStyle: { fill: EDGE_COLORS.signal, fontWeight: 600 },
-    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.signal, width: 14, height: 14 },
-    data: { kind: 'signal' },
-  },
-];
-
-const createInitialNodes = () =>
-  baseNodes.map(node => ({
-    ...node,
-    data: { ...(typeof node.data === 'object' ? node.data : {}) },
-  }));
-
-const createInitialEdges = () =>
-  baseEdges.map(edge => ({ ...edge }));
-
-const getComponentNodeDetails = (component: AudioComponent): { subtitle?: string; hint?: string; kind: NodeKind } => {
-  const subtitleParts: string[] = [];
-  if (component.category) subtitleParts.push(component.category);
-  if (component.specs?.size) subtitleParts.push(`${component.specs.size}"`);
-  if (component.specs?.channels && !subtitleParts.some(part => part.includes('ch'))) {
-    subtitleParts.push(`${component.specs.channels}ch`);
-  }
-
-  const type = component.type?.toLowerCase() ?? '';
-  let hint: string | undefined;
-  let kind: NodeKind = 'device';
-
-  if (type.includes('amplifier')) {
-    hint = 'Secure amp, ensure airflow, and torque power/ground lugs after crimping.';
-    kind = 'power';
-  } else if (type.includes('subwoofer')) {
-    hint = 'Confirm enclosure volume, use 12 AWG wire, and seal terminals against moisture.';
-    kind = 'signal';
-  } else if (type.includes('speaker')) {
-    hint = 'Use adapter brackets or foam gaskets to avoid air leaks and rattles.';
-    kind = 'signal';
-  } else if (type.includes('head-unit')) {
-    hint = 'Retain factory controls, secure the harness, and level-match outputs to the DSP/amp.';
-    kind = 'signal';
-  } else if (type.includes('dsp')) {
-    hint = 'Mount near amp rack, keep signal cables short, and document base tune files.';
-    kind = 'device';
-  } else if (type.includes('wiring')) {
-    hint = 'Route away from heat and moving parts, protect with loom, and anchor every 12 inches.';
-    kind = 'power';
-  } else if (type.includes('accessory')) {
-    hint = 'Mount within reach, use adhesive pads or screws, and dress the cable routing neatly.';
-    kind = 'accessory';
-  }
-
-  return {
-    subtitle: subtitleParts.join(' • ') || undefined,
-    hint,
-    kind,
-  };
-};
 
 const nodeTypes = {
   custom: CustomNode,
@@ -337,10 +105,6 @@ function App() {
   const [vehicleError, setVehicleError] = useState<string | null>(null);
   const [modelLoading, setModelLoading] = useState<boolean>(false);
   const [modelError, setModelError] = useState<string | null>(null);
-
-  const [nodes, setNodes, onNodesChange] = useNodesState(createInitialNodes());
-  const [edges, setEdges, onEdgesChange] = useEdgesState(createInitialEdges());
-  const nodeCounter = useRef(baseNodes.length + 1);
 
   const totalRms = useMemo(
     () => selectedComponents.reduce((total, comp) => total + (comp.specs?.rms_wattage || 0), 0),
@@ -556,43 +320,6 @@ function App() {
     setSafetyChecks(safetyIssues);
   }, [budget.accessoriesTotal, budget.componentTotal, budget.target, budget.wiringTotal, fitment, selectedComponents, totalPeak, totalRms, setSafetyChecks, wiringEstimate]);
 
-  const onConnect = useCallback((params: Connection) => {
-    setEdges(eds => addEdge(params, eds));
-  }, [setEdges]);
-
-  const handleRemoveComponent = useCallback(({ nodeId, componentId }: { nodeId: string; componentId?: string }) => {
-    setNodes(nds => nds.filter(node => node.id !== nodeId));
-    setEdges(eds => eds.filter(edge => edge.source !== nodeId && edge.target !== nodeId));
-    if (componentId) {
-      removeComponent(componentId);
-    }
-  }, [removeComponent, setEdges, setNodes]);
-
-  const handleAddComponentNode = useCallback((component: AudioComponent) => {
-    const newNodeId = `node-${nodeCounter.current++}`;
-    const position = {
-      x: 160 + (Math.random() * 240 - 120),
-      y: 340 + Math.random() * 180,
-    };
-    const { subtitle, hint, kind } = getComponentNodeDetails(component);
-    const label = component.brand ? `${component.brand} ${component.name}` : component.name;
-    const newNode: Node = {
-      id: newNodeId,
-      type: 'custom',
-      position,
-      data: {
-        label,
-        subtitle,
-        hint,
-        kind,
-        onRemove: handleRemoveComponent,
-        nodeId: newNodeId,
-        componentId: component.id,
-      },
-    };
-    setNodes(nds => nds.concat(newNode));
-  }, [handleRemoveComponent, setNodes]);
-
   const fetchVehicleSpecs = useCallback((make?: string, model?: string) => {
     if (!make || !model) {
       return;
@@ -660,20 +387,10 @@ function App() {
           </section>
           <section className="diagram-section">
             <div className="section-header">
-              <h2>Wiring Diagram</h2>
-              {vehicleDescriptor && <span className="vehicle-tag">{vehicleDescriptor}</span>}
+              <h2>Diagram Lab</h2>
+              <p className="section-subtitle">Use the lab to mock up wiring and accessories. Vehicle data now focuses on speaker fitment.</p>
             </div>
-            <WiringDiagram
-              nodes={nodes}
-              edges={edges}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
-              onConnect={onConnect}
-              nodeTypes={nodeTypes}
-            />
-          </section>
-          <section className="component-section">
-            <ComponentBrowser onComponentAdd={handleAddComponentNode} />
+            <DiagramLabView embedded />
           </section>
         </div>
         <aside className="sidebar">

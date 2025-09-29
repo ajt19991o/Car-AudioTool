@@ -112,7 +112,11 @@ const createEdgeStyle = () => ({
   strokeWidth: 1.4,
 });
 
-function DiagramLabView() {
+interface DiagramLabViewProps {
+  embedded?: boolean;
+}
+
+function DiagramLabView({ embedded = false }: DiagramLabViewProps) {
   const libraryComponents = useAppStore(state => state.libraryComponents);
   const addLibraryComponent = useAppStore(state => state.addLibraryComponent);
   const removeLibraryComponent = useAppStore(state => state.removeLibraryComponent);
@@ -239,7 +243,7 @@ function DiagramLabView() {
   const selectedData = selectedNode?.data as EditableNodeData | undefined;
 
   return (
-    <div className="diagram-lab-view">
+    <div className={`diagram-lab-view${embedded ? ' diagram-lab-view--embedded' : ''}`}>
       <div className="diagram-lab-layout">
         <section className="diagram-library">
           <header>
@@ -321,15 +325,17 @@ function DiagramLabView() {
           </div>
         </section>
         <section className="diagram-workspace">
-          <div className="workspace-header">
-            <div>
-              <h2>Diagram Workspace</h2>
-              <p>Create a layout with placeholder components. Use the editor to rename, recategorize, or jot notes.</p>
+          {!embedded && (
+            <div className="workspace-header">
+              <div>
+                <h2>Diagram Workspace</h2>
+                <p>Create a layout with placeholder components. Use the editor to rename, recategorize, or jot notes.</p>
+              </div>
+              <div className="workspace-actions">
+                <button type="button" onClick={handleClearDiagram} className="ghost">Clear Diagram</button>
+              </div>
             </div>
-            <div className="workspace-actions">
-              <button type="button" onClick={handleClearDiagram} className="ghost">Clear Diagram</button>
-            </div>
-          </div>
+          )}
           <div className="diagram-canvas">
             <ReactFlowProvider>
               <DiagramCanvas

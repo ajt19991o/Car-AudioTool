@@ -11,11 +11,28 @@
       "rms_wattage": 22,
       "peak_wattage": 50,
       "channels": 4,
-      "preamp_voltage": "4V"
+      "preamp_voltage": "4V",
+      "inputs": [
+        "USB",
+        "Bluetooth",
+        "Tuner"
+      ],
+      "outputs": [
+        "RCA Front",
+        "RCA Rear",
+        "RCA Sub"
+      ]
     },
-    "tags": ["carplay", "android-auto", "touchscreen"],
+    "tags": [
+      "carplay",
+      "android-auto",
+      "touchscreen"
+    ],
     "purchase_links": [
-      { "vendor": "Crutchfield", "url": "https://example.com/pioneer-dmh-w4660nex" }
+      {
+        "vendor": "Crutchfield",
+        "url": "https://example.com/pioneer-dmh-w4660nex"
+      }
     ]
   },
   {
@@ -30,11 +47,28 @@
       "rms_wattage": 20,
       "peak_wattage": 45,
       "channels": 4,
-      "preamp_voltage": "5V"
+      "preamp_voltage": "5V",
+      "inputs": [
+        "USB",
+        "Bluetooth",
+        "Tuner"
+      ],
+      "outputs": [
+        "RCA Front",
+        "RCA Rear",
+        "RCA Sub"
+      ]
     },
-    "tags": ["hi-res", "wireless", "maestro"],
+    "tags": [
+      "hi-res",
+      "wireless",
+      "maestro"
+    ],
     "purchase_links": [
-      { "vendor": "Best Buy", "url": "https://example.com/sony-xav-ax6000" }
+      {
+        "vendor": "Best Buy",
+        "url": "https://example.com/sony-xav-ax6000"
+      }
     ]
   },
   {
@@ -43,17 +77,33 @@
     "name": "iLX-507 Multimedia Receiver",
     "type": "head-unit",
     "category": "Head Unit",
-    "price": 749.00,
+    "price": 749.0,
     "description": "7\" HD screen with customizable widgets and built-in tuning suite.",
     "specs": {
       "rms_wattage": 18,
       "peak_wattage": 50,
       "channels": 4,
-      "preamp_voltage": "4V"
+      "preamp_voltage": "4V",
+      "inputs": [
+        "USB",
+        "Bluetooth",
+        "Tuner"
+      ],
+      "outputs": [
+        "RCA Front",
+        "RCA Rear",
+        "RCA Sub"
+      ]
     },
-    "tags": ["alpine", "hd-screen"],
+    "tags": [
+      "alpine",
+      "hd-screen"
+    ],
     "purchase_links": [
-      { "vendor": "Alpine", "url": "https://example.com/alpine-ilx-507" }
+      {
+        "vendor": "Alpine",
+        "url": "https://example.com/alpine-ilx-507"
+      }
     ]
   },
   {
@@ -67,11 +117,25 @@
     "specs": {
       "rms_wattage": 400,
       "channels": 1,
-      "impedance": "2Ω stable"
+      "impedance": "2\u03a9 stable",
+      "inputs": [
+        "RCA",
+        "Speaker Level"
+      ],
+      "outputs": [
+        "Speaker",
+        "Sub"
+      ]
     },
-    "tags": ["mono", "class-d"],
+    "tags": [
+      "mono",
+      "class-d"
+    ],
     "purchase_links": [
-      { "vendor": "Crutchfield", "url": "https://example.com/kicker-cxa4001" }
+      {
+        "vendor": "Crutchfield",
+        "url": "https://example.com/kicker-cxa4001"
+      }
     ]
   },
   {
@@ -85,11 +149,25 @@
     "specs": {
       "rms_wattage": 200,
       "channels": 4,
-      "impedance": "2Ω stereo"
+      "impedance": "2\u03a9 stereo",
+      "inputs": [
+        "RCA",
+        "Speaker Level"
+      ],
+      "outputs": [
+        "Speaker",
+        "Sub"
+      ]
     },
-    "tags": ["4-channel", "auto-eq"],
+    "tags": [
+      "4-channel",
+      "auto-eq"
+    ],
     "purchase_links": [
-      { "vendor": "Kicker", "url": "https://example.com/kicker-key2004" }
+      {
+        "vendor": "Kicker",
+        "url": "https://example.com/kicker-key2004"
+      }
     ]
   },
   {
@@ -103,11 +181,25 @@
     "specs": {
       "rms_wattage": 700,
       "channels": 5,
-      "impedance": "2Ω stable"
+      "impedance": "2\u03a9 stable",
+      "inputs": [
+        "RCA",
+        "Speaker Level"
+      ],
+      "outputs": [
+        "Speaker",
+        "Sub"
+      ]
     },
-    "tags": ["5-channel", "system-amp"],
+    "tags": [
+      "5-channel",
+      "system-amp"
+    ],
     "purchase_links": [
-      { "vendor": "JL Audio", "url": "https://example.com/jl-xd700-5v2" }
+      {
+        "vendor": "JL Audio",
+        "url": "https://example.com/jl-xd700-5v2"
+      }
     ]
   },
   {
@@ -116,16 +208,30 @@
     "name": "ACM-2.300 Micro 2-Channel Amplifier",
     "type": "amplifier",
     "category": "Amplifier",
-    "price": 379.00,
+    "price": 379.0,
     "description": "Compact two-channel amp with built-in load matching for factory integration.",
     "specs": {
       "rms_wattage": 300,
       "channels": 2,
-      "impedance": "2Ω stereo"
+      "impedance": "2\u03a9 stereo",
+      "inputs": [
+        "RCA",
+        "Speaker Level"
+      ],
+      "outputs": [
+        "Speaker",
+        "Sub"
+      ]
     },
-    "tags": ["factory-integration", "compact"],
+    "tags": [
+      "factory-integration",
+      "compact"
+    ],
     "purchase_links": [
-      { "vendor": "AudioControl", "url": "https://example.com/acm-2300" }
+      {
+        "vendor": "AudioControl",
+        "url": "https://example.com/acm-2300"
+      }
     ]
   },
   {
@@ -140,15 +246,29 @@
       "size": "6.5",
       "rms_wattage": 90,
       "peak_wattage": 180,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["6.5", "165mm"],
-      "locations": ["front door", "rear door"]
+      "speakerSizes": [
+        "6.5",
+        "165mm"
+      ],
+      "locations": [
+        "front door",
+        "rear door"
+      ]
     },
-    "tags": ["component", "silk-tweeter"],
+    "tags": [
+      "component",
+      "silk-tweeter"
+    ],
     "purchase_links": [
-      { "vendor": "Amazon", "url": "https://example.com/morel-maximo-ultra-602" }
+      {
+        "vendor": "Amazon",
+        "url": "https://example.com/morel-maximo-ultra-602"
+      }
     ]
   },
   {
@@ -163,15 +283,30 @@
       "size": "6.5",
       "rms_wattage": 50,
       "peak_wattage": 150,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["6.5", "165mm"],
-      "locations": ["front door", "rear door", "rear deck"]
+      "speakerSizes": [
+        "6.5",
+        "165mm"
+      ],
+      "locations": [
+        "front door",
+        "rear door",
+        "rear deck"
+      ]
     },
-    "tags": ["coaxial", "drop-in"],
+    "tags": [
+      "coaxial",
+      "drop-in"
+    ],
     "purchase_links": [
-      { "vendor": "Crutchfield", "url": "https://example.com/jl-audio-c1-650" }
+      {
+        "vendor": "Crutchfield",
+        "url": "https://example.com/jl-audio-c1-650"
+      }
     ]
   },
   {
@@ -186,15 +321,28 @@
       "size": "6x9",
       "rms_wattage": 100,
       "peak_wattage": 200,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["6x9"],
-      "locations": ["front door", "rear deck"]
+      "speakerSizes": [
+        "6x9"
+      ],
+      "locations": [
+        "front door",
+        "rear deck"
+      ]
     },
-    "tags": ["6x9", "component"],
+    "tags": [
+      "6x9",
+      "component"
+    ],
     "purchase_links": [
-      { "vendor": "Focal", "url": "https://example.com/focal-iss-690" }
+      {
+        "vendor": "Focal",
+        "url": "https://example.com/focal-iss-690"
+      }
     ]
   },
   {
@@ -209,15 +357,28 @@
       "size": "6x9",
       "rms_wattage": 90,
       "peak_wattage": 360,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["6x9"],
-      "locations": ["rear deck", "rear door"]
+      "speakerSizes": [
+        "6x9"
+      ],
+      "locations": [
+        "rear deck",
+        "rear door"
+      ]
     },
-    "tags": ["budget", "coaxial"],
+    "tags": [
+      "budget",
+      "coaxial"
+    ],
     "purchase_links": [
-      { "vendor": "Amazon", "url": "https://example.com/kicker-46dsc69304" }
+      {
+        "vendor": "Amazon",
+        "url": "https://example.com/kicker-46dsc69304"
+      }
     ]
   },
   {
@@ -226,21 +387,35 @@
     "name": "Dieci-Series DCX 570 Coaxials",
     "type": "speaker-set",
     "category": "Coaxial Speakers",
-    "price": 169.00,
+    "price": 169.0,
     "description": "5x7 replacements with treated paper cones and PEI tweeters.",
     "specs": {
       "size": "5x7",
       "rms_wattage": 60,
       "peak_wattage": 120,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["5x7", "6x8"],
-      "locations": ["front door", "rear door"]
+      "speakerSizes": [
+        "5x7",
+        "6x8"
+      ],
+      "locations": [
+        "front door",
+        "rear door"
+      ]
     },
-    "tags": ["ford", "drop-in"],
+    "tags": [
+      "ford",
+      "drop-in"
+    ],
     "purchase_links": [
-      { "vendor": "Hertz", "url": "https://example.com/hertz-dcx570" }
+      {
+        "vendor": "Hertz",
+        "url": "https://example.com/hertz-dcx570"
+      }
     ]
   },
   {
@@ -255,15 +430,28 @@
       "size": "4",
       "rms_wattage": 40,
       "peak_wattage": 120,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["4"],
-      "locations": ["dash", "rear pillar"]
+      "speakerSizes": [
+        "4"
+      ],
+      "locations": [
+        "dash",
+        "rear pillar"
+      ]
     },
-    "tags": ["compact", "european"],
+    "tags": [
+      "compact",
+      "european"
+    ],
     "purchase_links": [
-      { "vendor": "Audison", "url": "https://example.com/audison-apx4" }
+      {
+        "vendor": "Audison",
+        "url": "https://example.com/audison-apx4"
+      }
     ]
   },
   {
@@ -278,11 +466,19 @@
       "size": "10",
       "rms_wattage": 300,
       "peak_wattage": 600,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["sealed", "single-coil"],
+    "tags": [
+      "sealed",
+      "single-coil"
+    ],
     "purchase_links": [
-      { "vendor": "JL Audio", "url": "https://example.com/jl-audio-10w0v3-4" }
+      {
+        "vendor": "JL Audio",
+        "url": "https://example.com/jl-audio-10w0v3-4"
+      }
     ]
   },
   {
@@ -292,16 +488,24 @@
     "type": "subwoofer",
     "category": "Subwoofer",
     "price": 279.99,
-    "description": "Dual 4Ω voice coil driver built for ported enclosures.",
+    "description": "Dual 4\u03a9 voice coil driver built for ported enclosures.",
     "specs": {
       "size": "12",
       "rms_wattage": 600,
       "peak_wattage": 1200,
-      "impedance": "Dual 4Ω"
+      "impedance": "Dual 4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["ported", "high-output"],
+    "tags": [
+      "ported",
+      "high-output"
+    ],
     "purchase_links": [
-      { "vendor": "Rockford Fosgate", "url": "https://example.com/rockford-p3d4-12" }
+      {
+        "vendor": "Rockford Fosgate",
+        "url": "https://example.com/rockford-p3d4-12"
+      }
     ]
   },
   {
@@ -316,11 +520,19 @@
       "size": "10",
       "rms_wattage": 400,
       "peak_wattage": 800,
-      "impedance": "Dual 2Ω"
+      "impedance": "Dual 2\u03a9",
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["shallow", "truck"],
+    "tags": [
+      "shallow",
+      "truck"
+    ],
     "purchase_links": [
-      { "vendor": "Kicker", "url": "https://example.com/kicker-comp-rt-10" }
+      {
+        "vendor": "Kicker",
+        "url": "https://example.com/kicker-comp-rt-10"
+      }
     ]
   },
   {
@@ -334,11 +546,19 @@
     "specs": {
       "channels": 8,
       "rms_wattage": 0,
-      "peak_wattage": 0
+      "peak_wattage": 0,
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["dsp", "integration"],
+    "tags": [
+      "dsp",
+      "integration"
+    ],
     "purchase_links": [
-      { "vendor": "AudioControl", "url": "https://example.com/audiocontrol-dm608" }
+      {
+        "vendor": "AudioControl",
+        "url": "https://example.com/audiocontrol-dm608"
+      }
     ]
   },
   {
@@ -347,16 +567,24 @@
     "name": "DSP Mini MK2",
     "type": "dsp",
     "category": "DSP",
-    "price": 799.00,
+    "price": 799.0,
     "description": "Hi-res capable DSP with HELIX Director compatibility.",
     "specs": {
       "channels": 6,
       "rms_wattage": 0,
-      "peak_wattage": 0
+      "peak_wattage": 0,
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["hi-res", "compact"],
+    "tags": [
+      "hi-res",
+      "compact"
+    ],
     "purchase_links": [
-      { "vendor": "Helix", "url": "https://example.com/helix-dsp-mini" }
+      {
+        "vendor": "Helix",
+        "url": "https://example.com/helix-dsp-mini"
+      }
     ]
   },
   {
@@ -369,11 +597,19 @@
     "description": "OFC 1/0 AWG power kit with ANL fuse holder, remote wire, and accessories.",
     "specs": {
       "awg": "1/0",
-      "length": "20ft"
+      "length": "20ft",
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["ofc", "power-kit"],
+    "tags": [
+      "ofc",
+      "power-kit"
+    ],
     "purchase_links": [
-      { "vendor": "Amazon", "url": "https://example.com/stinger-pro-1-0" }
+      {
+        "vendor": "Amazon",
+        "url": "https://example.com/stinger-pro-1-0"
+      }
     ]
   },
   {
@@ -386,11 +622,19 @@
     "description": "Full copper 4 AWG kit with distribution-friendly hardware.",
     "specs": {
       "awg": "4",
-      "length": "18ft"
+      "length": "18ft",
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["amp-kit", "copper"],
+    "tags": [
+      "amp-kit",
+      "copper"
+    ],
     "purchase_links": [
-      { "vendor": "KnuKonceptz", "url": "https://example.com/knukonceptz-4awg" }
+      {
+        "vendor": "KnuKonceptz",
+        "url": "https://example.com/knukonceptz-4awg"
+      }
     ]
   },
   {
@@ -402,11 +646,23 @@
     "price": 69.99,
     "description": "Vehicle-specific integration harness compatible with iDatalink Maestro.",
     "specs": {
-      "compatibility": ["Ford", "Toyota", "GM"]
+      "compatibility": [
+        "Ford",
+        "Toyota",
+        "GM"
+      ],
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["integration", "maestro"],
+    "tags": [
+      "integration",
+      "maestro"
+    ],
     "purchase_links": [
-      { "vendor": "Metra", "url": "https://example.com/metra-bc-harness" }
+      {
+        "vendor": "Metra",
+        "url": "https://example.com/metra-bc-harness"
+      }
     ]
   },
   {
@@ -418,11 +674,19 @@
     "price": 79.99,
     "description": "Adds a remote volume knob for sub or aux channels.",
     "specs": {
-      "channels": 2
+      "channels": 2,
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["remote", "sub-control"],
+    "tags": [
+      "remote",
+      "sub-control"
+    ],
     "purchase_links": [
-      { "vendor": "JL Audio", "url": "https://example.com/jl-cl-rlc" }
+      {
+        "vendor": "JL Audio",
+        "url": "https://example.com/jl-cl-rlc"
+      }
     ]
   },
   {
@@ -435,11 +699,19 @@
     "description": "Noise-rejecting RCA cables with high-purity copper conductors.",
     "specs": {
       "length": "1m",
-      "pair": true
+      "pair": true,
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["rca", "low-noise"],
+    "tags": [
+      "rca",
+      "low-noise"
+    ],
     "purchase_links": [
-      { "vendor": "AudioQuest", "url": "https://example.com/audioquest-earth-rca" }
+      {
+        "vendor": "AudioQuest",
+        "url": "https://example.com/audioquest-earth-rca"
+      }
     ]
   },
   {
@@ -451,11 +723,19 @@
     "price": 219.99,
     "description": "Sound deadening kit covering four doors with foam and butyl layers.",
     "specs": {
-      "coverage": "36 sq ft"
+      "coverage": "36 sq ft",
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["sound-deadening", "door-kit"],
+    "tags": [
+      "sound-deadening",
+      "door-kit"
+    ],
     "purchase_links": [
-      { "vendor": "SoundSkins", "url": "https://example.com/soundskins-pro" }
+      {
+        "vendor": "SoundSkins",
+        "url": "https://example.com/soundskins-pro"
+      }
     ]
   },
   {
@@ -469,11 +749,26 @@
     "specs": {
       "rms_wattage": 1500,
       "channels": 1,
-      "impedance": "1Ω stable"
+      "impedance": "1\u03a9 stable",
+      "inputs": [
+        "RCA",
+        "Speaker Level"
+      ],
+      "outputs": [
+        "Speaker",
+        "Sub"
+      ]
     },
-    "tags": ["mono", "high-output", "bass"],
+    "tags": [
+      "mono",
+      "high-output",
+      "bass"
+    ],
     "purchase_links": [
-      { "vendor": "Rockford Fosgate", "url": "https://rockfordfosgate.com/products/details/t1500-1bdcp/" }
+      {
+        "vendor": "Rockford Fosgate",
+        "url": "https://rockfordfosgate.com/products/details/t1500-1bdcp/"
+      }
     ]
   },
   {
@@ -485,11 +780,20 @@
     "price": 799.99,
     "description": "8-channel DSP with 10-band parametric EQ per channel and time alignment.",
     "specs": {
-      "channels": 8
+      "channels": 8,
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["dsp", "tuning", "eq"],
+    "tags": [
+      "dsp",
+      "tuning",
+      "eq"
+    ],
     "purchase_links": [
-      { "vendor": "JL Audio", "url": "https://www.jlaudio.com/products/twk-88" }
+      {
+        "vendor": "JL Audio",
+        "url": "https://www.jlaudio.com/products/twk-88"
+      }
     ]
   },
   {
@@ -504,15 +808,28 @@
       "size": "6x9",
       "rms_wattage": 110,
       "peak_wattage": 330,
-      "impedance": "3Ω"
+      "impedance": "3\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["6x9"],
-      "locations": ["front door", "rear deck"]
+      "speakerSizes": [
+        "6x9"
+      ],
+      "locations": [
+        "front door",
+        "rear deck"
+      ]
     },
-    "tags": ["coaxial", "high-power"],
+    "tags": [
+      "coaxial",
+      "high-power"
+    ],
     "purchase_links": [
-      { "vendor": "Crutchfield", "url": "https://www.crutchfield.com/p_108K93IX/Infinity-Kappa-93ix.html" }
+      {
+        "vendor": "Crutchfield",
+        "url": "https://www.crutchfield.com/p_108K93IX/Infinity-Kappa-93ix.html"
+      }
     ]
   },
   {
@@ -527,15 +844,28 @@
       "size": "6.5",
       "rms_wattage": 100,
       "peak_wattage": 300,
-      "impedance": "3Ω"
+      "impedance": "3\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["6.5"],
-      "locations": ["front door", "rear door"]
+      "speakerSizes": [
+        "6.5"
+      ],
+      "locations": [
+        "front door",
+        "rear door"
+      ]
     },
-    "tags": ["component", "factory-integration"],
+    "tags": [
+      "component",
+      "factory-integration"
+    ],
     "purchase_links": [
-      { "vendor": "Amazon", "url": "https://www.amazon.com/dp/B07Q45M6L6" }
+      {
+        "vendor": "Amazon",
+        "url": "https://www.amazon.com/dp/B07Q45M6L6"
+      }
     ]
   },
   {
@@ -550,15 +880,29 @@
       "size": "5x7",
       "rms_wattage": 70,
       "peak_wattage": 140,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["5x7", "6x8"],
-      "locations": ["front door", "rear door"]
+      "speakerSizes": [
+        "5x7",
+        "6x8"
+      ],
+      "locations": [
+        "front door",
+        "rear door"
+      ]
     },
-    "tags": ["component", "ford"],
+    "tags": [
+      "component",
+      "ford"
+    ],
     "purchase_links": [
-      { "vendor": "Focal", "url": "https://www.focal.com/en/car-audio/car-audio-kits-integration/plugplay/ism-isu/isu-570" }
+      {
+        "vendor": "Focal",
+        "url": "https://www.focal.com/en/car-audio/car-audio-kits-integration/plugplay/ism-isu/isu-570"
+      }
     ]
   },
   {
@@ -573,15 +917,27 @@
       "size": "6.5",
       "rms_wattage": 125,
       "peak_wattage": 250,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["6.5"],
-      "locations": ["front door"]
+      "speakerSizes": [
+        "6.5"
+      ],
+      "locations": [
+        "front door"
+      ]
     },
-    "tags": ["active-ready", "3-way"],
+    "tags": [
+      "active-ready",
+      "3-way"
+    ],
     "purchase_links": [
-      { "vendor": "Kicker", "url": "https://www.kicker.com/46kss365" }
+      {
+        "vendor": "Kicker",
+        "url": "https://www.kicker.com/46kss365"
+      }
     ]
   },
   {
@@ -596,11 +952,20 @@
       "size": "12",
       "rms_wattage": 600,
       "peak_wattage": 1200,
-      "impedance": "Dual 2Ω"
+      "impedance": "Dual 2\u03a9",
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["shallow", "truck", "high-output"],
+    "tags": [
+      "shallow",
+      "truck",
+      "high-output"
+    ],
     "purchase_links": [
-      { "vendor": "Crutchfield", "url": "https://www.crutchfield.com/p_20646L7T12/Kicker-46L7T122.html" }
+      {
+        "vendor": "Crutchfield",
+        "url": "https://www.crutchfield.com/p_20646L7T12/Kicker-46L7T122.html"
+      }
     ]
   },
   {
@@ -612,11 +977,20 @@
     "price": 59.99,
     "description": "Twisted-pair RCA cables with locking ends for low noise signal runs.",
     "specs": {
-      "length": "17ft"
+      "length": "17ft",
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["rca", "low-noise", "twisted-pair"],
+    "tags": [
+      "rca",
+      "low-noise",
+      "twisted-pair"
+    ],
     "purchase_links": [
-      { "vendor": "Stinger", "url": "https://stingerelectronics.com/products/si626" }
+      {
+        "vendor": "Stinger",
+        "url": "https://stingerelectronics.com/products/si626"
+      }
     ]
   },
   {
@@ -627,10 +1001,19 @@
     "category": "Accessories",
     "price": 29.99,
     "description": "Installation kit for select Chrysler, Dodge, and Jeep vehicles.",
-    "specs": {},
-    "tags": ["dash-kit", "installation"],
+    "specs": {
+      "inputs": [],
+      "outputs": []
+    },
+    "tags": [
+      "dash-kit",
+      "installation"
+    ],
     "purchase_links": [
-      { "vendor": "Metra", "url": "https://metraonline.com/part/95-6511" }
+      {
+        "vendor": "Metra",
+        "url": "https://metraonline.com/part/95-6511"
+      }
     ]
   },
   {
@@ -641,10 +1024,19 @@
     "category": "Accessories",
     "price": 54.99,
     "description": "Adjustable 4-channel LOC with remote turn-on trigger for integrating factory radios.",
-    "specs": {},
-    "tags": ["loc", "factory-integration"],
+    "specs": {
+      "inputs": [],
+      "outputs": []
+    },
+    "tags": [
+      "loc",
+      "factory-integration"
+    ],
     "purchase_links": [
-      { "vendor": "PAC", "url": "https://catalog.pac-audio.com/catalog/locs-lvds/lp7-4" }
+      {
+        "vendor": "PAC",
+        "url": "https://catalog.pac-audio.com/catalog/locs-lvds/lp7-4"
+      }
     ]
   },
   {
@@ -653,16 +1045,31 @@
     "name": "LC-1.1500 Mono Amplifier",
     "type": "amplifier",
     "category": "Amplifier",
-    "price": 799.00,
+    "price": 799.0,
     "description": "1,500W mono amp with AccuBASS and active crossover for subwoofer systems.",
     "specs": {
       "rms_wattage": 1500,
       "channels": 1,
-      "impedance": "1Ω stable"
+      "impedance": "1\u03a9 stable",
+      "inputs": [
+        "RCA",
+        "Speaker Level"
+      ],
+      "outputs": [
+        "Speaker",
+        "Sub"
+      ]
     },
-    "tags": ["mono", "integration", "high-output"],
+    "tags": [
+      "mono",
+      "integration",
+      "high-output"
+    ],
     "purchase_links": [
-      { "vendor": "AudioControl", "url": "https://www.audiocontrol.com/product/lc-1-1500/" }
+      {
+        "vendor": "AudioControl",
+        "url": "https://www.audiocontrol.com/product/lc-1-1500/"
+      }
     ]
   },
   {
@@ -676,11 +1083,25 @@
     "specs": {
       "rms_wattage": 650,
       "channels": 5,
-      "impedance": "2Ω stable"
+      "impedance": "2\u03a9 stable",
+      "inputs": [
+        "RCA",
+        "Speaker Level"
+      ],
+      "outputs": [
+        "Speaker",
+        "Sub"
+      ]
     },
-    "tags": ["5-channel", "compact"],
+    "tags": [
+      "5-channel",
+      "compact"
+    ],
     "purchase_links": [
-      { "vendor": "Pioneer", "url": "https://www.pioneerelectronics.com/PUSA/Car/Amplifiers/GM-DX975" }
+      {
+        "vendor": "Pioneer",
+        "url": "https://www.pioneerelectronics.com/PUSA/Car/Amplifiers/GM-DX975"
+      }
     ]
   },
   {
@@ -694,11 +1115,26 @@
     "specs": {
       "rms_wattage": 2000,
       "channels": 1,
-      "impedance": "1Ω stable"
+      "impedance": "1\u03a9 stable",
+      "inputs": [
+        "RCA",
+        "Speaker Level"
+      ],
+      "outputs": [
+        "Speaker",
+        "Sub"
+      ]
     },
-    "tags": ["mono", "budget", "high-output"],
+    "tags": [
+      "mono",
+      "budget",
+      "high-output"
+    ],
     "purchase_links": [
-      { "vendor": "Skar Audio", "url": "https://www.skaraudio.com/products/rp-2000-1d" }
+      {
+        "vendor": "Skar Audio",
+        "url": "https://www.skaraudio.com/products/rp-2000-1d"
+      }
     ]
   },
   {
@@ -707,21 +1143,33 @@
     "name": "Tempo Ultra 602 Component System",
     "type": "speaker-set",
     "category": "Component Speakers",
-    "price": 579.00,
+    "price": 579.0,
     "description": "High-end 6.5-inch set with 1.1\" silk dome tweeters and MXR crossovers.",
     "specs": {
       "size": "6.5",
       "rms_wattage": 120,
       "peak_wattage": 250,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["6.5"],
-      "locations": ["front door"]
+      "speakerSizes": [
+        "6.5"
+      ],
+      "locations": [
+        "front door"
+      ]
     },
-    "tags": ["component", "audiophile"],
+    "tags": [
+      "component",
+      "audiophile"
+    ],
     "purchase_links": [
-      { "vendor": "Morel", "url": "https://www.morelhifi.com/product/tempo-ultra-602" }
+      {
+        "vendor": "Morel",
+        "url": "https://www.morelhifi.com/product/tempo-ultra-602"
+      }
     ]
   },
   {
@@ -736,15 +1184,28 @@
       "size": "6x9",
       "rms_wattage": 90,
       "peak_wattage": 300,
-      "impedance": "4Ω"
+      "impedance": "4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
     "fitment": {
-      "speakerSizes": ["6x9"],
-      "locations": ["rear deck", "rear door"]
+      "speakerSizes": [
+        "6x9"
+      ],
+      "locations": [
+        "rear deck",
+        "rear door"
+      ]
     },
-    "tags": ["coaxial", "gs-series"],
+    "tags": [
+      "coaxial",
+      "gs-series"
+    ],
     "purchase_links": [
-      { "vendor": "Sony", "url": "https://electronics.sony.com/audio/car-speakers/products/xs-690gs" }
+      {
+        "vendor": "Sony",
+        "url": "https://electronics.sony.com/audio/car-speakers/products/xs-690gs"
+      }
     ]
   },
   {
@@ -759,11 +1220,20 @@
       "size": "12",
       "rms_wattage": 600,
       "peak_wattage": 1200,
-      "impedance": "Dual 4Ω"
+      "impedance": "Dual 4\u03a9",
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["sealed", "premium", "sq"],
+    "tags": [
+      "sealed",
+      "premium",
+      "sq"
+    ],
     "purchase_links": [
-      { "vendor": "Crutchfield", "url": "https://www.crutchfield.com/p_13612W6V3/JL-Audio-12W6v3-D4.html" }
+      {
+        "vendor": "Crutchfield",
+        "url": "https://www.crutchfield.com/p_13612W6V3/JL-Audio-12W6v3-D4.html"
+      }
     ]
   },
   {
@@ -776,11 +1246,19 @@
     "description": "Full 0/1 AWG CCA kit including distribution and fuse hardware for dual amplifiers.",
     "specs": {
       "awg": "0",
-      "length": "18ft"
+      "length": "18ft",
+      "inputs": [],
+      "outputs": []
     },
-    "tags": ["power-kit", "dual-amp"],
+    "tags": [
+      "power-kit",
+      "dual-amp"
+    ],
     "purchase_links": [
-      { "vendor": "KnuKonceptz", "url": "https://www.knukonceptz.com/kca-kolossus-complete-0-gauge-amp-install-kit/" }
+      {
+        "vendor": "KnuKonceptz",
+        "url": "https://www.knukonceptz.com/kca-kolossus-complete-0-gauge-amp-install-kit/"
+      }
     ]
   },
   {
@@ -791,10 +1269,19 @@
     "category": "Accessories",
     "price": 79.99,
     "description": "Modular distribution block accepting 0 AWG inputs and dual 4/8 AWG outputs.",
-    "specs": {},
-    "tags": ["distribution", "power"],
+    "specs": {
+      "inputs": [],
+      "outputs": []
+    },
+    "tags": [
+      "distribution",
+      "power"
+    ],
     "purchase_links": [
-      { "vendor": "Stinger", "url": "https://stingerelectronics.com/products/spxdb3" }
+      {
+        "vendor": "Stinger",
+        "url": "https://stingerelectronics.com/products/spxdb3"
+      }
     ]
   },
   {
@@ -805,10 +1292,19 @@
     "category": "Accessories",
     "price": 129.99,
     "description": "Data interface for retaining factory features when installing aftermarket head units.",
-    "specs": {},
-    "tags": ["integration", "maestro"],
+    "specs": {
+      "inputs": [],
+      "outputs": []
+    },
+    "tags": [
+      "integration",
+      "maestro"
+    ],
     "purchase_links": [
-      { "vendor": "iDatalink", "url": "https://maestro.idatalink.com/product/product_id/102" }
+      {
+        "vendor": "iDatalink",
+        "url": "https://maestro.idatalink.com/product/product_id/102"
+      }
     ]
   }
 ]

@@ -21,6 +21,8 @@ export interface AudioComponent {
     awg?: string;
     length?: string;
     compatibility?: string[];
+    inputs?: string[];
+    outputs?: string[];
   };
   fitment?: {
     speakerSizes?: string[];

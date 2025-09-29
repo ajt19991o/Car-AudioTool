@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { ChangeEvent } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
 import { useAppStore } from '../state/useAppStore';
 
 const WIRING_STORAGE_KEY = 'car-audio-wiring-overrides';
@@ -26,6 +26,7 @@ function VehicleFitmentPanel() {
   const wiringEstimateSource = useAppStore(state => state.wiringEstimateSource);
   const setWiringEstimate = useAppStore(state => state.setWiringEstimate);
   const restoreAutoWiringEstimate = useAppStore(state => state.restoreAutoWiringEstimate);
+  const upsertCustomSpeaker = useAppStore(state => state.upsertCustomSpeaker);
   const [overrides, setOverrides] = useState<WiringOverridesMap>(() => {
     if (typeof window === 'undefined') return {};
     try {
@@ -94,8 +95,22 @@ function VehicleFitmentPanel() {
     return fitment.speakers.map(spec => ({
       location: spec.location,
       size: spec.size,
+      isCustom: spec.isCustom,
     }));
   }, [fitment]);
+
+  const [customSpeakerLocation, setCustomSpeakerLocation] = useState('');
+  const [customSpeakerSize, setCustomSpeakerSize] = useState('');
+
+  const handleCustomSpeakerSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const location = customSpeakerLocation.trim();
+    const size = customSpeakerSize.trim();
+    if (!location || !size) return;
+    upsertCustomSpeaker({ location, size, isCustom: true });
+    setCustomSpeakerLocation('');
+    setCustomSpeakerSize('');
+  };
 
   if (!vehicleSelection.make) {
     return (
@@ -120,13 +135,40 @@ function VehicleFitmentPanel() {
             {speakerSummary.map(item => (
               <li key={`${item.location}-${item.size}`}>
                 <strong>{item.location.replace(/_/g, ' ')}</strong>
-                <span>{item.size}</span>
+                <span>{item.size}{item.isCustom ? ' • custom' : ''}</span>
               </li>
             ))}
           </ul>
         ) : (
-          <p className="fitment-empty">Add factory speaker data to see required sizes.</p>
+          <p className="fitment-empty">Add speaker sizes manually to get wiring estimates.</p>
         )}
+
+        <form className="fitment-custom-speaker" onSubmit={handleCustomSpeakerSubmit}>
+          <h4>Add Speaker Size</h4>
+          <div className="fitment-custom-grid">
+            <label>
+              <span>Location</span>
+              <input
+                type="text"
+                value={customSpeakerLocation}
+                onChange={(event) => setCustomSpeakerLocation(event.target.value)}
+                placeholder="Front door"
+                required
+              />
+            </label>
+            <label>
+              <span>Size</span>
+              <input
+                type="text"
+                value={customSpeakerSize}
+                onChange={(event) => setCustomSpeakerSize(event.target.value)}
+                placeholder="6.5\""
+                required
+              />
+            </label>
+            <button type="submit">Add</button>
+          </div>
+        </form>
 
         {effectiveEstimate && (
           <div className="fitment-wiring">

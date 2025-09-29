@@ -93,6 +93,7 @@ interface FitmentDetail {
   location: string;
   size: string;
   depthLimit?: string;
+  isCustom?: boolean;
 }
 
 interface FitmentInfo {
@@ -148,6 +149,7 @@ interface AppState {
   setVehicleSelection: (selection: Partial<VehicleSelection>) => void;
   resetVehicleSelection: () => void;
   setFitment: (fitment?: FitmentInfo) => void;
+  upsertCustomSpeaker: (detail: FitmentDetail) => void;
   setWiringEstimate: (estimate?: WiringRunEstimate, options?: { source?: 'auto' | 'manual' }) => void;
   restoreAutoWiringEstimate: () => void;
   addComponent: (component: AudioComponent) => void;
@@ -230,6 +232,20 @@ export const useAppStore = create<AppState>((set) => ({
       modelOptions: [],
     }),
   setFitment: (fitment) => set({ fitment }),
+  upsertCustomSpeaker: (detail) =>
+    set((state) => {
+      const speakers = state.fitment?.speakers ?? [];
+      const existingIndex = speakers.findIndex(item => item.location.toLowerCase() === detail.location.toLowerCase());
+      const nextSpeakers = existingIndex >= 0
+        ? speakers.map((item, index) => (index === existingIndex ? { ...item, ...detail, isCustom: true } : item))
+        : [...speakers, { ...detail, isCustom: true }];
+      return {
+        fitment: {
+          ...state.fitment,
+          speakers: nextSpeakers,
+        },
+      };
+    }),
   setWiringEstimate: (estimate, options) =>
     set((state) => {
       const source = options?.source ?? 'auto';

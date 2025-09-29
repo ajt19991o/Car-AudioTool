@@ -4,6 +4,18 @@
   gap: 1.5rem;
 }
 
+.diagram-lab-view--embedded .diagram-library {
+  display: none;
+}
+
+.diagram-lab-view--embedded .diagram-lab-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.diagram-lab-view--embedded .diagram-editor {
+  display: none;
+}
+
 .diagram-lab-layout {
   display: grid;
   grid-template-columns: 320px 1fr 320px;
