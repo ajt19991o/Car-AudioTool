@@ -220,3 +220,38 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+/* Home View Styles */
+.home-view {
+  text-align: center;
+  padding: 4rem 1rem;
+}
+
+.home-view h2 {
+  font-size: 2.8rem;
+  margin-bottom: 1rem;
+}
+
+.home-view p {
+  font-size: 1.2rem;
+  color: #a0a0a0;
+  margin-bottom: 2.5rem;
+}
+
+.start-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.start-button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
