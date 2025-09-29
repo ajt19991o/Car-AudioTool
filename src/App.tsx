@@ -14,6 +14,7 @@ import ProjectSummary from './components/ProjectSummary';
 import WireGaugeCalculator from './components/WireGaugeCalculator';
 import CustomNode from './components/CustomNode';
 import { BudgetPlanner, TutorialsPanel, SafetyChecklistPanel } from './components/SidebarPanels';
+import VehicleFitmentPanel from './components/VehicleFitmentPanel';
 import { useAppStore } from './state/useAppStore';
 import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
 
@@ -52,6 +53,42 @@ const defaultModelByMake: Record<string, string> = {
   Honda: 'Civic',
   Nissan: 'Altima',
   Subaru: 'Outback',
+};
+
+const LOCATION_BASELINE_FEET: Record<string, number> = {
+  front_door: 28,
+  rear_door: 36,
+  rear_deck: 40,
+  dash: 16,
+  front_dash: 16,
+  rear_pillar: 32,
+  tweeter: 18,
+  kick_panel: 22,
+};
+
+const feetFromMeters = (value: number) => Math.round(value * 3.281);
+
+const estimatePowerRun = (cabinLengthFeet?: number) => {
+  if (!cabinLengthFeet || Number.isNaN(cabinLengthFeet)) {
+    return 16;
+  }
+  return Math.max(12, Math.round(cabinLengthFeet + 4));
+};
+
+const estimateSpeakerWire = (speakers: { location: string }[], cabinLengthFeet?: number) => {
+  if (!speakers || speakers.length === 0) {
+    return cabinLengthFeet ? Math.round(cabinLengthFeet * 2.2) : 40;
+  }
+
+  const adjustment = cabinLengthFeet ? Math.max(0.9, Math.min(1.4, cabinLengthFeet / 15)) : 1;
+
+  const total = speakers.reduce((sum, spec) => {
+    const key = spec.location.replace(/\s+/g, '_').toLowerCase();
+    const baseline = LOCATION_BASELINE_FEET[key] ?? 24;
+    return sum + baseline;
+  }, 0);
+
+  return Math.round(total * adjustment);
 };
 
 function App() {
@@ -218,15 +255,19 @@ function App() {
         size,
       }));
       setFitment({ speakers, wiringRunNotes: 'Use factory routing where possible and protect wires with loom.' });
-      if (specs.cabinDimensions?.frontToRearLength) {
-        setWiringEstimate({ powerRunFeet: Math.round(specs.cabinDimensions.frontToRearLength * 3.281) });
-      } else {
-        setWiringEstimate({ powerRunFeet: 15, speakerRunFeet: 40 });
-      }
+
+      const cabinLengthFeet = specs.cabinDimensions?.frontToRearLength
+        ? feetFromMeters(specs.cabinDimensions.frontToRearLength)
+        : undefined;
+      const powerRunFeet = estimatePowerRun(cabinLengthFeet);
+      const speakerRunFeet = estimateSpeakerWire(speakers, cabinLengthFeet);
+      const remoteTurnOnFeet = Math.max(10, Math.round(powerRunFeet * 0.9));
+
+      setWiringEstimate({ powerRunFeet, speakerRunFeet, remoteTurnOnFeet });
     } catch (error) {
       console.warn(error);
       setFitment(undefined);
-      setWiringEstimate(undefined);
+      setWiringEstimate({ powerRunFeet: 16, speakerRunFeet: 40, remoteTurnOnFeet: 14 });
     }
   }, [setFitment, setVehicleSelection, setWiringEstimate]);
 
@@ -304,6 +345,7 @@ function App() {
           </section>
         </div>
         <aside className="sidebar">
+          <VehicleFitmentPanel />
           <ProjectSummary />
           <BudgetPlanner />
           <WireGaugeCalculator />

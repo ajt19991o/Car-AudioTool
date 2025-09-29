@@ -109,13 +109,16 @@ export const useAppStore = create<AppState>((set) => ({
   setFitment: (fitment) => set({ fitment }),
   setWiringEstimate: (estimate) => set({ wiringEstimate: estimate }),
   addComponent: (component) =>
-    set((state) => ({
-      selectedComponents: [...state.selectedComponents, component],
-      budget: {
-        ...state.budget,
-        componentTotal: [...state.selectedComponents, component].reduce((sum, comp) => sum + comp.price, 0),
-      },
-    })),
+    set((state) => {
+      const nextComponents = [...state.selectedComponents, component];
+      return {
+        selectedComponents: nextComponents,
+        budget: {
+          ...state.budget,
+          ...calculateBudgetTotals(nextComponents),
+        },
+      };
+    }),
   removeComponent: (componentId) =>
     set((state) => {
       const updatedComponents = state.selectedComponents.filter((comp) => comp.id !== componentId);
@@ -123,7 +126,7 @@ export const useAppStore = create<AppState>((set) => ({
         selectedComponents: updatedComponents,
         budget: {
           ...state.budget,
-          componentTotal: updatedComponents.reduce((sum, comp) => sum + comp.price, 0),
+          ...calculateBudgetTotals(updatedComponents),
         },
       };
     }),
@@ -132,10 +135,36 @@ export const useAppStore = create<AppState>((set) => ({
       selectedComponents: components,
       budget: {
         ...state.budget,
-        componentTotal: components.reduce((sum, comp) => sum + comp.price, 0),
+        ...calculateBudgetTotals(components),
       },
     })),
   upsertTutorials: (entries) => set({ tutorials: entries }),
   setSafetyChecks: (issues) => set({ safetyChecks: issues }),
   updateBudget: (budget) => set((state) => ({ budget: { ...state.budget, ...budget } })),
 }));
+
+function calculateBudgetTotals(components: AudioComponent[]) {
+  let componentTotal = 0;
+  let wiringTotal = 0;
+  let accessoriesTotal = 0;
+
+  components.forEach((component) => {
+    const price = component.price ?? 0;
+    const category = (component.category || '').toLowerCase();
+    const type = (component.type || '').toLowerCase();
+
+    if (type.includes('wiring') || category.includes('wiring') || category.includes('installation')) {
+      wiringTotal += price;
+    } else if (type.includes('accessor') || category.includes('accessor')) {
+      accessoriesTotal += price;
+    } else {
+      componentTotal += price;
+    }
+  });
+
+  return {
+    componentTotal,
+    wiringTotal,
+    accessoriesTotal,
+  };
+}
