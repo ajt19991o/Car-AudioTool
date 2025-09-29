@@ -21,32 +21,36 @@ function ProjectSummary({ selectedComponents }: ProjectSummaryProps) {
   return (
     <div className="project-summary">
       <h3>Project Summary</h3>
-      
-      <div className="summary-item">
-        <span>Total Cost:</span>
-        <strong>${totalCost.toFixed(2)}</strong>
-      </div>
+      <div className="summary-stats">
+        <div className="summary-item">
+          <span>Total Cost:</span>
+          <strong>${totalCost.toFixed(2)}</strong>
+        </div>
 
-      <div className="summary-item">
-        <span>Total RMS Wattage:</span>
-        <strong>{totalRms}W</strong>
-      </div>
+        <div className="summary-item">
+          <span>Total RMS Wattage:</span>
+          <strong>{totalRms}W</strong>
+        </div>
 
-      <div className="summary-item">
-        <span>Total Peak Wattage:</span>
-        <strong>{totalPeak}W</strong>
+        <div className="summary-item">
+          <span>Total Peak Wattage:</span>
+          <strong>{totalPeak}W</strong>
+        </div>
       </div>
 
       <div className="selected-components-list">
         <h4>Selected Items:</h4>
-        <ul>
-          {selectedComponents.map((comp, index) => (
-            <li key={`${comp.id}-${index}`}>{comp.name}</li>
-          ))}
-        </ul>
+        {selectedComponents.length > 0 ? (
+          <ul>
+            {selectedComponents.map((comp, index) => (
+              <li key={`${comp.id}-${index}`}>{comp.name}</li>
+            ))}
+          </ul>
+        ) : (
+          <p className="no-items-message">No components added yet.</p>
+        )}
       </div>
     </div>
   );
-}
 
 export default ProjectSummary;

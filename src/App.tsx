@@ -57,7 +57,10 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<'home' | 'vehicle-selection' | 'project'>('home');
+<<<<<<< HEAD
   const [selectedCorp, setSelectedCorp] = useState<VehicleCorporation | null>(null);
+=======
+>>>>>>> fe1dd852b3a368d5e69e9c237a65f0e3ca2725f0
   const [selectedMake, setSelectedMake] = useState<string | null>(null);
   const [selectedComponents, setSelectedComponents] = useState<AudioComponent[]>([]);
   const [vehicleSpecs, setVehicleSpecs] = useState<any>(null);
@@ -122,7 +125,10 @@ function App() {
     setSelectedMake(null);
     setVehicleSpecs(null);
     setView('vehicle-selection');
+<<<<<<< HEAD
     setSelectedCorp(null); // Also reset selected corporation
+=======
+>>>>>>> fe1dd852b3a368d5e69e9c237a65f0e3ca2725f0
   };
 
   const renderContent = () => {
@@ -138,6 +144,7 @@ function App() {
           </div>
         );
       case 'vehicle-selection':
+<<<<<<< HEAD
         if (loading) return <p>Loading vehicle list...</p>;
         if (error) return <p className="error">{error}</p>;
 
@@ -163,6 +170,26 @@ function App() {
           </div>
         );
 
+=======
+        return (
+          <div className="vehicle-list">
+            {loading && <p>Loading vehicle list...</p>}
+            {error && <p className="error">{error}</p>}
+            {vehicleData.map(corp => (
+              <details key={corp.corporation} className="corporation-item">
+                <summary>{corp.corporation}</summary>
+                <ul>
+                  {corp.makes.map((make, index) => (
+                    <li key={index} onClick={() => handleSelectMake(make)}>
+                      {make}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ))}
+          </div>
+        );
+>>>>>>> fe1dd852b3a368d5e69e9c237a65f0e3ca2725f0
       case 'project':
         return (
           <div>
