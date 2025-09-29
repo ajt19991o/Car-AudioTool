@@ -1,9 +1,5 @@
-
-import { useState, useEffect } from 'react';
-
-interface WireGaugeCalculatorProps {
-  totalRms: number;
-}
+import { useState, useEffect, useMemo } from 'react';
+import { useAppStore } from '../state/useAppStore';
 
 // AWG chart with cross-sectional area in mm^2
 const awgData = [
@@ -14,39 +10,48 @@ const awgData = [
   { awg: 16, area: 1.31 }, { awg: 18, area: 0.823 },
 ];
 
-function WireGaugeCalculator({ totalRms }: WireGaugeCalculatorProps) {
+function WireGaugeCalculator() {
+  const selectedComponents = useAppStore(state => state.selectedComponents);
+  const wiringEstimate = useAppStore(state => state.wiringEstimate);
+  const totalRms = useMemo(
+    () => selectedComponents.reduce((total, comp) => total + (comp.specs?.rms_wattage || 0), 0),
+    [selectedComponents],
+  );
   const [length, setLength] = useState<number>(10);
   const [wattage, setWattage] = useState<number>(totalRms);
-  const [recommendedGauge, setRecommendedGauge] = useState<number | string>('N/A');
-  const [recommendedFuse, setRecommendedFuse] = useState<number | string>('N/A');
+  const [recommendedGauge, setRecommendedGauge] = useState<string>('N/A');
+  const [recommendedFuse, setRecommendedFuse] = useState<string>('N/A');
 
   useEffect(() => {
     setWattage(totalRms);
   }, [totalRms]);
 
   useEffect(() => {
-    if (wattage > 0 && length > 0) {
-      const amps = wattage / 13.8; // Calculate current
-      const voltageDropTarget = 13.8 * 0.04; // 4% voltage drop
-      const resistivityOfCopper = 1.724e-8; // Ohm-meters
-      const lengthInMeters = length * 0.3048; // Convert feet to meters
+    if (wiringEstimate?.powerRunFeet) {
+      setLength(wiringEstimate.powerRunFeet);
+    }
+  }, [wiringEstimate]);
 
-      // Calculate required cross-sectional area in m^2
+  useEffect(() => {
+    if (wattage > 0 && length > 0) {
+      const amps = wattage / 13.8;
+      const voltageDropTarget = 13.8 * 0.04;
+      const resistivityOfCopper = 1.724e-8;
+      const lengthInMeters = length * 0.3048;
+
       const requiredAreaM2 = (resistivityOfCopper * lengthInMeters * amps) / voltageDropTarget;
-      const requiredAreaMm2 = requiredAreaM2 * 1e6; // Convert to mm^2
+      const requiredAreaMm2 = requiredAreaM2 * 1e6;
 
       const suitableGauge = awgData.find(g => g.area >= requiredAreaMm2);
 
       if (suitableGauge) {
         setRecommendedGauge(`${suitableGauge.awg} AWG`);
       } else {
-        setRecommendedGauge('Too large'); // Or handle as an error
+        setRecommendedGauge('Too large');
       }
 
-      // Calculate recommended fuse size (125% of continuous current)
-      const fuseSize = Math.ceil(amps * 1.25 / 5) * 5; // Round up to nearest 5A
+      const fuseSize = Math.ceil(amps * 1.25 / 5) * 5;
       setRecommendedFuse(`${fuseSize}A`);
-
     } else {
       setRecommendedGauge('N/A');
       setRecommendedFuse('N/A');
@@ -59,7 +64,7 @@ function WireGaugeCalculator({ totalRms }: WireGaugeCalculatorProps) {
       <div className="calculator-inputs">
         <div className="input-group">
           <label>Total RMS Wattage</label>
-          <input 
+          <input
             type="number"
             value={wattage}
             onChange={e => setWattage(Number(e.target.value))}
@@ -69,7 +74,7 @@ function WireGaugeCalculator({ totalRms }: WireGaugeCalculatorProps) {
         <div className="input-group">
           <label>Wire Length (feet)</label>
           <div className="slider-group">
-            <input 
+            <input
               type="range"
               min="1"
               max="30"

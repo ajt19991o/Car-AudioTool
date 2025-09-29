@@ -16,3 +16,19 @@ export interface AudioComponent {
   };
   purchase_links?: { vendor: string; url: string }[];
 }
+
+export interface VehicleSpecs {
+  years: number[];
+  speakers: Record<string, string>;
+  cabinDimensions?: {
+    frontToRearLength?: number;
+    width?: number;
+    height?: number;
+  };
+}
+
+export interface VehicleFitmentSummary {
+  recommendedSpeakers: { location: string; size: string }[];
+  compatibleComponentTypes: string[];
+  notes?: string;
+}

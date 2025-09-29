@@ -1,20 +1,23 @@
 
 import { useState, useEffect } from 'react';
 import { type AudioComponent } from '../types';
+import { useAppStore } from '../state/useAppStore';
 
 interface ComponentBrowserProps {
-  onAddComponent: (component: AudioComponent) => void;
-  vehicleSpecs: any;
+  onComponentAdd?: (component: AudioComponent) => void;
 }
 
-const categories = ['All', 'Head Unit', 'Amplifier', 'Component Speakers', 'Coaxial Speakers', 'Subwoofer', 'DSP'];
+const categories = ['All', 'Head Unit', 'Amplifier', 'Component Speakers', 'Coaxial Speakers', 'Subwoofer', 'DSP', 'Accessories'];
 
-function ComponentBrowser({ onAddComponent, vehicleSpecs }: ComponentBrowserProps) {
+function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
   const [components, setComponents] = useState<AudioComponent[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const addComponent = useAppStore(state => state.addComponent);
+  const fitment = useAppStore(state => state.fitment);
+  const vehicleSelection = useAppStore(state => state.vehicleSelection);
 
   useEffect(() => {
     fetch('http://localhost:3001/api/components')
@@ -33,12 +36,15 @@ function ComponentBrowser({ onAddComponent, vehicleSpecs }: ComponentBrowserProp
       });
   }, []);
 
-  const allowedSpeakerSizes = vehicleSpecs ? Object.values(vehicleSpecs.speakers) : null;
+  const allowedSpeakerSizes = fitment?.speakers.map(item => item.size.toLowerCase()) ?? null;
 
   const filteredComponents = components.filter(comp => {
     // Vehicle spec filter
-    if (comp.type === 'speaker-set' && allowedSpeakerSizes && !allowedSpeakerSizes.includes(comp.specs?.size)) {
-      return false;
+    if (comp.category.toLowerCase().includes('speaker') && allowedSpeakerSizes) {
+      const size = comp.specs?.size?.toLowerCase();
+      if (!size || !allowedSpeakerSizes.includes(size)) {
+        return false;
+      }
     }
     // Category filter
     if (selectedCategory !== 'All' && comp.category !== selectedCategory) {
@@ -79,6 +85,9 @@ function ComponentBrowser({ onAddComponent, vehicleSpecs }: ComponentBrowserProp
             <div className="component-info">
               <strong>{comp.name}</strong>
               <span>{comp.category}</span>
+              {vehicleSelection.make && comp.category.toLowerCase().includes('speaker') && comp.specs?.size && (
+                <small className="fitment-detail">Fits {vehicleSelection.make}: {comp.specs.size}</small>
+              )}
             </div>
             <div className="component-actions">
               <span>${comp.price.toFixed(2)}</span>
@@ -89,7 +98,14 @@ function ComponentBrowser({ onAddComponent, vehicleSpecs }: ComponentBrowserProp
               >
                 Shop
               </button>
-              <button onClick={() => onAddComponent(comp)}>Add</button>
+              <button
+                onClick={() => {
+                  addComponent(comp);
+                  onComponentAdd?.(comp);
+                }}
+              >
+                Add
+              </button>
             </div>
           </div>
         ))}

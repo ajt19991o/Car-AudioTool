@@ -3,8 +3,9 @@ import './CustomNode.css';
 
 interface CustomNodeData {
   label: string;
-  onRemove: (id: string) => void;
-  id: string;
+  onRemove: (payload: { nodeId: string; componentId?: string }) => void;
+  nodeId: string;
+  componentId?: string;
 }
 
 function CustomNode({ data }: { data: CustomNodeData }) {
@@ -13,7 +14,10 @@ function CustomNode({ data }: { data: CustomNodeData }) {
       <Handle type="target" position={Position.Top} />
       <div className="custom-node-content">
         <div className="custom-node-label">{data.label}</div>
-        <button className="custom-node-delete-button" onClick={() => data.onRemove(data.id)}>
+        <button
+          className="custom-node-delete-button"
+          onClick={() => data.onRemove({ nodeId: data.nodeId, componentId: data.componentId })}
+        >
           ×
         </button>
       </div>
