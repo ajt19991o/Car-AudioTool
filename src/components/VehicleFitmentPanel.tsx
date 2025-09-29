@@ -26,38 +26,65 @@ function VehicleFitmentPanel() {
   const wiringEstimateSource = useAppStore(state => state.wiringEstimateSource);
   const setWiringEstimate = useAppStore(state => state.setWiringEstimate);
   const restoreAutoWiringEstimate = useAppStore(state => state.restoreAutoWiringEstimate);
-  const [savedManual, setSavedManual] = useState(() => {
-    if (typeof window === 'undefined') return null;
+  const [overrides, setOverrides] = useState<WiringOverridesMap>(() => {
+    if (typeof window === 'undefined') return {};
     try {
       const raw = window.localStorage.getItem(WIRING_STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
+      if (!raw) return {};
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object' && 'powerRunFeet' in parsed) {
+        return {};
+      }
+      return parsed ?? {};
     } catch (error) {
       console.warn('Failed to parse stored wiring overrides', error);
-      return null;
+      return {};
     }
   });
 
-  const effectiveEstimate = wiringEstimate ?? wiringEstimateAuto;
+  const overrideKey = vehicleSelection.make && vehicleSelection.model
+    ? `${vehicleSelection.make.toLowerCase()}::${vehicleSelection.model.toLowerCase()}`
+    : null;
+
+  const storedOverride = overrideKey ? overrides[overrideKey] : undefined;
+
+  const effectiveEstimate = wiringEstimate
+    ?? wiringEstimateAuto
+    ?? storedOverride
+    ?? createDefaultWiring();
+
+  const persistOverrides = (next: WiringOverridesMap) => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(WIRING_STORAGE_KEY, JSON.stringify(next));
+    }
+  };
+
+  const applyManualOverride = (updated: WiringOverride) => {
+    setWiringEstimate(updated, { source: 'manual' });
+    if (!overrideKey) return;
+    setOverrides(prev => {
+      const next = { ...prev, [overrideKey]: updated };
+      persistOverrides(next);
+      return next;
+    });
+  };
 
   const handleManualChange = (field: 'powerRunFeet' | 'speakerRunFeet' | 'remoteTurnOnFeet') => (event: ChangeEvent<HTMLInputElement>) => {
     const nextValue = Math.max(1, Math.round(Number(event.target.value) || 0));
     const base = {
-      powerRunFeet: effectiveEstimate?.powerRunFeet ?? 16,
-      speakerRunFeet: effectiveEstimate?.speakerRunFeet ?? 40,
-      remoteTurnOnFeet: effectiveEstimate?.remoteTurnOnFeet ?? 14,
+      ...(wiringEstimate ?? wiringEstimateAuto ?? storedOverride ?? createDefaultWiring()),
     };
     const updated = { ...base, [field]: nextValue };
-    setWiringEstimate(updated, { source: 'manual' });
-    setSavedManual(updated);
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(WIRING_STORAGE_KEY, JSON.stringify(updated));
-    }
+    applyManualOverride(updated);
   };
 
   useEffect(() => {
-    if (!savedManual) return;
-    setWiringEstimate(savedManual, { source: 'manual' });
-  }, [savedManual, setWiringEstimate, vehicleSelection.make, vehicleSelection.model]);
+    if (!overrideKey) return;
+    const saved = overrides[overrideKey];
+    if (saved && wiringEstimateSource === 'auto') {
+      setWiringEstimate(saved, { source: 'manual' });
+    }
+  }, [overrideKey, overrides, wiringEstimateSource, setWiringEstimate]);
 
   const speakerSummary = useMemo(() => {
     if (!fitment?.speakers) return [] as { location: string; size: string }[];
@@ -155,12 +182,15 @@ function VehicleFitmentPanel() {
                 className="reset-wiring-button"
                 onClick={() => {
                   restoreAutoWiringEstimate();
-                  setSavedManual(null);
-                  if (typeof window !== 'undefined') {
-                    window.localStorage.removeItem(WIRING_STORAGE_KEY);
-                  }
+                  if (!overrideKey) return;
+                  setOverrides(prev => {
+                    const next = { ...prev };
+                    delete next[overrideKey];
+                    persistOverrides(next);
+                    return next;
+                  });
                 }}
-                disabled={!wiringEstimateAuto}
+                disabled={!wiringEstimateAuto && !storedOverride}
               >
                 Reset to vehicle estimate
               </button>
