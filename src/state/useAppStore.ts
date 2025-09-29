@@ -8,6 +8,66 @@ import type {
 } from '../types';
 import { guideChapters, guideResources } from '../data/guideContent';
 
+const LIBRARY_STORAGE_KEY = 'planner-component-library';
+
+const defaultLibrary: LibraryComponent[] = [
+  { id: 'lib-amp', name: 'Amplifier', type: 'amplifier', category: 'Power' },
+  { id: 'lib-sub', name: 'Subwoofer', type: 'subwoofer', category: 'Low Frequency' },
+  { id: 'lib-speaker', name: 'Door Speaker', type: 'speaker-set', category: 'Mid/High' },
+  { id: 'lib-dsp', name: 'DSP/Processor', type: 'dsp', category: 'Signal' },
+  { id: 'lib-wiring', name: 'Power Wiring Kit', type: 'wiring', category: 'Power Distribution' },
+];
+
+function getInitialLibraryComponents(): LibraryComponent[] {
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = window.localStorage.getItem(LIBRARY_STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored) as LibraryComponent[];
+      }
+    } catch (error) {
+      console.warn('Failed to read component library from storage', error);
+      window.localStorage.removeItem(LIBRARY_STORAGE_KEY);
+    }
+  }
+  return defaultLibrary;
+}
+
+function persistLibrary(components: LibraryComponent[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(LIBRARY_STORAGE_KEY, JSON.stringify(components));
+  } catch (error) {
+    console.warn('Failed to persist component library', error);
+  }
+}
+
+function calculateBudgetTotals(components: AudioComponent[]) {
+  let componentTotal = 0;
+  let wiringTotal = 0;
+  let accessoriesTotal = 0;
+
+  components.forEach((component) => {
+    const price = component.price ?? 0;
+    const category = (component.category || '').toLowerCase();
+    const type = (component.type || '').toLowerCase();
+
+    if (type.includes('wiring') || category.includes('wiring') || category.includes('installation')) {
+      wiringTotal += price;
+    } else if (type.includes('accessor') || category.includes('accessor')) {
+      accessoriesTotal += price;
+    } else {
+      componentTotal += price;
+    }
+  });
+
+  return {
+    componentTotal,
+    wiringTotal,
+    accessoriesTotal,
+  };
+}
+
 type AppView = 'home' | 'vehicle-selection' | 'project' | 'learn' | 'diagram-lab';
 
 type Theme = 'light' | 'dark';
@@ -229,62 +289,3 @@ export const useAppStore = create<AppState>((set) => ({
   setSafetyChecks: (issues) => set({ safetyChecks: issues }),
   updateBudget: (budget) => set((state) => ({ budget: { ...state.budget, ...budget } })),
 }));
-
-const LIBRARY_STORAGE_KEY = 'planner-component-library';
-
-const defaultLibrary: LibraryComponent[] = [
-  { id: 'lib-amp', name: 'Amplifier', type: 'amplifier', category: 'Power' },
-  { id: 'lib-sub', name: 'Subwoofer', type: 'subwoofer', category: 'Low Frequency' },
-  { id: 'lib-speaker', name: 'Door Speaker', type: 'speaker-set', category: 'Mid/High' },
-  { id: 'lib-dsp', name: 'DSP/Processor', type: 'dsp', category: 'Signal' },
-  { id: 'lib-wiring', name: 'Power Wiring Kit', type: 'wiring', category: 'Power Distribution' },
-];
-
-function getInitialLibraryComponents(): LibraryComponent[] {
-  if (typeof window !== 'undefined') {
-    try {
-      const stored = window.localStorage.getItem(LIBRARY_STORAGE_KEY);
-      if (stored) {
-        return JSON.parse(stored) as LibraryComponent[];
-      }
-    } catch (error) {
-      console.warn('Failed to read component library from storage', error);
-    }
-  }
-  return defaultLibrary;
-}
-
-function persistLibrary(components: LibraryComponent[]) {
-  if (typeof window === 'undefined') return;
-  try {
-    window.localStorage.setItem(LIBRARY_STORAGE_KEY, JSON.stringify(components));
-  } catch (error) {
-    console.warn('Failed to persist component library', error);
-  }
-}
-
-function calculateBudgetTotals(components: AudioComponent[]) {
-  let componentTotal = 0;
-  let wiringTotal = 0;
-  let accessoriesTotal = 0;
-
-  components.forEach((component) => {
-    const price = component.price ?? 0;
-    const category = (component.category || '').toLowerCase();
-    const type = (component.type || '').toLowerCase();
-
-    if (type.includes('wiring') || category.includes('wiring') || category.includes('installation')) {
-      wiringTotal += price;
-    } else if (type.includes('accessor') || category.includes('accessor')) {
-      accessoriesTotal += price;
-    } else {
-      componentTotal += price;
-    }
-  });
-
-  return {
-    componentTotal,
-    wiringTotal,
-    accessoriesTotal,
-  };
-}
