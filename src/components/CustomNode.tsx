@@ -1,8 +1,13 @@
-import React from 'react';
 import { Handle, Position } from 'reactflow';
 import './CustomNode.css';
 
-function CustomNode({ data }) {
+interface CustomNodeData {
+  label: string;
+  onRemove: (id: string) => void;
+  id: string;
+}
+
+function CustomNode({ data }: { data: CustomNodeData }) {
   return (
     <div className="custom-node">
       <Handle type="target" position={Position.Top} />

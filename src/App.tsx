@@ -1,29 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Node, Edge, useNodesState, useEdgesState, addEdge } from 'reactflow';
+import { type Node, type Edge, useNodesState, useEdgesState, addEdge, type Connection } from 'reactflow';
 import './App.css';
 import WiringDiagram from './components/WiringDiagram';
 import ComponentBrowser from './components/ComponentBrowser';
 import ProjectSummary from './components/ProjectSummary';
 import WireGaugeCalculator from './components/WireGaugeCalculator';
 import CustomNode from './components/CustomNode';
-
-// Define data structures
-interface VehicleCorporation {
-  corporation: string;
-  makes: string[];
-}
-interface AudioComponent {
-  id: string;
-  name: string;
-  type: string;
-  category: string;
-  price: number;
-  specs: {
-    rms_wattage?: number;
-    peak_wattage?: number;
-    size?: string;
-  };
-}
+import { type VehicleCorporation, type AudioComponent } from './types';
 
 const initialNodes: Node[] = [
   { id: '1', type: 'input', data: { label: 'Car Battery' }, position: { x: 250, y: 0 } },
@@ -69,7 +52,7 @@ function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const onConnect = (params) => setEdges((eds) => addEdge(params, eds));
+  const onConnect = (params: Connection) => setEdges((eds) => addEdge(params, eds));
 
   const handleRemoveComponent = (nodeIdToRemove: string) => {
     setNodes((nds) => nds.filter((node) => node.id !== nodeIdToRemove));
@@ -113,7 +96,7 @@ function App() {
   const totalRms = selectedComponents.reduce((total, comp) => total + (comp.specs?.rms_wattage || 0), 0);
 
   const handleAddComponent = (component: AudioComponent) => {
-    const newNodeId = `node-${component.id}`;
+    const newNodeId = `node-${nodeId++}`;
     setSelectedComponents(prev => [...prev, component]);
 
     const newNode: Node = {

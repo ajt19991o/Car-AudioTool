@@ -1,5 +1,5 @@
 
-import ReactFlow, { MiniMap, Controls, Background, Node, Edge, OnNodesChange, OnEdgesChange, OnConnect, ReactFlowProvider } from 'reactflow';
+import ReactFlow, { MiniMap, Controls, Background, type Node, type Edge, type OnNodesChange, type OnEdgesChange, type OnConnect, ReactFlowProvider, BackgroundVariant } from 'reactflow';
 
 interface WiringDiagramProps {
   nodes: Node[];
@@ -25,7 +25,7 @@ function WiringDiagram({ nodes, edges, onNodesChange, onEdgesChange, onConnect, 
         >
           <Controls />
           <MiniMap />
-          <Background variant="dots" gap={12} size={1} />
+          <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
         </ReactFlow>
       </ReactFlowProvider>
     </div>

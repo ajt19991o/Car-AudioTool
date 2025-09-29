@@ -1,18 +1,6 @@
 
 import { useState, useEffect } from 'react';
-
-// Define the structure of a component
-interface AudioComponent {
-  id: string;
-  name: string;
-  type: string;
-  category: string;
-  price: number;
-  specs?: {
-    size?: string;
-  };
-  purchase_links?: { vendor: string; url: string }[];
-}
+import { type AudioComponent } from '../types';
 
 interface ComponentBrowserProps {
   onAddComponent: (component: AudioComponent) => void;
@@ -97,7 +85,7 @@ function ComponentBrowser({ onAddComponent, vehicleSpecs }: ComponentBrowserProp
               <button 
                 className="shop-button"
                 disabled={!comp.purchase_links || comp.purchase_links.length === 0}
-                onClick={() => window.open(comp.purchase_links[0].url, '_blank')}
+                onClick={() => comp.purchase_links && window.open(comp.purchase_links[0].url, '_blank')}
               >
                 Shop
               </button>
