@@ -5,24 +5,20 @@ interface WireGaugeCalculatorProps {
   totalRms: number;
 }
 
-// Simplified AWG chart based on current and length for 4% voltage drop at 13.8V
-// This is a data structure representing a standard lookup table.
-const awgChart = [
-  { amps: 20, gauges: [16, 14, 12, 12, 10, 10, 8] },
-  { amps: 35, gauges: [12, 10, 8, 8, 6, 6, 4] },
-  { amps: 50, gauges: [10, 8, 6, 6, 4, 4, 4] },
-  { amps: 65, gauges: [8, 6, 4, 4, 4, 2, 2] },
-  { amps: 85, gauges: [6, 4, 4, 2, 2, 2, 0] },
-  { amps: 105, gauges: [4, 4, 2, 2, 0, 0, 0] },
-  { amps: 125, gauges: [4, 2, 2, 0, 0, 0, 0] },
-  { amps: 150, gauges: [2, 2, 0, 0, 0, 0, 0] },
+// AWG chart with cross-sectional area in mm^2
+const awgData = [
+  { awg: 0, area: 53.48 }, { awg: 1, area: 42.41 }, { awg: 2, area: 33.63 },
+  { awg: 3, area: 26.67 }, { awg: 4, area: 21.15 }, { awg: 5, area: 16.77 },
+  { awg: 6, area: 13.30 }, { awg: 7, area: 10.55 }, { awg: 8, area: 8.37 },
+  { awg: 10, area: 5.26 }, { awg: 12, area: 3.31 }, { awg: 14, area: 2.08 },
+  { awg: 16, area: 1.31 }, { awg: 18, area: 0.823 },
 ];
-const lengthBrackets = [4, 7, 10, 13, 16, 19, 22];
 
 function WireGaugeCalculator({ totalRms }: WireGaugeCalculatorProps) {
   const [length, setLength] = useState<number>(10);
   const [wattage, setWattage] = useState<number>(totalRms);
   const [recommendedGauge, setRecommendedGauge] = useState<number | string>('N/A');
+  const [recommendedFuse, setRecommendedFuse] = useState<number | string>('N/A');
 
   useEffect(() => {
     setWattage(totalRms);
@@ -30,23 +26,30 @@ function WireGaugeCalculator({ totalRms }: WireGaugeCalculatorProps) {
 
   useEffect(() => {
     if (wattage > 0 && length > 0) {
-      const amps = wattage / 13.8;
-      
-      const lengthIndex = lengthBrackets.findIndex(bracket => length <= bracket);
-      if (lengthIndex === -1) {
-        setRecommendedGauge('Too long');
-        return;
+      const amps = wattage / 13.8; // Calculate current
+      const voltageDropTarget = 13.8 * 0.04; // 4% voltage drop
+      const resistivityOfCopper = 1.724e-8; // Ohm-meters
+      const lengthInMeters = length * 0.3048; // Convert feet to meters
+
+      // Calculate required cross-sectional area in m^2
+      const requiredAreaM2 = (resistivityOfCopper * lengthInMeters * amps) / voltageDropTarget;
+      const requiredAreaMm2 = requiredAreaM2 * 1e6; // Convert to mm^2
+
+      const suitableGauge = awgData.find(g => g.area >= requiredAreaMm2);
+
+      if (suitableGauge) {
+        setRecommendedGauge(`${suitableGauge.awg} AWG`);
+      } else {
+        setRecommendedGauge('Too large'); // Or handle as an error
       }
 
-      const chartRow = awgChart.find(row => amps <= row.amps);
-      if (!chartRow) {
-        setRecommendedGauge('Too high');
-        return;
-      }
+      // Calculate recommended fuse size (125% of continuous current)
+      const fuseSize = Math.ceil(amps * 1.25 / 5) * 5; // Round up to nearest 5A
+      setRecommendedFuse(`${fuseSize}A`);
 
-      setRecommendedGauge(`${chartRow.gauges[lengthIndex]} AWG`);
     } else {
       setRecommendedGauge('N/A');
+      setRecommendedFuse('N/A');
     }
   }, [wattage, length]);
 
@@ -89,7 +92,12 @@ function WireGaugeCalculator({ totalRms }: WireGaugeCalculatorProps) {
         <span>Recommended Gauge:</span>
         <strong>{recommendedGauge}</strong>
       </div>
+      <div className="calculator-result fuse-result">
+        <span>Recommended Fuse:</span>
+        <strong>{recommendedFuse}</strong>
+      </div>
     </div>
   );
+}
 
 export default WireGaugeCalculator;
