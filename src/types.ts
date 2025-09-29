@@ -1,5 +1,3 @@
-import { type Node, type Edge } from 'reactflow';
-
 export interface VehicleCorporation {
   corporation: string;
   makes: string[];

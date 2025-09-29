@@ -1,13 +1,4 @@
-// Define the structure of a component
-interface AudioComponent {
-  id: string;
-  name: string;
-  price: number;
-  specs: {
-    rms_wattage?: number;
-    peak_wattage?: number;
-  };
-}
+import type { AudioComponent } from '../types';
 
 interface ProjectSummaryProps {
   selectedComponents: AudioComponent[];
