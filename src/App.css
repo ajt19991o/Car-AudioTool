@@ -42,6 +42,11 @@
   --color-disabled: #555555;
   --color-shop-text: #ffffff;
   --color-error: #ff6b6b;
+  --color-subtle-bg: #f7f9ff;
+  --color-subtle-border: #dfe4f3;
+  --color-highlight-bg: #f3f6ff;
+  --color-highlight-border: #dfe4f3;
+  --color-warning-text: #9f5e00;
 }
 
 body {
@@ -91,6 +96,11 @@ body.theme-dark {
   --color-disabled: #4a4f5d;
   --color-shop-text: #0c1424;
   --color-error: #ff7f7f;
+  --color-subtle-bg: #1c2535;
+  --color-subtle-border: #2a3346;
+  --color-highlight-bg: #222d43;
+  --color-highlight-border: #2a3346;
+  --color-warning-text: #ffdca6;
 }
 
 .App {
@@ -366,11 +376,11 @@ body.theme-dark {
 .tutorials-panel,
 .safety-panel,
 .fitment-panel {
-  background-color: #ffffff;
+  background-color: var(--color-card-bg);
   padding: 1.5rem;
   border-radius: 14px;
-  border: 1px solid #e3e7f4;
-  box-shadow: 0 18px 36px rgba(34, 52, 93, 0.1);
+  border: 1px solid var(--color-card-border);
+  box-shadow: var(--shadow-elevated);
 }
 
 .section-header {
@@ -399,13 +409,13 @@ body.theme-dark {
 
 .vehicle-setup-status {
   font-size: 0.85rem;
-  color: #5f6c85;
+  color: var(--color-muted);
 }
 
 .vehicle-setup-error {
-  background: rgba(255, 174, 0, 0.12);
-  border: 1px solid rgba(255, 174, 0, 0.5);
-  color: #9f5e00;
+  background: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  color: var(--color-warning-text);
   padding: 0.35rem 0.75rem;
   border-radius: 8px;
   cursor: pointer;
@@ -422,20 +432,20 @@ body.theme-dark {
   flex-direction: column;
   gap: 0.35rem;
   font-size: 0.85rem;
-  color: #5f6c85;
+  color: var(--color-muted);
 }
 
 .vehicle-selectors select {
-  background-color: #ffffff;
-  border: 1px solid #cbd5f0;
-  color: #1a2330;
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-input-text);
   padding: 0.55rem 0.65rem;
   border-radius: 10px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .vehicle-selectors select:focus {
-  border-color: #7c92ff;
+  border-color: var(--color-selection-border);
   box-shadow: 0 0 0 3px rgba(124, 146, 255, 0.25);
   outline: none;
 }
@@ -446,8 +456,8 @@ body.theme-dark {
 }
 
 .vehicle-tag {
-  background-color: rgba(76, 130, 255, 0.2);
-  color: #e4edff;
+  background-color: var(--color-chip-bg);
+  color: var(--color-chip-text);
   border-radius: 999px;
   padding: 0.25rem 0.75rem;
   font-size: 0.85rem;
@@ -472,9 +482,9 @@ body.theme-dark {
 .category-select,
 .budget-form input,
 .budget-form button {
-  background-color: #ffffff;
-  border: 1px solid #cbd5f0;
-  color: #1a2330;
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-input-text);
   padding: 0.6rem 0.75rem;
   border-radius: 10px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -492,7 +502,7 @@ body.theme-dark {
 .category-select:focus,
 .budget-form input:focus,
 .budget-form button:focus {
-  border-color: #7c92ff;
+  border-color: var(--color-selection-border);
   box-shadow: 0 0 0 3px rgba(124, 146, 255, 0.25);
   outline: none;
 }
@@ -507,13 +517,13 @@ body.theme-dark {
   flex-direction: column;
   gap: 0.35rem;
   font-size: 0.85rem;
-  color: #5f6c85;
+  color: var(--color-muted);
 }
 
 .price-filter input {
-  background-color: #ffffff;
-  border: 1px solid #cbd5f0;
-  color: #1a2330;
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-input-text);
   padding: 0.5rem;
   border-radius: 10px;
   width: 140px;
@@ -524,7 +534,7 @@ body.theme-dark {
   flex-direction: column;
   gap: 0.35rem;
   font-size: 0.85rem;
-  color: #5f6c85;
+  color: var(--color-muted);
 }
 
 .tag-chips {
@@ -535,8 +545,8 @@ body.theme-dark {
 
 .tag-chip {
   background-color: transparent;
-  border: 1px solid #cbd5f0;
-  color: #3654b3;
+  border: 1px solid var(--color-input-border);
+  color: var(--color-link);
   padding: 0.3rem 0.6rem;
   border-radius: 999px;
   cursor: pointer;
@@ -544,15 +554,15 @@ body.theme-dark {
 }
 
 .tag-chip--active {
-  background-color: rgba(76, 130, 255, 0.2);
-  border-color: #4c82ff;
-  color: #1a2330;
+  background-color: var(--color-chip-bg);
+  border-color: var(--color-chip-border);
+  color: var(--color-chip-text);
 }
 
 .filter-info {
   font-size: 0.85rem;
   font-style: italic;
-  color: #a0a0a0;
+  color: var(--color-panel-muted);
   margin: -0.5rem 0 1rem;
   text-align: center;
 }
@@ -567,10 +577,10 @@ body.theme-dark {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f7f9ff;
+  background-color: var(--color-subtle-bg);
   padding: 0.95rem 1.1rem;
   border-radius: 12px;
-  border: 1px solid #dfe4f3;
+  border: 1px solid var(--color-subtle-border);
 }
 
 .component-info {
@@ -585,17 +595,17 @@ body.theme-dark {
 
 .component-info span {
   font-size: 0.85rem;
-  color: #5f6c85;
+  color: var(--color-muted);
 }
 
 .component-specs {
   font-size: 0.8rem;
-  color: #8ab8ff;
+  color: var(--color-link);
 }
 
 .component-description {
   font-size: 0.85rem;
-  color: #d0d0d0;
+  color: var(--color-panel-muted);
   margin: 0.2rem 0 0.35rem;
 }
 
@@ -607,15 +617,15 @@ body.theme-dark {
 
 .component-tags span {
   font-size: 0.75rem;
-  background-color: rgba(76, 130, 255, 0.15);
-  color: #3654b3;
+  background-color: var(--color-tag-bg);
+  color: var(--color-tag-text);
   padding: 0.2rem 0.55rem;
   border-radius: 999px;
 }
 
 .fitment-detail {
   font-size: 0.75rem;
-  color: #8ec4ff;
+  color: var(--color-link);
 }
 
 .fitment-panel h3 {
@@ -634,12 +644,12 @@ body.theme-dark {
   justify-content: space-between;
   align-items: center;
   font-size: 0.9rem;
-  color: #bdbdbd;
+  color: var(--color-muted);
 }
 
 .fitment-vehicle {
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text);
 }
 
 .fitment-speakers {
@@ -654,10 +664,10 @@ body.theme-dark {
 .fitment-speakers li {
   display: flex;
   justify-content: space-between;
-  background-color: #f3f6ff;
+  background-color: var(--color-highlight-bg);
   padding: 0.65rem 0.85rem;
   border-radius: 10px;
-  border: 1px solid #dfe4f3;
+  border: 1px solid var(--color-highlight-border);
 }
 
 .fitment-speakers strong {
@@ -665,13 +675,13 @@ body.theme-dark {
 }
 
 .fitment-speakers span {
-  color: #3654b3;
+  color: var(--color-link);
   font-weight: 600;
 }
 
 .fitment-empty {
   font-style: italic;
-  color: #6f7a92;
+  color: var(--color-panel-muted);
 }
 
 .fitment-wiring h4 {
@@ -687,19 +697,19 @@ body.theme-dark {
 
 .fitment-wiring dt {
   font-size: 0.85rem;
-  color: #ccc;
+  color: var(--color-muted);
 }
 
 .fitment-wiring dd {
   margin: 0;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-text);
 }
 
 .fitment-note {
   margin-top: 0.75rem;
   font-size: 0.85rem;
-  color: #5f6c85;
+  color: var(--color-muted);
   line-height: 1.4;
 }
 
@@ -712,14 +722,14 @@ body.theme-dark {
 
 .fitment-wiring-adjust label {
   font-size: 0.8rem;
-  color: #5f6c85;
+  color: var(--color-muted);
 }
 
 .fitment-wiring-adjust input {
   margin-top: 0.3rem;
-  background-color: #ffffff;
-  border: 1px solid #cbd5f0;
-  color: #1a2330;
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-input-text);
   padding: 0.45rem;
   border-radius: 8px;
   width: 100%;
@@ -732,7 +742,7 @@ body.theme-dark {
   align-items: center;
   gap: 0.75rem;
   font-size: 0.8rem;
-  color: #5f6c85;
+  color: var(--color-muted);
 }
 
 .fitment-wiring-source {
@@ -740,9 +750,9 @@ body.theme-dark {
 }
 
 .reset-wiring-button {
-  background: none;
-  border: 1px solid #4c82ff;
-  color: #e4edff;
+  background: transparent;
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
   cursor: pointer;
@@ -766,9 +776,9 @@ body.theme-dark {
 }
 
 .component-item button {
-  background-color: #4c82ff;
+  background-color: var(--color-primary);
   border: none;
-  color: white;
+  color: var(--color-on-primary);
   padding: 0.48rem 1.1rem;
   border-radius: 999px;
   cursor: pointer;
@@ -777,27 +787,27 @@ body.theme-dark {
 }
 
 .component-item button:hover:not(:disabled) {
-  background-color: #3563c9;
+  background-color: var(--color-primary-hover);
   transform: translateY(-1px);
 }
 
 .shop-button {
-  background-color: #2db84c;
+  background-color: var(--color-success);
 }
 
 .shop-button:hover:not(:disabled) {
-  background-color: #23913d;
+  background-color: var(--color-success-hover);
 }
 
 .shop-button:disabled {
-  background-color: #555;
+  background-color: var(--color-disabled);
   cursor: not-allowed;
 }
 
 .empty-message {
   text-align: center;
   padding: 1.25rem 0;
-  color: #bdbdbd;
+  color: var(--color-panel-muted);
 }
 
 /* Project summary */
