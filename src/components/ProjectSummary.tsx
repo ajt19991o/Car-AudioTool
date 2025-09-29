@@ -52,5 +52,6 @@ function ProjectSummary({ selectedComponents }: ProjectSummaryProps) {
       </div>
     </div>
   );
+}
 
 export default ProjectSummary;
