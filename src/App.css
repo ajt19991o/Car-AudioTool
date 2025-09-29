@@ -804,6 +804,15 @@ body {
 
 .budget-form button {
   cursor: pointer;
+  background-color: #4c82ff;
+  border-color: #4c82ff;
+  color: #fff;
+  font-weight: 600;
+}
+
+.budget-form button:hover {
+  background-color: #3563c9;
+  border-color: #3563c9;
 }
 
 .budget-breakdown {
