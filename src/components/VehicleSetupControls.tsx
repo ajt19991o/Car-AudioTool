@@ -24,9 +24,10 @@ function VehicleSetupControls({ loading, error, onRetry }: VehicleSetupControlsP
   const handleModelChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const model = event.target.value;
     const matching = modelOptions.find(option => option.model === model);
+    const years = matching?.years ?? [];
     setVehicleSelection({
       model,
-      year: matching?.years && matching.years.length > 0 ? String(matching.years[0]) : undefined,
+      year: years.length > 0 ? String(years[years.length - 1]) : undefined,
       trim: matching?.trims && matching.trims.length > 0 ? matching.trims[0] : undefined,
     });
   };

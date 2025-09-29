@@ -20,6 +20,7 @@ import { useAppStore } from './state/useAppStore';
 import ThemeToggle from './components/ThemeToggle';
 import vehicleSpecsData from './data/vehicle_specs.json';
 import corporationMapData from './data/corporationMap.json';
+import { fetchModelsForMake } from './services/nhtsa';
 import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
 
 const initialNodes: Node[] = [
@@ -137,6 +138,8 @@ function App() {
   const [selectedCorp, setSelectedCorp] = useState<VehicleCorporation | null>(null);
   const [vehicleLoading, setVehicleLoading] = useState<boolean>(true);
   const [vehicleError, setVehicleError] = useState<string | null>(null);
+  const [modelLoading, setModelLoading] = useState<boolean>(false);
+  const [modelError, setModelError] = useState<string | null>(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -229,61 +232,58 @@ function App() {
     };
   }, [setCorporations]);
 
-  const loadModelOptions = useCallback(() => {
+  const loadModelOptions = useCallback(async () => {
     if (!vehicleSelection.make) {
       setModelOptions([]);
       return;
     }
 
-    const specsMap = vehicleSpecsData as Record<string, Record<string, VehicleSpecs>>;
-    const makeKey = Object.keys(specsMap).find(key => key.toLowerCase() === vehicleSelection.make?.toLowerCase());
+    setModelLoading(true);
+    setModelError(null);
 
-    if (!makeKey) {
-      setModelOptions([]);
-      return;
-    }
+    try {
+      const models = await fetchModelsForMake(vehicleSelection.make);
+      setModelOptions(models);
 
-    const modelsRecord = specsMap[makeKey];
-    const models = Object.entries(modelsRecord).map(([modelName, details]) => ({
-      model: modelName,
-      years: details.years ?? [],
-      trims: details.trims ?? [],
-    }));
+      if (models.length === 0) {
+        setVehicleSelection({ model: undefined, year: undefined, trim: undefined });
+        return;
+      }
 
-    setModelOptions(models);
+      const currentModelEntry = vehicleSelection.model
+        ? models.find(item => item.model.toLowerCase() === (vehicleSelection.model ?? '').toLowerCase())
+        : undefined;
 
-    if (models.length === 0) {
-      return;
-    }
+      const targetModel = currentModelEntry ?? models[0];
+      const nextSelection: Partial<typeof vehicleSelection> = {};
 
-    const currentModelEntry = models.find(item => item.model.toLowerCase() === (vehicleSelection.model ?? '').toLowerCase());
-    let nextSelection: Partial<typeof vehicleSelection> = {};
+      if (!currentModelEntry) {
+        nextSelection.model = targetModel.model;
+      }
 
-    if (!currentModelEntry) {
-      const fallback = models[0];
-      nextSelection = {
-        model: fallback.model,
-        year: fallback.years && fallback.years.length > 0 ? String(fallback.years[0]) : undefined,
-        trim: fallback.trims && fallback.trims.length > 0 ? fallback.trims[0] : undefined,
-      };
-    } else {
-      if (currentModelEntry.years && currentModelEntry.years.length > 0) {
+      if (targetModel.years && targetModel.years.length > 0) {
         const numericYear = vehicleSelection.year ? Number(vehicleSelection.year) : undefined;
-        if (!numericYear || !currentModelEntry.years.includes(numericYear)) {
-          nextSelection.year = String(currentModelEntry.years[0]);
+        if (!numericYear || !targetModel.years.includes(numericYear)) {
+          const latestYear = targetModel.years[targetModel.years.length - 1];
+          nextSelection.year = String(latestYear);
         }
+      } else {
+        nextSelection.year = undefined;
       }
-      if (currentModelEntry.trims && currentModelEntry.trims.length > 0) {
-        if (!vehicleSelection.trim || !currentModelEntry.trims.includes(vehicleSelection.trim)) {
-          nextSelection.trim = currentModelEntry.trims[0];
-        }
-      }
-    }
 
-    if (Object.keys(nextSelection).length > 0) {
-      setVehicleSelection(nextSelection);
+      nextSelection.trim = undefined;
+
+      if (Object.keys(nextSelection).length > 0) {
+        setVehicleSelection(nextSelection);
+      }
+    } catch (error) {
+      console.error('Unable to load models for make', error);
+      setModelOptions([]);
+      setModelError('Unable to load model list right now.');
+    } finally {
+      setModelLoading(false);
     }
-  }, [setModelOptions, setVehicleSelection, vehicleSelection.make, vehicleSelection.model, vehicleSelection.year, vehicleSelection.trim]);
+  }, [setModelOptions, setVehicleSelection, vehicleSelection.make, vehicleSelection.model, vehicleSelection.year]);
 
   useEffect(() => {
     loadModelOptions();
@@ -481,7 +481,7 @@ function App() {
       <div className="project-view">
         <div className="main-content">
           <section className="vehicle-setup-section">
-            <VehicleSetupControls loading={false} error={null} onRetry={loadModelOptions} />
+            <VehicleSetupControls loading={modelLoading} error={modelError} onRetry={loadModelOptions} />
           </section>
           <section className="diagram-section">
             <div className="section-header">

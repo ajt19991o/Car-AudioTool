@@ -47,6 +47,8 @@
   --color-highlight-bg: #f3f6ff;
   --color-highlight-border: #dfe4f3;
   --color-warning-text: #9f5e00;
+  --color-warning-border: rgba(255, 174, 0, 0.6);
+  --color-critical-border: rgba(255, 112, 112, 0.45);
 }
 
 body {
@@ -101,6 +103,8 @@ body.theme-dark {
   --color-highlight-bg: #222d43;
   --color-highlight-border: #2a3346;
   --color-warning-text: #ffdca6;
+  --color-warning-border: rgba(255, 183, 77, 0.6);
+  --color-critical-border: rgba(255, 120, 120, 0.5);
 }
 
 .App {
@@ -823,26 +827,26 @@ body.theme-dark {
   justify-content: space-between;
   align-items: center;
   font-size: 1rem;
-  background-color: #f7f9ff;
+  background-color: var(--color-subtle-bg);
   padding: 0.85rem 1rem;
   border-radius: 10px;
-  border: 1px solid #dfe4f3;
+  border: 1px solid var(--color-subtle-border);
 }
 
 .summary-item strong {
-  color: #1a2330;
+  color: var(--color-text);
   font-weight: 600;
 }
 
 .summary-item.over-budget {
-  background-color: rgba(255, 122, 122, 0.18);
-  border: 1px solid rgba(255, 122, 122, 0.45);
+  background-color: var(--color-critical-bg);
+  border: 1px solid var(--color-critical-border);
 }
 
 .selected-components-list h4 {
   margin-bottom: 0.75rem;
   font-size: 1.1rem;
-  border-top: 1px solid #e3e7f4;
+  border-top: 1px solid var(--color-subtle-border);
   padding-top: 1.2rem;
 }
 
@@ -856,7 +860,7 @@ body.theme-dark {
 
 .no-items-message {
   font-style: italic;
-  color: #6f7a92;
+  color: var(--color-panel-muted);
   text-align: center;
   padding: 1rem 0;
 }
@@ -877,7 +881,7 @@ body.theme-dark {
 
 .input-group label {
   font-size: 0.9rem;
-  color: #5f6c85;
+  color: var(--color-muted);
 }
 
 .slider-group {
@@ -893,9 +897,9 @@ body.theme-dark {
 .length-input,
 .wattage-input {
   width: 72px;
-  background-color: #ffffff;
-  border: 1px solid #cbd5f0;
-  color: #1a2330;
+  background-color: var(--color-input-bg);
+  border: 1px solid var(--color-input-border);
+  color: var(--color-input-text);
   padding: 0.45rem;
   border-radius: 8px;
   text-align: center;
@@ -906,10 +910,10 @@ body.theme-dark {
   justify-content: space-between;
   align-items: center;
   font-size: 1.1rem;
-  background-color: #f0f4ff;
+  background-color: var(--color-highlight-bg);
   padding: 0.8rem;
   border-radius: 10px;
-  border: 1px solid #dfe4f3;
+  border: 1px solid var(--color-highlight-border);
 }
 
 .fuse-result {
@@ -931,22 +935,22 @@ body.theme-dark {
 
 .budget-form button {
   cursor: pointer;
-  background-color: #4c82ff;
-  border-color: #4c82ff;
-  color: #fff;
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
   font-weight: 600;
 }
 
 .budget-form button:hover {
-  background-color: #3563c9;
-  border-color: #3563c9;
+  background-color: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .budget-breakdown {
   display: flex;
   justify-content: space-between;
   font-size: 0.95rem;
-  color: #495570;
+  color: var(--color-muted);
 }
 
 /* Tutorials */
@@ -965,10 +969,10 @@ body.theme-dark {
 }
 
 .tutorials-panel li {
-  background-color: #f7f9ff;
+  background-color: var(--color-subtle-bg);
   padding: 0.95rem;
   border-radius: 12px;
-  border: 1px solid #e1e5f3;
+  border: 1px solid var(--color-subtle-border);
 }
 
 .tutorials-panel li strong {
@@ -977,7 +981,7 @@ body.theme-dark {
 }
 
 .tutorials-panel a {
-  color: #3654b3;
+  color: var(--color-link);
   font-size: 0.9rem;
 }
 
@@ -1003,18 +1007,18 @@ body.theme-dark {
 .safety-item {
   padding: 0.6rem 0.75rem;
   border-radius: 10px;
-  background-color: #f5f7ff;
-  border: 1px solid #e1e5f3;
+  background-color: var(--color-subtle-bg);
+  border: 1px solid var(--color-subtle-border);
 }
 
 .safety-item--warning {
-  border-color: rgba(255, 174, 0, 0.6);
-  background-color: rgba(255, 210, 96, 0.18);
+  border-color: var(--color-warning-border);
+  background-color: var(--color-warning-bg);
 }
 
 .safety-item--critical {
-  border-color: rgba(255, 112, 112, 0.6);
-  background-color: rgba(255, 112, 112, 0.18);
+  border-color: var(--color-critical-border);
+  background-color: var(--color-critical-bg);
 }
 
 /* Tutorials view */
@@ -1028,7 +1032,7 @@ body.theme-dark {
 }
 
 .learn-view p {
-  color: #bdbdbd;
+  color: var(--color-panel-muted);
 }
 
 /* Responsive */
