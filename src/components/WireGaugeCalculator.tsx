@@ -60,15 +60,29 @@ function WireGaugeCalculator({ totalRms }: WireGaugeCalculatorProps) {
             type="number"
             value={wattage}
             onChange={e => setWattage(Number(e.target.value))}
+            className="wattage-input"
           />
         </div>
         <div className="input-group">
           <label>Wire Length (feet)</label>
-          <input 
-            type="number"
-            value={length}
-            onChange={e => setLength(Number(e.target.value))}
-          />
+          <div className="slider-group">
+            <input 
+              type="range"
+              min="1"
+              max="30"
+              value={length}
+              onChange={e => setLength(Number(e.target.value))}
+              className="length-slider"
+            />
+            <input
+              type="number"
+              min="1"
+              max="30"
+              value={length}
+              onChange={e => setLength(Number(e.target.value))}
+              className="length-input"
+            />
+          </div>
         </div>
       </div>
       <div className="calculator-result">
@@ -77,6 +91,5 @@ function WireGaugeCalculator({ totalRms }: WireGaugeCalculatorProps) {
       </div>
     </div>
   );
-}
 
 export default WireGaugeCalculator;
