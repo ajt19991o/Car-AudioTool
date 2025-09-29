@@ -437,6 +437,10 @@ function App() {
   );
 
   const renderVehicleSelection = () => {
+    if (vehicleLoading) {
+      return <p>Loading vehicle list...</p>;
+    }
+
     return selectedCorp ? (
       <div className="make-list">
         <button onClick={() => setSelectedCorp(null)} className="back-button">← Back to Brands</button>
@@ -450,14 +454,17 @@ function App() {
         </ul>
       </div>
     ) : (
-      <div className="vehicle-grid">
-        {corporations.map(corp => (
-          <div key={corp.corporation} className="corp-card" onClick={() => setSelectedCorp(corp)}>
-            <span>{corp.corporation}</span>
-            <small>{corp.makes.slice(0, 4).join(', ')}{corp.makes.length > 4 ? '…' : ''}</small>
-          </div>
-        ))}
-      </div>
+      <>
+        {vehicleError && <p className="vehicle-info">{vehicleError}</p>}
+        <div className="vehicle-grid">
+          {corporations.map(corp => (
+            <div key={corp.corporation} className="corp-card" onClick={() => setSelectedCorp(corp)}>
+              <span>{corp.corporation}</span>
+              <small>{corp.makes.slice(0, 4).join(', ')}{corp.makes.length > 4 ? '…' : ''}</small>
+            </div>
+          ))}
+        </div>
+      </>
     );
   };
 
