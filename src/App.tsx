@@ -17,6 +17,8 @@ import { BudgetPlanner, TutorialsPanel, SafetyChecklistPanel } from './component
 import VehicleFitmentPanel from './components/VehicleFitmentPanel';
 import VehicleSetupControls from './components/VehicleSetupControls';
 import { useAppStore } from './state/useAppStore';
+import vehicleCorporationsData from './data/vehicleCorporations.json';
+import vehicleSpecsData from './data/vehicle_specs.json';
 import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
 
 const initialNodes: Node[] = [
@@ -101,11 +103,7 @@ function App() {
   const upsertTutorials = useAppStore(state => state.upsertTutorials);
   const setSafetyChecks = useAppStore(state => state.setSafetyChecks);
 
-  const [vehicleLoading, setVehicleLoading] = useState<boolean>(true);
-  const [vehicleError, setVehicleError] = useState<string | null>(null);
   const [selectedCorp, setSelectedCorp] = useState<VehicleCorporation | null>(null);
-  const [modelLoading, setModelLoading] = useState<boolean>(false);
-  const [modelError, setModelError] = useState<string | null>(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -129,79 +127,62 @@ function App() {
   }, [vehicleSelection.make, vehicleSelection.model, vehicleSelection.year]);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/vehicles')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Failed to load vehicle data');
-        }
-        return response.json();
-      })
-      .then((data: VehicleCorporation[]) => {
-        setCorporations(data);
-        setVehicleLoading(false);
-      })
-      .catch(error => {
-        console.error(error);
-        setVehicleError('Unable to load vehicle list. Please try again later.');
-        setVehicleLoading(false);
-      });
+    setCorporations(vehicleCorporationsData as VehicleCorporation[]);
   }, [setCorporations]);
 
-  const loadModelOptions = useCallback(async () => {
+  const loadModelOptions = useCallback(() => {
     if (!vehicleSelection.make) {
       setModelOptions([]);
       return;
     }
 
-    setModelLoading(true);
-    setModelError(null);
-    try {
-      const response = await fetch(`http://localhost:3001/api/specs/${encodeURIComponent(vehicleSelection.make)}`);
-      if (!response.ok) {
-        throw new Error('Failed to load model list');
-      }
+    const specsMap = vehicleSpecsData as Record<string, Record<string, VehicleSpecs>>;
+    const makeKey = Object.keys(specsMap).find(key => key.toLowerCase() === vehicleSelection.make?.toLowerCase());
 
-      const data: { make: string; models: { model: string; years?: number[]; trims?: string[] }[] } = await response.json();
-      const models = data.models ?? [];
-      setModelOptions(models);
-
-      if (models.length === 0) {
-        return;
-      }
-
-      const currentModelEntry = models.find(item => item.model.toLowerCase() === (vehicleSelection.model ?? '').toLowerCase());
-      let nextSelection: Partial<typeof vehicleSelection> = {};
-
-      if (!currentModelEntry) {
-        const fallback = models[0];
-        nextSelection = {
-          model: fallback.model,
-          year: fallback.years && fallback.years.length > 0 ? String(fallback.years[0]) : undefined,
-          trim: fallback.trims && fallback.trims.length > 0 ? fallback.trims[0] : undefined,
-        };
-      } else {
-        if (currentModelEntry.years && currentModelEntry.years.length > 0) {
-          const numericYear = vehicleSelection.year ? Number(vehicleSelection.year) : undefined;
-          if (!numericYear || !currentModelEntry.years.includes(numericYear)) {
-            nextSelection.year = String(currentModelEntry.years[0]);
-          }
-        }
-        if (currentModelEntry.trims && currentModelEntry.trims.length > 0) {
-          if (!vehicleSelection.trim || !currentModelEntry.trims.includes(vehicleSelection.trim)) {
-            nextSelection.trim = currentModelEntry.trims[0];
-          }
-        }
-      }
-
-      if (Object.keys(nextSelection).length > 0) {
-        setVehicleSelection(nextSelection);
-      }
-    } catch (error) {
-      console.error(error);
-      setModelError('Unable to load models for this make.');
+    if (!makeKey) {
       setModelOptions([]);
-    } finally {
-      setModelLoading(false);
+      return;
+    }
+
+    const modelsRecord = specsMap[makeKey];
+    const models = Object.entries(modelsRecord).map(([modelName, details]) => ({
+      model: modelName,
+      years: details.years ?? [],
+      trims: details.trims ?? [],
+    }));
+
+    setModelOptions(models);
+
+    if (models.length === 0) {
+      return;
+    }
+
+    const currentModelEntry = models.find(item => item.model.toLowerCase() === (vehicleSelection.model ?? '').toLowerCase());
+    let nextSelection: Partial<typeof vehicleSelection> = {};
+
+    if (!currentModelEntry) {
+      const fallback = models[0];
+      nextSelection = {
+        model: fallback.model,
+        year: fallback.years && fallback.years.length > 0 ? String(fallback.years[0]) : undefined,
+        trim: fallback.trims && fallback.trims.length > 0 ? fallback.trims[0] : undefined,
+      };
+    } else {
+      if (currentModelEntry.years && currentModelEntry.years.length > 0) {
+        const numericYear = vehicleSelection.year ? Number(vehicleSelection.year) : undefined;
+        if (!numericYear || !currentModelEntry.years.includes(numericYear)) {
+          nextSelection.year = String(currentModelEntry.years[0]);
+        }
+      }
+      if (currentModelEntry.trims && currentModelEntry.trims.length > 0) {
+        if (!vehicleSelection.trim || !currentModelEntry.trims.includes(vehicleSelection.trim)) {
+          nextSelection.trim = currentModelEntry.trims[0];
+        }
+      }
+    }
+
+    if (Object.keys(nextSelection).length > 0) {
+      setVehicleSelection(nextSelection);
     }
   }, [setModelOptions, setVehicleSelection, vehicleSelection.make, vehicleSelection.model, vehicleSelection.year, vehicleSelection.trim]);
 
@@ -307,33 +288,42 @@ function App() {
     setEdges(initialEdges);
   }, [resetVehicleSelection, setEdges, setNodes, setView]);
 
-  const fetchVehicleSpecs = useCallback(async (make?: string, model?: string) => {
-    if (!make || !model) return;
-    try {
-      const response = await fetch(`http://localhost:3001/api/specs/${encodeURIComponent(make)}/${encodeURIComponent(model)}`);
-      if (!response.ok) {
-        throw new Error(`No specs found for ${make} ${model}`);
-      }
-      const specs: VehicleSpecs = await response.json();
-      const speakers = Object.entries(specs.speakers || {}).map(([location, size]) => ({
-        location,
-        size,
-      }));
-      setFitment({ speakers, wiringRunNotes: 'Use factory routing where possible and protect wires with loom.' });
+  const fetchVehicleSpecs = useCallback((make?: string, model?: string) => {
+    if (!make || !model) {
+      return;
+    }
 
-      const cabinLengthFeet = specs.cabinDimensions?.frontToRearLength
-        ? feetFromMeters(specs.cabinDimensions.frontToRearLength)
-        : undefined;
-      const powerRunFeet = estimatePowerRun(cabinLengthFeet);
-      const speakerRunFeet = estimateSpeakerWire(speakers, cabinLengthFeet);
-      const remoteTurnOnFeet = Math.max(10, Math.round(powerRunFeet * 0.9));
-
-      setWiringEstimate({ powerRunFeet, speakerRunFeet, remoteTurnOnFeet }, { source: 'auto' });
-    } catch (error) {
-      console.warn(error);
+    const specsMap = vehicleSpecsData as Record<string, Record<string, VehicleSpecs>>;
+    const makeKey = Object.keys(specsMap).find(key => key.toLowerCase() === make.toLowerCase());
+    if (!makeKey) {
       setFitment(undefined);
       setWiringEstimate({ powerRunFeet: 16, speakerRunFeet: 40, remoteTurnOnFeet: 14 }, { source: 'auto' });
+      return;
     }
+
+    const modelRecord = specsMap[makeKey];
+    const modelKey = Object.keys(modelRecord).find(key => key.toLowerCase() === model.toLowerCase());
+    if (!modelKey) {
+      setFitment(undefined);
+      setWiringEstimate({ powerRunFeet: 16, speakerRunFeet: 40, remoteTurnOnFeet: 14 }, { source: 'auto' });
+      return;
+    }
+
+    const specs = modelRecord[modelKey];
+    const speakers = Object.entries(specs.speakers || {}).map(([location, size]) => ({
+      location,
+      size,
+    }));
+    setFitment({ speakers, wiringRunNotes: 'Use factory routing where possible and protect wires with loom.' });
+
+    const cabinLengthFeet = specs.cabinDimensions?.frontToRearLength
+      ? feetFromMeters(specs.cabinDimensions.frontToRearLength)
+      : undefined;
+    const powerRunFeet = estimatePowerRun(cabinLengthFeet);
+    const speakerRunFeet = estimateSpeakerWire(speakers, cabinLengthFeet);
+    const remoteTurnOnFeet = Math.max(10, Math.round(powerRunFeet * 0.9));
+
+    setWiringEstimate({ powerRunFeet, speakerRunFeet, remoteTurnOnFeet }, { source: 'auto' });
   }, [setFitment, setWiringEstimate]);
 
   useEffect(() => {
@@ -355,13 +345,6 @@ function App() {
   );
 
   const renderVehicleSelection = () => {
-    if (vehicleLoading) {
-      return <p>Loading vehicle list...</p>;
-    }
-    if (vehicleError) {
-      return <p className="error">{vehicleError}</p>;
-    }
-
     return selectedCorp ? (
       <div className="make-list">
         <button onClick={() => setSelectedCorp(null)} className="back-button">← Back to Brands</button>
@@ -392,7 +375,7 @@ function App() {
       <div className="project-view">
         <div className="main-content">
           <section className="vehicle-setup-section">
-            <VehicleSetupControls loading={modelLoading} error={modelError} onRetry={loadModelOptions} />
+            <VehicleSetupControls loading={false} error={null} onRetry={loadModelOptions} />
           </section>
           <section className="diagram-section">
             <div className="section-header">
