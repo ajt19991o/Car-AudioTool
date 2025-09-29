@@ -5,15 +5,28 @@ export interface VehicleCorporation {
 
 export interface AudioComponent {
   id: string;
+  brand?: string;
   name: string;
   type: string;
   category: string;
   price: number;
+  description?: string;
   specs?: {
     rms_wattage?: number;
     peak_wattage?: number;
     size?: string;
+    channels?: number;
+    impedance?: string;
+    preamp_voltage?: string;
+    awg?: string;
+    length?: string;
+    compatibility?: string[];
   };
+  fitment?: {
+    speakerSizes?: string[];
+    locations?: string[];
+  };
+  tags?: string[];
   purchase_links?: { vendor: string; url: string }[];
 }
 

@@ -45,8 +45,10 @@ function ProjectSummary() {
         <h4>Selected Items:</h4>
         {selectedComponents.length > 0 ? (
           <ul>
-            {selectedComponents.map((comp) => (
-              <li key={comp.id}>{comp.name}</li>
+            {selectedComponents.map((comp, index) => (
+              <li key={`${comp.id}-${index}`}>
+                {comp.brand ? `${comp.brand} ${comp.name}` : comp.name}
+              </li>
             ))}
           </ul>
         ) : (

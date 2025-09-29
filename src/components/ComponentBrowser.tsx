@@ -1,13 +1,38 @@
-
-import { useState, useEffect } from 'react';
-import { type AudioComponent } from '../types';
+import { useEffect, useMemo, useState } from 'react';
+import type { AudioComponent } from '../types';
 import { useAppStore } from '../state/useAppStore';
 
 interface ComponentBrowserProps {
   onComponentAdd?: (component: AudioComponent) => void;
 }
 
-const categories = ['All', 'Head Unit', 'Amplifier', 'Component Speakers', 'Coaxial Speakers', 'Subwoofer', 'DSP', 'Accessories'];
+const categories = [
+  'All',
+  'Head Unit',
+  'Amplifier',
+  'Component Speakers',
+  'Coaxial Speakers',
+  'Subwoofer',
+  'DSP',
+  'Wiring & Installation',
+  'Accessories',
+];
+
+const formatSpecsSummary = (component: AudioComponent) => {
+  if (!component.specs) return null;
+  const { specs } = component;
+  const details: string[] = [];
+
+  if (specs.size) details.push(specs.size);
+  if (specs.channels) details.push(`${specs.channels}ch`);
+  if (specs.rms_wattage) details.push(`${specs.rms_wattage}W RMS`);
+  if (specs.impedance) details.push(specs.impedance);
+  if (specs.awg) details.push(`${specs.awg} AWG`);
+  if (specs.length && !specs.size) details.push(specs.length);
+
+  if (details.length === 0) return null;
+  return details.join(' • ');
+};
 
 function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
   const [components, setComponents] = useState<AudioComponent[]>([]);
@@ -19,43 +44,51 @@ function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
   const fitment = useAppStore(state => state.fitment);
   const vehicleSelection = useAppStore(state => state.vehicleSelection);
 
+  const allowedSpeakerSizes = useMemo(() => {
+    if (!fitment?.speakers) return [] as string[];
+    const sizes = fitment.speakers
+      .map(spec => spec.size.toLowerCase())
+      .filter((value, index, array) => array.indexOf(value) === index);
+    return sizes;
+  }, [fitment]);
+
   useEffect(() => {
-    fetch('http://localhost:3001/api/components')
+    const controller = new AbortController();
+    const params = new URLSearchParams();
+    if (selectedCategory !== 'All') {
+      params.set('category', selectedCategory);
+    }
+    if (searchTerm.trim()) {
+      params.set('q', searchTerm.trim());
+    }
+    if (allowedSpeakerSizes.length > 0) {
+      params.set('fits', allowedSpeakerSizes.join(','));
+    }
+    params.set('limit', '60');
+
+    setLoading(true);
+    setError(null);
+
+    fetch(`http://localhost:3001/api/components?${params.toString()}`, { signal: controller.signal })
       .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
         return response.json();
       })
-      .then(data => {
+      .then((data: AudioComponent[]) => {
         setComponents(data);
         setLoading(false);
       })
-      .catch(error => {
-        console.error('Error fetching components:', error);
+      .catch(fetchError => {
+        if (controller.signal.aborted) return;
+        console.error('Error fetching components:', fetchError);
         setError('Failed to load components.');
         setLoading(false);
       });
-  }, []);
 
-  const allowedSpeakerSizes = fitment?.speakers.map(item => item.size.toLowerCase()) ?? null;
-
-  const filteredComponents = components.filter(comp => {
-    // Vehicle spec filter
-    if (comp.category.toLowerCase().includes('speaker') && allowedSpeakerSizes) {
-      const size = comp.specs?.size?.toLowerCase();
-      if (!size || !allowedSpeakerSizes.includes(size)) {
-        return false;
-      }
-    }
-    // Category filter
-    if (selectedCategory !== 'All' && comp.category !== selectedCategory) {
-      return false;
-    }
-    // Search term filter
-    if (searchTerm && !comp.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-      return false;
-    }
-    return true;
-  });
+    return () => controller.abort();
+  }, [selectedCategory, searchTerm, allowedSpeakerSizes]);
 
   return (
     <div className="component-browser">
@@ -65,50 +98,69 @@ function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
           type="text"
           placeholder="Search components..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(event) => setSearchTerm(event.target.value)}
           className="search-input"
         />
-        <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)} className="category-select">
+        <select value={selectedCategory} onChange={(event) => setSelectedCategory(event.target.value)} className="category-select">
           {categories.map(cat => (
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
       </div>
-      {allowedSpeakerSizes && (
-        <p className="filter-info">Showing speakers that fit your vehicle.</p>
+      {allowedSpeakerSizes.length > 0 && (
+        <p className="filter-info">
+          Matching speaker sizes: {allowedSpeakerSizes.join(', ').toUpperCase()}
+        </p>
       )}
-      {loading && <p>Loading...</p>}
+      {loading && <p>Loading catalog...</p>}
       {error && <p className="error">{error}</p>}
       <div className="component-list">
-        {filteredComponents.map(comp => (
-          <div key={comp.id} className="component-item">
-            <div className="component-info">
-              <strong>{comp.name}</strong>
-              <span>{comp.category}</span>
-              {vehicleSelection.make && comp.category.toLowerCase().includes('speaker') && comp.specs?.size && (
-                <small className="fitment-detail">Fits {vehicleSelection.make}: {comp.specs.size}</small>
-              )}
+        {components.map(comp => {
+          const specSummary = formatSpecsSummary(comp);
+          const fitmentDetails = comp.fitment?.speakerSizes?.join(', ');
+          const primaryLink = comp.purchase_links?.[0];
+          return (
+            <div key={comp.id} className="component-item">
+              <div className="component-info">
+                <strong>{comp.brand ? `${comp.brand} ${comp.name}` : comp.name}</strong>
+                <span>{comp.category}</span>
+                {specSummary && <small className="component-specs">{specSummary}</small>}
+                {comp.description && <p className="component-description">{comp.description}</p>}
+                {vehicleSelection.make && fitmentDetails && comp.category.toLowerCase().includes('speaker') && (
+                  <small className="fitment-detail">Fits {vehicleSelection.make}: {fitmentDetails}</small>
+                )}
+                {comp.tags && comp.tags.length > 0 && (
+                  <div className="component-tags">
+                    {comp.tags.slice(0, 4).map(tag => (
+                      <span key={tag}>#{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="component-actions">
+                <span>${comp.price.toFixed(2)}</span>
+                <button
+                  className="shop-button"
+                  disabled={!primaryLink}
+                  onClick={() => primaryLink && window.open(primaryLink.url, '_blank', 'noopener')}
+                >
+                  Shop
+                </button>
+                <button
+                  onClick={() => {
+                    addComponent(comp);
+                    onComponentAdd?.(comp);
+                  }}
+                >
+                  Add
+                </button>
+              </div>
             </div>
-            <div className="component-actions">
-              <span>${comp.price.toFixed(2)}</span>
-              <button 
-                className="shop-button"
-                disabled={!comp.purchase_links || comp.purchase_links.length === 0}
-                onClick={() => comp.purchase_links && window.open(comp.purchase_links[0].url, '_blank')}
-              >
-                Shop
-              </button>
-              <button
-                onClick={() => {
-                  addComponent(comp);
-                  onComponentAdd?.(comp);
-                }}
-              >
-                Add
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
+        {!loading && components.length === 0 && !error && (
+          <p className="empty-message">No components match your filters yet.</p>
+        )}
       </div>
     </div>
   );

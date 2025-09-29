@@ -99,6 +99,12 @@ export const useAppStore = create<AppState>((set) => ({
       wiringEstimate: undefined,
       selectedComponents: [],
       safetyChecks: [],
+      budget: {
+        target: undefined,
+        componentTotal: 0,
+        wiringTotal: 0,
+        accessoriesTotal: 0,
+      },
     }),
   setFitment: (fitment) => set({ fitment }),
   setWiringEstimate: (estimate) => set({ wiringEstimate: estimate }),

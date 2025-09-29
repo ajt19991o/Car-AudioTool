@@ -7,6 +7,10 @@
   background-color: #242424;
 }
 
+body {
+  margin: 0;
+}
+
 .App {
   max-width: 1200px;
   margin: 0 auto;
@@ -15,13 +19,57 @@
 }
 
 .App-header {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
   margin-bottom: 2rem;
+  text-align: center;
+}
+
+.header-primary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .App-header h1 {
   font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  margin: 0;
+}
+
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.app-nav button {
+  background-color: #2f2f2f;
+  border: 1px solid #444;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.app-nav button:hover:not(:disabled) {
+  background-color: #3c3c3c;
+  transform: translateY(-1px);
+}
+
+.app-nav button.active {
+  background-color: #4c82ff;
+  border-color: #4c82ff;
+  color: #0c1222;
+}
+
+.app-nav button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .error {
@@ -32,7 +80,65 @@
   border-radius: 8px;
 }
 
-/* Vehicle Selection Styles */
+/* Home */
+.home-view {
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 3rem 1rem;
+}
+
+.home-view h2 {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.home-view p {
+  margin-bottom: 2rem;
+  color: #bdbdbd;
+}
+
+.home-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.start-button,
+.secondary-button,
+.back-button {
+  background-color: #4c82ff;
+  border: none;
+  color: white;
+  padding: 0.85rem 1.8rem;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.secondary-button {
+  background-color: transparent;
+  border: 1px solid #4c82ff;
+}
+
+.secondary-button:hover {
+  background-color: rgba(76, 130, 255, 0.15);
+}
+
+.start-button:hover,
+.back-button:hover {
+  background-color: #3563c9;
+  transform: translateY(-1px);
+}
+
+.back-button {
+  margin-bottom: 1rem;
+  padding: 0.65rem 1.4rem;
+}
+
+/* Vehicle selection */
 .vehicle-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -45,12 +151,19 @@
   background-color: #2f2f2f;
   border: 1px solid #444;
   border-radius: 8px;
-  padding: 2rem 1rem;
+  padding: 1.75rem 1rem;
   text-align: center;
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1.1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.corp-card small {
+  display: block;
+  margin-top: 0.5rem;
+  color: #a9a9a9;
+  font-size: 0.85rem;
 }
 
 .corp-card:hover {
@@ -84,7 +197,7 @@
   border-bottom: 1px solid #444;
   cursor: pointer;
   transition: background-color 0.2s;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 
 .make-list li:last-child {
@@ -95,17 +208,7 @@
   background-color: #4a4a4a;
 }
 
-/* Project View Layout */
-.back-button {
-  margin-bottom: 1rem;
-  background-color: #4f4f4f;
-  border: none;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
+/* Project workspace */
 .project-view {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -113,7 +216,9 @@
 }
 
 .main-content {
-  /* Styles for the wiring diagram container */
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
 }
 
 .sidebar {
@@ -122,27 +227,179 @@
   gap: 1.5rem;
 }
 
-/* Component Browser & Other Sidebar Widgets */
+.diagram-section,
+.component-section,
 .project-summary,
 .wire-calculator,
-.component-browser {
+.component-browser,
+.budget-panel,
+.tutorials-panel,
+.safety-panel {
   background-color: #2f2f2f;
   padding: 1.5rem;
   border-radius: 8px;
   border: 1px solid #444;
 }
 
-.project-summary h3,
-.wire-calculator h3,
-.component-browser h3 {
-  margin-top: 0;
-  border-bottom: 1px solid #555;
-  padding-bottom: 1rem;
-  font-size: 1.4rem;
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 1rem;
 }
 
-/* Project Summary Styles */
+.section-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.vehicle-tag {
+  background-color: rgba(76, 130, 255, 0.2);
+  color: #e4edff;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+}
+
+/* Component browser */
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.search-input,
+.category-select,
+.budget-form input,
+.budget-form button {
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  color: white;
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+}
+
+.search-input {
+  flex-grow: 1;
+}
+
+.category-select {
+  min-width: 160px;
+}
+
+.filter-info {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: #a0a0a0;
+  margin: -0.5rem 0 1rem;
+  text-align: center;
+}
+
+.component-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.component-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #3a3a3a;
+  padding: 0.85rem 1rem;
+  border-radius: 6px;
+}
+
+.component-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.component-info strong {
+  font-size: 1.05rem;
+}
+
+.component-info span {
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.component-specs {
+  font-size: 0.8rem;
+  color: #8ab8ff;
+}
+
+.component-description {
+  font-size: 0.85rem;
+  color: #d0d0d0;
+  margin: 0.2rem 0 0.35rem;
+}
+
+.component-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.component-tags span {
+  font-size: 0.75rem;
+  background-color: rgba(76, 130, 255, 0.18);
+  color: #e4edff;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+}
+
+.fitment-detail {
+  font-size: 0.75rem;
+  color: #8ec4ff;
+}
+
+.component-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.component-actions span {
+  font-weight: 600;
+  min-width: 64px;
+  text-align: right;
+}
+
+.component-item button {
+  background-color: #4c82ff;
+  border: none;
+  color: white;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.component-item button:hover:not(:disabled) {
+  background-color: #3563c9;
+}
+
+.shop-button {
+  background-color: #2db84c;
+}
+
+.shop-button:hover:not(:disabled) {
+  background-color: #23913d;
+}
+
+.shop-button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+.empty-message {
+  text-align: center;
+  padding: 1.25rem 0;
+  color: #bdbdbd;
+}
+
+/* Project summary */
 .summary-stats {
   display: flex;
   flex-direction: column;
@@ -154,14 +411,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   background-color: #3a3a3a;
   padding: 0.75rem;
   border-radius: 6px;
-}
-
-.summary-item span {
-  color: #ccc;
 }
 
 .summary-item strong {
@@ -169,9 +422,14 @@
   font-weight: bold;
 }
 
+.summary-item.over-budget {
+  background-color: rgba(255, 99, 99, 0.2);
+  border: 1px solid rgba(255, 99, 99, 0.4);
+}
+
 .selected-components-list h4 {
   margin-bottom: 0.75rem;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   border-top: 1px solid #555;
   padding-top: 1.5rem;
 }
@@ -179,12 +437,9 @@
 .selected-components-list ul {
   list-style-position: inside;
   padding-left: 0.5rem;
-}
-
-.selected-components-list li {
-  font-size: 1rem;
-  color: #ddd;
-  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
 .no-items-message {
@@ -194,7 +449,7 @@
   padding: 1rem 0;
 }
 
-/* Wire Gauge Calculator Styles */
+/* Wire gauge calculator */
 .calculator-inputs {
   display: flex;
   flex-direction: column;
@@ -205,146 +460,14 @@
 .input-group {
   display: flex;
   flex-direction: column;
+  gap: 0.4rem;
 }
 
 .input-group label {
   font-size: 0.9rem;
   color: #ccc;
-  margin-bottom: 0.25rem;
 }
 
-.input-group input {
-  background-color: #3a3a3a;
-  border: 1px solid #555;
-  color: white;
-  padding: 8px;
-  border-radius: 4px;
-}
-
-.calculator-result {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 1.2rem;
-  background-color: #1a1a1a;
-  padding: 0.75rem;
-  border-radius: 6px;
-}
-
-/* Component Browser Styles */
-.filter-info {
-  font-size: 0.85rem;
-  font-style: italic;
-  color: #a0a0a0;
-  text-align: center;
-  margin: -0.5rem 0 1rem 0;
-}
-
-.component-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.component-item {
-  display: flex; /* Use flexbox for alignment */
-  justify-content: space-between;
-  align-items: center;
-  background-color: #3a3a3a;
-  padding: 0.75rem 1rem;
-  border-radius: 6px;
-}
-
-.component-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.component-info strong {
-  font-size: 1.1rem;
-}
-
-.component-info span {
-  font-size: 0.85rem;
-  color: #ccc;
-}
-
-.component-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.component-actions span {
-  font-weight: bold;
-  font-size: 1.1rem;
-  min-width: 70px; /* Align prices */
-  text-align: right;
-}
-
-.shop-button {
-  background-color: #28a745; /* Green color for shopping */
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.shop-button:hover:not(:disabled) {
-  background-color: #218838;
-}
-
-.shop-button:disabled {
-  background-color: #555;
-  cursor: not-allowed;
-}
-
-.component-item button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px; /* Standardized padding */
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-/* Home View Styles */
-.home-view {
-  text-align: center;
-  padding: 4rem 1rem;
-}
-
-.home-view h2 {
-  font-size: 2.8rem;
-  margin-bottom: 1rem;
-}
-
-.home-view p {
-  font-size: 1.2rem;
-  color: #a0a0a0;
-  margin-bottom: 2.5rem;
-}
-
-.start-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 1rem 2.5rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.start-button:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-}
-
-/* Wire Gauge Calculator Styles */
 .slider-group {
   display: flex;
   align-items: center;
@@ -355,97 +478,151 @@
   flex-grow: 1;
 }
 
-.length-input, .wattage-input {
-  width: 70px; /* Fixed width for number inputs */
+.length-input,
+.wattage-input {
+  width: 72px;
   background-color: #3a3a3a;
   border: 1px solid #555;
   color: white;
-  padding: 8px;
+  padding: 0.4rem;
   border-radius: 4px;
   text-align: center;
+}
+
+.calculator-result {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+  background-color: #1a1a1a;
+  padding: 0.75rem;
+  border-radius: 6px;
 }
 
 .fuse-result {
   margin-top: 0.75rem;
 }
 
-/* Component Browser Filter Styles */
-.filters {
-  display: flex;
-  gap: 1rem;
+/* Budget planner */
+.budget-panel h3 {
+  margin-top: 0;
   margin-bottom: 1rem;
 }
 
-.search-input {
-  flex-grow: 1;
-  background-color: #3a3a3a;
-  border: 1px solid #555;
-  color: white;
-  padding: 10px;
-  border-radius: 6px;
-}
-
-.category-select {
-  background-color: #3a3a3a;
-  border: 1px solid #555;
-  color: white;
-  padding: 10px;
-  border-radius: 6px;
-}
-
-/* Budget Section Styles */
-.budget-section {
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid #555;
-  padding-bottom: 1.5rem;
-}
-
-.budget-section h4 {
-  font-size: 1.2rem;
-  margin-bottom: 0.75rem;
-  margin-top: 0;
-}
-
-.budget-input-group {
+.budget-form {
   display: flex;
+  gap: 0.75rem;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-.budget-input-group span {
-  font-size: 1.2rem;
-  font-weight: bold;
+.budget-form button {
+  cursor: pointer;
 }
 
-.budget-input-group input {
-  width: 120px;
-  background-color: #3a3a3a;
-  border: 1px solid #555;
-  color: white;
-  padding: 8px;
-  border-radius: 4px;
-}
-
-.budget-progress-bar {
-  width: 100%;
-  height: 20px;
-  background-color: #242424;
-  border: 1px solid #555;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.progress-fill {
-  height: 100%;
-  background-color: #007bff;
-  transition: width 0.3s ease-in-out;
-}
-
-.budget-summary {
+.budget-breakdown {
   display: flex;
   justify-content: space-between;
+  font-size: 0.95rem;
+  color: #ddd;
+}
+
+/* Tutorials */
+.tutorials-panel h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.tutorials-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tutorials-panel li {
+  background-color: #343434;
+  padding: 0.85rem;
+  border-radius: 6px;
+}
+
+.tutorials-panel li strong {
+  display: block;
+  margin-bottom: 0.35rem;
+}
+
+.tutorials-panel a {
+  color: #8ec4ff;
   font-size: 0.9rem;
-  color: #ccc;
+}
+
+/* Safety */
+.safety-panel {
+  position: relative;
+}
+
+.safety-panel--alert {
+  border-color: rgba(255, 153, 0, 0.45);
+  box-shadow: 0 0 12px rgba(255, 153, 0, 0.15);
+}
+
+.safety-panel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.safety-item {
+  padding: 0.6rem 0.75rem;
+  border-radius: 6px;
+  background-color: #343434;
+}
+
+.safety-item--warning {
+  border: 1px solid rgba(255, 204, 0, 0.6);
+}
+
+.safety-item--critical {
+  border: 1px solid rgba(255, 99, 99, 0.6);
+}
+
+/* Tutorials view */
+.learn-view {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.learn-view p {
+  color: #bdbdbd;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .project-view {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    order: -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .App {
+    padding: 1.4rem;
+  }
+  .filters {
+    flex-direction: column;
+  }
+  .home-actions {
+    flex-direction: column;
+  }
 }
