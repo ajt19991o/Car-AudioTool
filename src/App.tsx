@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Node, Edge, useNodesState, useEdgesState } from 'reactflow';
+import { Node, Edge, useNodesState, useEdgesState, addEdge } from 'reactflow';
 import './App.css';
 import WiringDiagram from './components/WiringDiagram';
 import ComponentBrowser from './components/ComponentBrowser';
 import ProjectSummary from './components/ProjectSummary';
-
 import WireGaugeCalculator from './components/WireGaugeCalculator';
+import CustomNode from './components/CustomNode';
 
 // Define data structures
 interface VehicleCorporation {
@@ -50,17 +50,18 @@ const initialEdges: Edge[] = [
   },
 ];
 
-let nodeId = 3;
+const nodeTypes = {
+  custom: CustomNode,
+};
+
+let nodeId = 4; // Start after initial nodes
 
 function App() {
   const [vehicleData, setVehicleData] = useState<VehicleCorporation[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<'home' | 'vehicle-selection' | 'project'>('home');
-<<<<<<< HEAD
   const [selectedCorp, setSelectedCorp] = useState<VehicleCorporation | null>(null);
-=======
->>>>>>> fe1dd852b3a368d5e69e9c237a65f0e3ca2725f0
   const [selectedMake, setSelectedMake] = useState<string | null>(null);
   const [selectedComponents, setSelectedComponents] = useState<AudioComponent[]>([]);
   const [vehicleSpecs, setVehicleSpecs] = useState<any>(null);
@@ -68,11 +69,17 @@ function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  // Fetch vehicle specs when a make is selected
+  const onConnect = (params) => setEdges((eds) => addEdge(params, eds));
+
+  const handleRemoveComponent = (nodeIdToRemove: string) => {
+    setNodes((nds) => nds.filter((node) => node.id !== nodeIdToRemove));
+    setEdges((eds) => eds.filter((edge) => edge.source !== nodeIdToRemove && edge.target !== nodeIdToRemove));
+    setSelectedComponents((comps) => comps.filter((comp) => `node-${comp.id}` !== nodeIdToRemove));
+  };
+
   useEffect(() => {
     if (!selectedMake) return;
 
-    // TODO: Replace this with real model selection
     const model = selectedMake === 'Ford' ? 'F-150' : 'Tacoma';
 
     fetch(`http://localhost:3001/api/specs/${selectedMake}/${model}`)
@@ -106,12 +113,14 @@ function App() {
   const totalRms = selectedComponents.reduce((total, comp) => total + (comp.specs?.rms_wattage || 0), 0);
 
   const handleAddComponent = (component: AudioComponent) => {
+    const newNodeId = `node-${component.id}`;
     setSelectedComponents(prev => [...prev, component]);
 
     const newNode: Node = {
-      id: `node-${nodeId++}`,
+      id: newNodeId,
+      type: 'custom',
       position: { x: Math.random() * 400 - 200, y: Math.random() * 200 + 200 },
-      data: { label: component.name },
+      data: { label: component.name, onRemove: handleRemoveComponent, id: newNodeId },
     };
     setNodes(nds => nds.concat(newNode));
   };
@@ -125,10 +134,7 @@ function App() {
     setSelectedMake(null);
     setVehicleSpecs(null);
     setView('vehicle-selection');
-<<<<<<< HEAD
-    setSelectedCorp(null); // Also reset selected corporation
-=======
->>>>>>> fe1dd852b3a368d5e69e9c237a65f0e3ca2725f0
+    setSelectedCorp(null);
   };
 
   const renderContent = () => {
@@ -144,7 +150,6 @@ function App() {
           </div>
         );
       case 'vehicle-selection':
-<<<<<<< HEAD
         if (loading) return <p>Loading vehicle list...</p>;
         if (error) return <p className="error">{error}</p>;
 
@@ -170,26 +175,6 @@ function App() {
           </div>
         );
 
-=======
-        return (
-          <div className="vehicle-list">
-            {loading && <p>Loading vehicle list...</p>}
-            {error && <p className="error">{error}</p>}
-            {vehicleData.map(corp => (
-              <details key={corp.corporation} className="corporation-item">
-                <summary>{corp.corporation}</summary>
-                <ul>
-                  {corp.makes.map((make, index) => (
-                    <li key={index} onClick={() => handleSelectMake(make)}>
-                      {make}
-                    </li>
-                  ))}
-                </ul>
-              </details>
-            ))}
-          </div>
-        );
->>>>>>> fe1dd852b3a368d5e69e9c237a65f0e3ca2725f0
       case 'project':
         return (
           <div>
@@ -201,6 +186,8 @@ function App() {
                   edges={edges}
                   onNodesChange={onNodesChange}
                   onEdgesChange={onEdgesChange}
+                  onConnect={onConnect}
+                  nodeTypes={nodeTypes}
                 />
               </div>
               <aside className="sidebar">
