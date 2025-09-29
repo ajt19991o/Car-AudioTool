@@ -273,7 +273,6 @@ function App() {
   const setMakes = useAppStore(state => state.setMakes);
   const vehicleSelection = useAppStore(state => state.vehicleSelection);
   const setVehicleSelection = useAppStore(state => state.setVehicleSelection);
-  const resetVehicleSelection = useAppStore(state => state.resetVehicleSelection);
   const setModelOptions = useAppStore(state => state.setModelOptions);
   const fitment = useAppStore(state => state.fitment);
   const setFitment = useAppStore(state => state.setFitment);
@@ -284,6 +283,7 @@ function App() {
   const upsertTutorials = useAppStore(state => state.upsertTutorials);
   const setSafetyChecks = useAppStore(state => state.setSafetyChecks);
   const theme = useAppStore(state => state.theme);
+  const budget = useAppStore(state => state.budget);
 
   const [vehicleLoading, setVehicleLoading] = useState<boolean>(true);
   const [vehicleError, setVehicleError] = useState<string | null>(null);
@@ -472,6 +472,7 @@ function App() {
     const hasAmplifier = selectedComponents.some(comp => comp.type.toLowerCase().includes('amplifier'));
     const hasSubwoofer = selectedComponents.some(comp => comp.type.toLowerCase().includes('subwoofer'));
     const hasWiringKit = selectedComponents.some(comp => comp.type.toLowerCase().includes('wiring'));
+    const totalBudgetSpend = budget.componentTotal + budget.wiringTotal + budget.accessoriesTotal;
 
     if (totalRms > 2000) {
       safetyIssues.push({
@@ -522,8 +523,15 @@ function App() {
         severity: 'info' as const,
       });
     }
+    if (typeof budget.target === 'number' && budget.target > 0 && totalBudgetSpend > budget.target) {
+      safetyIssues.push({
+        id: 'over-budget',
+        message: `Current build total of $${totalBudgetSpend.toFixed(2)} exceeds the budget target by $${(totalBudgetSpend - budget.target).toFixed(2)}.`,
+        severity: 'warning' as const,
+      });
+    }
     setSafetyChecks(safetyIssues);
-  }, [fitment, selectedComponents, totalPeak, totalRms, setSafetyChecks, wiringEstimate]);
+  }, [budget.accessoriesTotal, budget.componentTotal, budget.target, budget.wiringTotal, fitment, selectedComponents, totalPeak, totalRms, setSafetyChecks, wiringEstimate]);
 
   const onConnect = useCallback((params: Connection) => {
     setEdges(eds => addEdge(params, eds));

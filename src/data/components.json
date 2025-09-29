@@ -664,5 +664,151 @@
     "purchase_links": [
       { "vendor": "AudioControl", "url": "https://www.audiocontrol.com/product/lc-1-1500/" }
     ]
+  },
+  {
+    "id": "amp-007",
+    "brand": "Pioneer",
+    "name": "GM-DX975 Class D 5-Channel Amplifier",
+    "type": "amplifier",
+    "category": "Amplifier",
+    "price": 399.99,
+    "description": "Compact 5-channel amp delivering 75Wx4 + 350Wx1 for complete systems.",
+    "specs": {
+      "rms_wattage": 650,
+      "channels": 5,
+      "impedance": "2Ω stable"
+    },
+    "tags": ["5-channel", "compact"],
+    "purchase_links": [
+      { "vendor": "Pioneer", "url": "https://www.pioneerelectronics.com/PUSA/Car/Amplifiers/GM-DX975" }
+    ]
+  },
+  {
+    "id": "amp-008",
+    "brand": "Skar Audio",
+    "name": "RP-2000.1D Monoblock Amplifier",
+    "type": "amplifier",
+    "category": "Amplifier",
+    "price": 249.99,
+    "description": "Affordable 2,000W monoblock amp ideal for dual subwoofer builds.",
+    "specs": {
+      "rms_wattage": 2000,
+      "channels": 1,
+      "impedance": "1Ω stable"
+    },
+    "tags": ["mono", "budget", "high-output"],
+    "purchase_links": [
+      { "vendor": "Skar Audio", "url": "https://www.skaraudio.com/products/rp-2000-1d" }
+    ]
+  },
+  {
+    "id": "spk-011",
+    "brand": "Morel",
+    "name": "Tempo Ultra 602 Component System",
+    "type": "speaker-set",
+    "category": "Component Speakers",
+    "price": 579.00,
+    "description": "High-end 6.5-inch set with 1.1\" silk dome tweeters and MXR crossovers.",
+    "specs": {
+      "size": "6.5",
+      "rms_wattage": 120,
+      "peak_wattage": 250,
+      "impedance": "4Ω"
+    },
+    "fitment": {
+      "speakerSizes": ["6.5"],
+      "locations": ["front door"]
+    },
+    "tags": ["component", "audiophile"],
+    "purchase_links": [
+      { "vendor": "Morel", "url": "https://www.morelhifi.com/product/tempo-ultra-602" }
+    ]
+  },
+  {
+    "id": "spk-012",
+    "brand": "Sony",
+    "name": "XS-690GS 6x9 Coaxial Speakers",
+    "type": "speaker-set",
+    "category": "Coaxial Speakers",
+    "price": 229.99,
+    "description": "GS-series coaxials with lightweight mica cones and synthetic fabric tweeters.",
+    "specs": {
+      "size": "6x9",
+      "rms_wattage": 90,
+      "peak_wattage": 300,
+      "impedance": "4Ω"
+    },
+    "fitment": {
+      "speakerSizes": ["6x9"],
+      "locations": ["rear deck", "rear door"]
+    },
+    "tags": ["coaxial", "gs-series"],
+    "purchase_links": [
+      { "vendor": "Sony", "url": "https://electronics.sony.com/audio/car-speakers/products/xs-690gs" }
+    ]
+  },
+  {
+    "id": "sub-005",
+    "brand": "JL Audio",
+    "name": "12W6v3-D4 Subwoofer",
+    "type": "subwoofer",
+    "category": "Subwoofer",
+    "price": 799.99,
+    "description": "JL Audio W6 series 12-inch subwoofer delivering deep, accurate bass in sealed enclosures.",
+    "specs": {
+      "size": "12",
+      "rms_wattage": 600,
+      "peak_wattage": 1200,
+      "impedance": "Dual 4Ω"
+    },
+    "tags": ["sealed", "premium", "sq"],
+    "purchase_links": [
+      { "vendor": "Crutchfield", "url": "https://www.crutchfield.com/p_13612W6V3/JL-Audio-12W6v3-D4.html" }
+    ]
+  },
+  {
+    "id": "wire-005",
+    "brand": "KnuKonceptz",
+    "name": "KCA Complete 0/1 AWG Amp Kit",
+    "type": "wiring",
+    "category": "Wiring & Installation",
+    "price": 199.99,
+    "description": "Full 0/1 AWG CCA kit including distribution and fuse hardware for dual amplifiers.",
+    "specs": {
+      "awg": "0",
+      "length": "18ft"
+    },
+    "tags": ["power-kit", "dual-amp"],
+    "purchase_links": [
+      { "vendor": "KnuKonceptz", "url": "https://www.knukonceptz.com/kca-kolossus-complete-0-gauge-amp-install-kit/" }
+    ]
+  },
+  {
+    "id": "acc-006",
+    "brand": "Stinger",
+    "name": "SPXDB3 Power Distribution Block",
+    "type": "accessory",
+    "category": "Accessories",
+    "price": 79.99,
+    "description": "Modular distribution block accepting 0 AWG inputs and dual 4/8 AWG outputs.",
+    "specs": {},
+    "tags": ["distribution", "power"],
+    "purchase_links": [
+      { "vendor": "Stinger", "url": "https://stingerelectronics.com/products/spxdb3" }
+    ]
+  },
+  {
+    "id": "acc-007",
+    "brand": "iDatalink",
+    "name": "Maestro RR Interface",
+    "type": "accessory",
+    "category": "Accessories",
+    "price": 129.99,
+    "description": "Data interface for retaining factory features when installing aftermarket head units.",
+    "specs": {},
+    "tags": ["integration", "maestro"],
+    "purchase_links": [
+      { "vendor": "iDatalink", "url": "https://maestro.idatalink.com/product/product_id/102" }
+    ]
   }
 ]

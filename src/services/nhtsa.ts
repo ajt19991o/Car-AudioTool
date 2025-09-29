@@ -29,10 +29,6 @@ const getSessionKey = (make: string) => `nhtsa-models:${make.toLowerCase()}`;
 
 const ALL_MAKES_CACHE_KEY = 'nhtsa-all-makes';
 
-interface NhtsaMakeResponse {
-  Results?: Array<{ Make_Name?: string }>;
-}
-
 export async function fetchAllMakes(): Promise<string[]> {
   if (session) {
     const stored = session.getItem(ALL_MAKES_CACHE_KEY);
@@ -155,16 +151,4 @@ export async function fetchModelsForMake(make: string, startYear = START_YEAR): 
   }
 
   return models;
-}
-
-export async function fetchAllMakes(): Promise<string[]> {
-  const url = `${BASE_URL}/GetAllMakes?format=json`;
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`NHTSA responded with ${response.status}`);
-  }
-  const data = (await response.json()) as NhtsaMakeResponse;
-  return (data.Results ?? [])
-    .map(result => result.Make_Name?.trim())
-    .filter((name): name is string => Boolean(name && name.length > 0));
 }
