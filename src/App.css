@@ -397,15 +397,15 @@ body {
   flex-direction: column;
   gap: 0.35rem;
   font-size: 0.85rem;
-  color: #ccc;
+  color: #5f6c85;
 }
 
 .price-filter input {
-  background-color: #3a3a3a;
-  border: 1px solid #555;
-  color: white;
+  background-color: #ffffff;
+  border: 1px solid #cbd5f0;
+  color: #1a2330;
   padding: 0.5rem;
-  border-radius: 6px;
+  border-radius: 10px;
   width: 140px;
 }
 
@@ -414,7 +414,7 @@ body {
   flex-direction: column;
   gap: 0.35rem;
   font-size: 0.85rem;
-  color: #ccc;
+  color: #5f6c85;
 }
 
 .tag-chips {
@@ -425,8 +425,8 @@ body {
 
 .tag-chip {
   background-color: transparent;
-  border: 1px solid #555;
-  color: #e4edff;
+  border: 1px solid #cbd5f0;
+  color: #3654b3;
   padding: 0.3rem 0.6rem;
   border-radius: 999px;
   cursor: pointer;
@@ -436,7 +436,7 @@ body {
 .tag-chip--active {
   background-color: rgba(76, 130, 255, 0.2);
   border-color: #4c82ff;
-  color: #ffffff;
+  color: #1a2330;
 }
 
 .filter-info {
@@ -722,8 +722,8 @@ body {
 .selected-components-list h4 {
   margin-bottom: 0.75rem;
   font-size: 1.1rem;
-  border-top: 1px solid #555;
-  padding-top: 1.5rem;
+  border-top: 1px solid #e3e7f4;
+  padding-top: 1.2rem;
 }
 
 .selected-components-list ul {
@@ -736,7 +736,7 @@ body {
 
 .no-items-message {
   font-style: italic;
-  color: #a0a0a0;
+  color: #6f7a92;
   text-align: center;
   padding: 1rem 0;
 }
@@ -757,7 +757,7 @@ body {
 
 .input-group label {
   font-size: 0.9rem;
-  color: #ccc;
+  color: #5f6c85;
 }
 
 .slider-group {
@@ -773,11 +773,11 @@ body {
 .length-input,
 .wattage-input {
   width: 72px;
-  background-color: #3a3a3a;
-  border: 1px solid #555;
-  color: white;
-  padding: 0.4rem;
-  border-radius: 4px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5f0;
+  color: #1a2330;
+  padding: 0.45rem;
+  border-radius: 8px;
   text-align: center;
 }
 
@@ -786,9 +786,10 @@ body {
   justify-content: space-between;
   align-items: center;
   font-size: 1.1rem;
-  background-color: #1a1a1a;
-  padding: 0.75rem;
-  border-radius: 6px;
+  background-color: #f0f4ff;
+  padding: 0.8rem;
+  border-radius: 10px;
+  border: 1px solid #dfe4f3;
 }
 
 .fuse-result {
@@ -880,16 +881,19 @@ body {
 
 .safety-item {
   padding: 0.6rem 0.75rem;
-  border-radius: 6px;
-  background-color: #343434;
+  border-radius: 10px;
+  background-color: #f5f7ff;
+  border: 1px solid #e1e5f3;
 }
 
 .safety-item--warning {
-  border: 1px solid rgba(255, 204, 0, 0.6);
+  border-color: rgba(255, 174, 0, 0.6);
+  background-color: rgba(255, 210, 96, 0.18);
 }
 
 .safety-item--critical {
-  border: 1px solid rgba(255, 99, 99, 0.6);
+  border-color: rgba(255, 112, 112, 0.6);
+  background-color: rgba(255, 112, 112, 0.18);
 }
 
 /* Tutorials view */
