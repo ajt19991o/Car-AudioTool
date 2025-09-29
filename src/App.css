@@ -457,9 +457,10 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #3a3a3a;
-  padding: 0.85rem 1rem;
-  border-radius: 6px;
+  background-color: #f7f9ff;
+  padding: 0.95rem 1.1rem;
+  border-radius: 12px;
+  border: 1px solid #dfe4f3;
 }
 
 .component-info {
@@ -474,7 +475,7 @@ body {
 
 .component-info span {
   font-size: 0.85rem;
-  color: #ccc;
+  color: #5f6c85;
 }
 
 .component-specs {
@@ -496,9 +497,9 @@ body {
 
 .component-tags span {
   font-size: 0.75rem;
-  background-color: rgba(76, 130, 255, 0.18);
-  color: #e4edff;
-  padding: 0.1rem 0.45rem;
+  background-color: rgba(76, 130, 255, 0.15);
+  color: #3654b3;
+  padding: 0.2rem 0.55rem;
   border-radius: 999px;
 }
 
@@ -543,9 +544,10 @@ body {
 .fitment-speakers li {
   display: flex;
   justify-content: space-between;
-  background-color: #343434;
-  padding: 0.6rem 0.75rem;
-  border-radius: 6px;
+  background-color: #f3f6ff;
+  padding: 0.65rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid #dfe4f3;
 }
 
 .fitment-speakers strong {
@@ -553,13 +555,13 @@ body {
 }
 
 .fitment-speakers span {
-  color: #8ec4ff;
+  color: #3654b3;
   font-weight: 600;
 }
 
 .fitment-empty {
   font-style: italic;
-  color: #a0a0a0;
+  color: #6f7a92;
 }
 
 .fitment-wiring h4 {
@@ -587,7 +589,7 @@ body {
 .fitment-note {
   margin-top: 0.75rem;
   font-size: 0.85rem;
-  color: #d7d7d7;
+  color: #5f6c85;
   line-height: 1.4;
 }
 
@@ -657,13 +659,16 @@ body {
   background-color: #4c82ff;
   border: none;
   color: white;
-  padding: 0.45rem 0.9rem;
-  border-radius: 6px;
+  padding: 0.48rem 1.1rem;
+  border-radius: 999px;
   cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .component-item button:hover:not(:disabled) {
   background-color: #3563c9;
+  transform: translateY(-1px);
 }
 
 .shop-button {
