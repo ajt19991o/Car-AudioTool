@@ -5,6 +5,8 @@ import WiringDiagram from './components/WiringDiagram';
 import ComponentBrowser from './components/ComponentBrowser';
 import ProjectSummary from './components/ProjectSummary';
 
+import WireGaugeCalculator from './components/WireGaugeCalculator';
+
 // Define data structures
 interface VehicleCorporation {
   corporation: string;
@@ -76,6 +78,8 @@ function App() {
       });
   }, []);
 
+  const totalRms = selectedComponents.reduce((total, comp) => total + (comp.specs?.rms_wattage || 0), 0);
+
   const handleAddComponent = (component: AudioComponent) => {
     setSelectedComponents(prev => [...prev, component]);
 
@@ -130,6 +134,7 @@ function App() {
               </div>
               <aside className="sidebar">
                 <ProjectSummary selectedComponents={selectedComponents} />
+                <WireGaugeCalculator totalRms={totalRms} />
                 <ComponentBrowser onAddComponent={handleAddComponent} />
               </aside>
             </div>

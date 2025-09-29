@@ -139,7 +139,55 @@
   color: #ccc;
 }
 
-/* Component Browser Styles */
+/* Wire Gauge Calculator Styles */
+.wire-calculator {
+  background-color: #2f2f2f;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.wire-calculator h3 {
+  margin-top: 0;
+  border-bottom: 1px solid #555;
+  padding-bottom: 0.5rem;
+}
+
+.calculator-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 0.25rem;
+}
+
+.input-group input {
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.calculator-result {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem;
+  background-color: #1a1a1a;
+  padding: 0.75rem;
+  border-radius: 6px;
+}
+
 .component-list {
   display: flex;
   flex-direction: column;
