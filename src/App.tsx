@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Node, Edge, useNodesState, useEdgesState } from 'reactflow';
 import './App.css';
 import WiringDiagram from './components/WiringDiagram';
 import ComponentBrowser from './components/ComponentBrowser';
@@ -17,12 +18,26 @@ interface AudioComponent {
   price: number;
 }
 
+const initialNodes: Node[] = [
+  { id: '1', position: { x: 0, y: 0 }, data: { label: 'Car Battery' }, type: 'input' },
+  { id: '2', position: { x: 0, y: 100 }, data: { label: 'Head Unit' } },
+];
+
+const initialEdges: Edge[] = [
+  { id: 'e1-2', source: '1', target: '2', label: '12V Power' },
+];
+
+let nodeId = 3;
+
 function App() {
   const [vehicleData, setVehicleData] = useState<VehicleCorporation[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedMake, setSelectedMake] = useState<string | null>(null);
   const [selectedComponents, setSelectedComponents] = useState<AudioComponent[]>([]);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   useEffect(() => {
     fetch('http://localhost:3001/api/vehicles')
@@ -43,6 +58,13 @@ function App() {
 
   const handleAddComponent = (component: AudioComponent) => {
     setSelectedComponents(prev => [...prev, component]);
+
+    const newNode: Node = {
+      id: `node-${nodeId++}`,
+      position: { x: Math.random() * 400 - 200, y: Math.random() * 200 + 200 },
+      data: { label: component.name },
+    };
+    setNodes(nds => nds.concat(newNode));
   };
 
   return (
@@ -79,7 +101,12 @@ function App() {
             <button onClick={() => setSelectedMake(null)} className="back-button">← Back to Vehicle List</button>
             <div className="project-view">
               <div className="main-content">
-                <WiringDiagram />
+                <WiringDiagram 
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                />
               </div>
               <aside className="sidebar">
                 <Budget selectedComponents={selectedComponents} />
