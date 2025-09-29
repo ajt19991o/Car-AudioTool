@@ -113,7 +113,7 @@ function buildCorporationList(mapping: Record<string, string>): VehicleCorporati
 const formatMakeName = (value: string) =>
   value
     .toLowerCase()
-    .replace(/(^|[\s-\/])([a-z])/g, (match, boundary, letter) => `${boundary}${letter.toUpperCase()}`);
+    .replace(/(^|[\s-\/])([a-z])/g, (_, boundary, letter) => `${boundary}${letter.toUpperCase()}`);
 
 function App() {
   const view = useAppStore(state => state.view);
