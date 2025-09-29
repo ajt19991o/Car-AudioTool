@@ -54,3 +54,26 @@ export interface VehicleFitmentSummary {
   compatibleComponentTypes: string[];
   notes?: string;
 }
+
+export interface GuideSection {
+  id: string;
+  title: string;
+  focus: string;
+  keyPoints: string[];
+  actionSteps: string[];
+  references: string[];
+}
+
+export interface GuideChapter {
+  id: string;
+  title: string;
+  summary: string;
+  sections: GuideSection[];
+}
+
+export interface GuideResource {
+  id: string;
+  title: string;
+  description: string;
+  href: string;
+}

@@ -43,23 +43,30 @@ export function BudgetPlanner() {
 }
 
 export function TutorialsPanel() {
-  const tutorials = useAppStore(state => state.tutorials);
+  const guideChapters = useAppStore(state => state.guideChapters);
+  const setView = useAppStore(state => state.setView);
+  const preview = guideChapters.slice(0, 3);
 
   return (
     <div className="tutorials-panel">
       <h3>Guides & Tutorials</h3>
+      <p className="tutorials-panel__intro">Highlights curated from the Car Audio &amp; AV Bible.</p>
       <ul>
-        {tutorials.map(guide => (
-          <li key={guide.id}>
-            <strong>{guide.title}</strong>
-            <p>{guide.description}</p>
-            {guide.url && (
-              <a href={guide.url} target="_blank" rel="noreferrer">Open Tutorial</a>
-            )}
+        {preview.map(chapter => (
+          <li key={chapter.id}>
+            <strong>{chapter.title}</strong>
+            <p>{chapter.summary}</p>
+            <div className="tutorials-panel__tags">
+              {chapter.sections.slice(0, 2).map(section => (
+                <span key={section.id}>{section.title.replace(/Section \d+\.\d+ · /, '')}</span>
+              ))}
+            </div>
           </li>
         ))}
-        {tutorials.length === 0 && <p>New how-to guides coming soon.</p>}
       </ul>
+      <button type="button" className="tutorials-panel__cta" onClick={() => setView('learn')}>
+        Open Guide Hub
+      </button>
     </div>
   );
 }

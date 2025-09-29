@@ -1,5 +1,12 @@
 import { create } from 'zustand';
-import type { AudioComponent, VehicleCorporation, VehicleModelOption } from '../types';
+import type {
+  AudioComponent,
+  VehicleCorporation,
+  VehicleModelOption,
+  GuideChapter,
+  GuideResource,
+} from '../types';
+import guideChaptersData, { guideResources as guideResourcesData } from '../data/guideContent';
 
 type AppView = 'home' | 'vehicle-selection' | 'project' | 'learn' | 'diagram-lab';
 
@@ -46,14 +53,6 @@ interface BudgetState {
   accessoriesTotal: number;
 }
 
-interface TutorialEntry {
-  id: string;
-  title: string;
-  description: string;
-  url?: string;
-  tags: string[];
-}
-
 interface SafetyCheckIssue {
   id: string;
   message: string;
@@ -73,7 +72,8 @@ interface AppState {
   wiringEstimateAuto?: WiringRunEstimate;
   wiringEstimateSource: 'auto' | 'manual';
   selectedComponents: AudioComponent[];
-  tutorials: TutorialEntry[];
+  guideChapters: GuideChapter[];
+  guideResources: GuideResource[];
   safetyChecks: SafetyCheckIssue[];
   budget: BudgetState;
   setView: (view: AppView) => void;
@@ -93,7 +93,6 @@ interface AppState {
   addComponent: (component: AudioComponent) => void;
   removeComponent: (id: string) => void;
   setComponents: (components: AudioComponent[]) => void;
-  upsertTutorials: (entries: TutorialEntry[]) => void;
   setSafetyChecks: (issues: SafetyCheckIssue[]) => void;
   updateBudget: (budget: Partial<BudgetState>) => void;
 }
@@ -111,7 +110,8 @@ export const useAppStore = create<AppState>((set) => ({
   wiringEstimateAuto: undefined,
   wiringEstimateSource: 'auto',
   selectedComponents: [],
-  tutorials: [],
+  guideChapters: guideChaptersData,
+  guideResources: guideResourcesData,
   safetyChecks: [],
   budget: {
     target: undefined,
@@ -226,7 +226,6 @@ export const useAppStore = create<AppState>((set) => ({
         ...calculateBudgetTotals(components),
       },
     })),
-  upsertTutorials: (entries) => set({ tutorials: entries }),
   setSafetyChecks: (issues) => set({ safetyChecks: issues }),
   updateBudget: (budget) => set((state) => ({ budget: { ...state.budget, ...budget } })),
 }));

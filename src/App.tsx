@@ -20,6 +20,7 @@ import VehicleSetupControls from './components/VehicleSetupControls';
 import { useAppStore } from './state/useAppStore';
 import ThemeToggle from './components/ThemeToggle';
 import DiagramLabView from './views/DiagramLabView';
+import GuideHub from './views/GuideHub';
 import vehicleSpecsData from './data/vehicle_specs.json';
 import corporationMapData from './data/corporationMap.json';
 import { fetchAllMakes, fetchModelsForMake } from './services/nhtsa';
@@ -328,7 +329,6 @@ function App() {
   const wiringEstimate = useAppStore(state => state.wiringEstimate);
   const selectedComponents = useAppStore(state => state.selectedComponents);
   const removeComponent = useAppStore(state => state.removeComponent);
-  const upsertTutorials = useAppStore(state => state.upsertTutorials);
   const setSafetyChecks = useAppStore(state => state.setSafetyChecks);
   const theme = useAppStore(state => state.theme);
   const budget = useAppStore(state => state.budget);
@@ -488,31 +488,6 @@ function App() {
   useEffect(() => {
     void loadModelOptions();
   }, [loadModelOptions]);
-
-  useEffect(() => {
-    upsertTutorials([
-      {
-        id: 'planning-basics',
-        title: 'Planning Your First Car Audio Upgrade',
-        description: 'Understand the components, wiring paths, and safety essentials before turning a wrench.',
-        url: 'https://www.crutchfield.com/learn/car-audio-video-installation-guide.html',
-        tags: ['planning', 'beginner'],
-      },
-      {
-        id: 'amp-wiring',
-        title: 'How to Wire an Amplifier Safely',
-        description: 'Step-by-step walkthrough covering power routing, grounding, and fuse placement.',
-        url: 'https://www.sonicelectronix.com/learn/how-to-install-a-car-amplifier/',
-        tags: ['wiring', 'safety'],
-      },
-      {
-        id: 'tuning-basics',
-        title: 'Tuning for Clear Sound',
-        description: 'Learn gain structure, crossover points, and DSP basics for a balanced system.',
-        tags: ['tuning'],
-      },
-    ]);
-  }, [upsertTutorials]);
 
   useEffect(() => {
     const safetyIssues = [];
@@ -713,14 +688,7 @@ function App() {
     </div>
   );
 
-  const renderLearn = () => (
-    <div className="learn-view">
-      <h2>Learn the Essentials</h2>
-      <p>Prep for your install with curated guides on planning, wiring, tuning, and safety.</p>
-      <TutorialsPanel />
-      <button onClick={() => setView('project')} className="start-button">Start Building</button>
-    </div>
-  );
+  const renderLearn = () => <GuideHub />;
 
   const renderDiagramLab = () => <DiagramLabView />;
 
