@@ -15,6 +15,7 @@ import ReactFlow, {
   type OnNodesChange,
   type OnEdgesChange,
   ReactFlowProvider,
+  type NodeTypes,
 } from 'reactflow';
 import { useAppStore } from '../state/useAppStore';
 import type { LibraryComponent } from '../state/useAppStore';
@@ -28,7 +29,7 @@ type EditableNodeData = {
   kind?: NodeKind;
 };
 
-const nodeTypes = {
+const nodeTypes: NodeTypes = {
   custom: CustomNode,
 };
 
@@ -362,7 +363,7 @@ interface DiagramCanvasProps {
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: (connection: Connection) => void;
-  nodeTypes: Record<string, any>;
+  nodeTypes: NodeTypes;
   onSelectionChange: (nodeId: string | null) => void;
 }
 
@@ -387,7 +388,8 @@ function DiagramCanvas({ nodes, edges, onNodesChange, onEdgesChange, onConnect, 
     >
       <MiniMap
         nodeColor={(node) => {
-          const kind = (node.data as any)?.kind ?? 'device';
+          const data = node.data as { kind?: string } | undefined;
+          const kind = data?.kind ?? 'device';
           switch (kind) {
             case 'power':
               return '#ef4444';

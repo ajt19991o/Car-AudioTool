@@ -330,5 +330,3 @@ export const guideResources = [
     href: '#part-6',
   },
 ];
-
-export default guideChapters;

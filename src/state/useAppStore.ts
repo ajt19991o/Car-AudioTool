@@ -6,7 +6,7 @@ import type {
   GuideChapter,
   GuideResource,
 } from '../types';
-import guideChaptersData, { guideResources as guideResourcesData } from '../data/guideContent';
+import { guideChapters, guideResources } from '../data/guideContent';
 
 type AppView = 'home' | 'vehicle-selection' | 'project' | 'learn' | 'diagram-lab';
 
@@ -110,8 +110,8 @@ export const useAppStore = create<AppState>((set) => ({
   wiringEstimateAuto: undefined,
   wiringEstimateSource: 'auto',
   selectedComponents: [],
-  guideChapters: guideChaptersData,
-  guideResources: guideResourcesData,
+  guideChapters,
+  guideResources,
   safetyChecks: [],
   budget: {
     target: undefined,

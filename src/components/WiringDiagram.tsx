@@ -11,6 +11,7 @@ import ReactFlow, {
   ReactFlowProvider,
   BackgroundVariant,
   useReactFlow,
+  type NodeTypes,
 } from 'reactflow';
 import { useMemo } from 'react';
 import './WiringDiagram.css';
@@ -21,7 +22,7 @@ interface WiringDiagramProps {
   onNodesChange: OnNodesChange;
   onEdgesChange: OnEdgesChange;
   onConnect: OnConnect;
-  nodeTypes: any;
+  nodeTypes: NodeTypes;
 }
 
 function WiringDiagram({ nodes, edges, onNodesChange, onEdgesChange, onConnect, nodeTypes }: WiringDiagramProps) {
@@ -43,7 +44,7 @@ function WiringDiagram({ nodes, edges, onNodesChange, onEdgesChange, onConnect, 
 
 export default WiringDiagram;
 
-interface DiagramInnerProps extends WiringDiagramProps {}
+type DiagramInnerProps = WiringDiagramProps;
 
 const EDGE_LABELS: Record<string, string> = {
   power: 'Power Feed (12V)',
@@ -90,7 +91,8 @@ function DiagramInner({ nodes, edges, onNodesChange, onEdgesChange, onConnect, n
       >
         <MiniMap
           nodeColor={(node) => {
-            const kind = (node.data as any)?.kind ?? 'device';
+            const data = node.data as { kind?: string } | undefined;
+            const kind = data?.kind ?? 'device';
             return EDGE_COLORS[kind] ?? '#4b5563';
           }}
           style={{ backgroundColor: 'var(--color-bg, #0f172a)', borderRadius: '8px' }}

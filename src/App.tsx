@@ -291,7 +291,7 @@ const CORPORATION_MAP = corporationMapData as Record<string, string>;
 const formatMakeName = (value: string) =>
   value
     .toLowerCase()
-    .replace(/(^|[\s-\/])([a-z])/g, (_, boundary, letter) => `${boundary}${letter.toUpperCase()}`);
+    .replace(/(^|[\s-/])([a-z])/g, (_, boundary, letter) => `${boundary}${letter.toUpperCase()}`);
 
 const corporationFallbackList = buildCorporationList(CORPORATION_MAP);
 

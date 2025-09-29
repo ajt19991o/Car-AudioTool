@@ -21,7 +21,7 @@ const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 const formatModelName = (value: string) =>
   value
     .toLowerCase()
-    .replace(/(^|[\s-\/])([a-z0-9])/g, (_, boundary, letter) => `${boundary}${letter.toUpperCase()}`)
+    .replace(/(^|[\s-/])([a-z0-9])/g, (_, boundary, letter) => `${boundary}${letter.toUpperCase()}`)
     .replace(/\s+/g, ' ')
     .trim();
 
@@ -35,7 +35,7 @@ export async function fetchAllMakes(): Promise<string[]> {
     if (stored) {
       try {
         return JSON.parse(stored) as string[];
-      } catch (error) {
+      } catch {
         session.removeItem(ALL_MAKES_CACHE_KEY);
       }
     }
@@ -80,7 +80,7 @@ export async function fetchModelsForMake(make: string, startYear = START_YEAR): 
         const parsed = JSON.parse(stored) as VehicleModelOption[];
         modelCache.set(cacheKey, parsed);
         return parsed;
-      } catch (error) {
+      } catch {
         session.removeItem(getSessionKey(make));
       }
     }
