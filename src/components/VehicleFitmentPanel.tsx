@@ -72,7 +72,10 @@ function VehicleFitmentPanel() {
   const handleManualChange = (field: 'powerRunFeet' | 'speakerRunFeet' | 'remoteTurnOnFeet') => (event: ChangeEvent<HTMLInputElement>) => {
     const nextValue = Math.max(1, Math.round(Number(event.target.value) || 0));
     const base = {
-      ...(wiringEstimate ?? wiringEstimateAuto ?? storedOverride ?? createDefaultWiring()),
+      ...createDefaultWiring(),
+      ...(wiringEstimateAuto ?? {}),
+      ...(storedOverride ?? {}),
+      ...(wiringEstimate ?? {}),
     };
     const updated = { ...base, [field]: nextValue };
     applyManualOverride(updated);
