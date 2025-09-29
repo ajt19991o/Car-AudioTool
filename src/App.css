@@ -32,54 +32,69 @@
   border-radius: 8px;
 }
 
-/* Vehicle List Styles */
-.vehicle-list {
-  max-width: 800px;
-  margin: 0 auto; /* Center the list before selection */
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+/* Vehicle Selection Styles */
+.vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 2rem auto;
 }
 
-.corporation-item summary {
-  cursor: pointer;
-  font-weight: bold;
+.corp-card {
+  background-color: #2f2f2f;
+  border: 1px solid #444;
+  border-radius: 8px;
+  padding: 2rem 1rem;
+  text-align: center;
   font-size: 1.2rem;
-  padding: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+.corp-card:hover {
   background-color: #3a3a3a;
-  border-radius: 6px;
-  transition: background-color 0.2s;
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
-.corporation-item summary:hover {
-  background-color: #4a4a4a;
+.make-list {
+  max-width: 500px;
+  margin: 0 auto;
 }
 
-.corporation-item[open] summary {
-  background-color: #1a1a1a;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+.make-list h3 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
 }
 
-.corporation-item ul {
+.make-list ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
   background-color: #2f2f2f;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.corporation-item li {
-  padding: 0.75rem 1.5rem;
-  border-top: 1px solid #444;
+.make-list li {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #444;
   cursor: pointer;
   transition: background-color 0.2s;
+  font-size: 1.1rem;
 }
 
-.corporation-item li:hover {
+.make-list li:last-child {
+  border-bottom: none;
+}
+
+.make-list li:hover {
   background-color: #4a4a4a;
 }
+
 
 /* Project View Layout */
 .back-button {

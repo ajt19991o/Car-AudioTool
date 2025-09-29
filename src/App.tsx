@@ -57,6 +57,7 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<'home' | 'vehicle-selection' | 'project'>('home');
+  const [selectedCorp, setSelectedCorp] = useState<VehicleCorporation | null>(null);
   const [selectedMake, setSelectedMake] = useState<string | null>(null);
   const [selectedComponents, setSelectedComponents] = useState<AudioComponent[]>([]);
   const [vehicleSpecs, setVehicleSpecs] = useState<any>(null);
@@ -121,6 +122,7 @@ function App() {
     setSelectedMake(null);
     setVehicleSpecs(null);
     setView('vehicle-selection');
+    setSelectedCorp(null); // Also reset selected corporation
   };
 
   const renderContent = () => {
@@ -136,24 +138,31 @@ function App() {
           </div>
         );
       case 'vehicle-selection':
-        return (
-          <div className="vehicle-list">
-            {loading && <p>Loading vehicle list...</p>}
-            {error && <p className="error">{error}</p>}
+        if (loading) return <p>Loading vehicle list...</p>;
+        if (error) return <p className="error">{error}</p>;
+
+        return selectedCorp ? (
+          <div className="make-list">
+            <button onClick={() => setSelectedCorp(null)} className="back-button">← Back to Brands</button>
+            <h3>{selectedCorp.corporation}</h3>
+            <ul>
+              {selectedCorp.makes.map((make, index) => (
+                <li key={index} onClick={() => handleSelectMake(make)}>
+                  {make}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div className="vehicle-grid">
             {vehicleData.map(corp => (
-              <details key={corp.corporation} className="corporation-item">
-                <summary>{corp.corporation}</summary>
-                <ul>
-                  {corp.makes.map((make, index) => (
-                    <li key={index} onClick={() => handleSelectMake(make)}>
-                      {make}
-                    </li>
-                  ))}
-                </ul>
-              </details>
+              <div key={corp.corporation} className="corp-card" onClick={() => setSelectedCorp(corp)}>
+                <span>{corp.corporation}</span>
+              </div>
             ))}
           </div>
         );
+
       case 'project':
         return (
           <div>
