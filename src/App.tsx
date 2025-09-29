@@ -17,6 +17,7 @@ import { BudgetPlanner, TutorialsPanel, SafetyChecklistPanel } from './component
 import VehicleFitmentPanel from './components/VehicleFitmentPanel';
 import VehicleSetupControls from './components/VehicleSetupControls';
 import { useAppStore } from './state/useAppStore';
+import ThemeToggle from './components/ThemeToggle';
 import vehicleSpecsData from './data/vehicle_specs.json';
 import corporationMapData from './data/corporationMap.json';
 import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
@@ -131,6 +132,7 @@ function App() {
   const removeComponent = useAppStore(state => state.removeComponent);
   const upsertTutorials = useAppStore(state => state.upsertTutorials);
   const setSafetyChecks = useAppStore(state => state.setSafetyChecks);
+  const theme = useAppStore(state => state.theme);
 
   const [selectedCorp, setSelectedCorp] = useState<VehicleCorporation | null>(null);
   const [vehicleLoading, setVehicleLoading] = useState<boolean>(true);
@@ -156,6 +158,11 @@ function App() {
     if (vehicleSelection.year) parts.push(`(${vehicleSelection.year})`);
     return parts.join(' ');
   }, [vehicleSelection.make, vehicleSelection.model, vehicleSelection.year]);
+
+  useEffect(() => {
+    document.body.classList.remove('theme-light', 'theme-dark');
+    document.body.classList.add(theme === 'dark' ? 'theme-dark' : 'theme-light');
+  }, [theme]);
 
   useEffect(() => {
     const allowedMakes = new Set(Object.keys(CORPORATION_MAP).map(name => name.toUpperCase()));
@@ -568,6 +575,7 @@ function App() {
           >
             Tutorials
           </button>
+          <ThemeToggle />
         </nav>
       </header>
       <main>

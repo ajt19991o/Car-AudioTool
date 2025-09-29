@@ -3,6 +3,8 @@ import type { AudioComponent, VehicleCorporation, VehicleModelOption } from '../
 
 type AppView = 'home' | 'vehicle-selection' | 'project' | 'learn';
 
+type Theme = 'light' | 'dark';
+
 interface VehicleSelection {
   corporation?: string;
   make?: string;
@@ -54,6 +56,7 @@ interface AppState {
   vehicleSelection: VehicleSelection;
   corporations: VehicleCorporation[];
   modelOptions: VehicleModelOption[];
+  theme: Theme;
   fitment?: FitmentInfo;
   wiringEstimate?: WiringRunEstimate;
   wiringEstimateAuto?: WiringRunEstimate;
@@ -65,6 +68,8 @@ interface AppState {
   setView: (view: AppView) => void;
   setCorporations: (data: VehicleCorporation[]) => void;
   setModelOptions: (options: VehicleModelOption[]) => void;
+  setTheme: (theme: Theme) => void;
+  toggleTheme: () => void;
   setVehicleSelection: (selection: Partial<VehicleSelection>) => void;
   resetVehicleSelection: () => void;
   setFitment: (fitment?: FitmentInfo) => void;
@@ -83,6 +88,7 @@ export const useAppStore = create<AppState>((set) => ({
   vehicleSelection: {},
   corporations: [],
   modelOptions: [],
+  theme: 'light',
   fitment: undefined,
   wiringEstimate: undefined,
   wiringEstimateAuto: undefined,
@@ -99,6 +105,9 @@ export const useAppStore = create<AppState>((set) => ({
   setView: (view) => set({ view }),
   setCorporations: (data) => set({ corporations: data }),
   setModelOptions: (options) => set({ modelOptions: options }),
+  setTheme: (theme) => set({ theme }),
+  toggleTheme: () =>
+    set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
   setVehicleSelection: (selection) =>
     set((state) => ({ vehicleSelection: { ...state.vehicleSelection, ...selection } })),
   resetVehicleSelection: () =>
