@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const fs = require('fs/promises');
 const path = require('path');
 const corporationMap = require('../data/corporationMap.json');
+const fallbackVehicleData = require('../data/vehicle_fallback.json');
 
 const NHTSA_API_BASE = 'https://vpic.nhtsa.dot.gov/api/vehicles';
 const CACHE_TTL_MS = 1000 * 60 * 60 * 12; // 12 hours
@@ -95,12 +96,16 @@ const getVehicleData = async (req, res) => {
       grouped.set('Independent & Specialty', existing);
     }
 
-    const vehicleData = Array.from(grouped.entries())
+    let vehicleData = Array.from(grouped.entries())
       .map(([corporation, makes]) => ({
         corporation,
         makes: Array.from(makes).sort((a, b) => a.localeCompare(b)),
       }))
       .sort((a, b) => a.corporation.localeCompare(b.corporation));
+
+    if (!vehicleData.length && fallbackVehicleData.length) {
+      vehicleData = fallbackVehicleData;
+    }
 
     cachedVehicleData = vehicleData;
     cacheExpiresAt = Date.now() + CACHE_TTL_MS;
@@ -112,6 +117,12 @@ const getVehicleData = async (req, res) => {
 
     if (cachedVehicleData) {
       return res.json(cachedVehicleData);
+    }
+
+    if (fallbackVehicleData.length) {
+      cachedVehicleData = fallbackVehicleData;
+      cacheExpiresAt = Date.now() + CACHE_TTL_MS;
+      return res.json(fallbackVehicleData);
     }
 
     res.status(500).json({ error: 'Failed to fetch vehicle data' });

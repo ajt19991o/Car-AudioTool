@@ -1,6 +1,8 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { useAppStore } from '../state/useAppStore';
+
+const WIRING_STORAGE_KEY = 'car-audio-wiring-overrides';
 
 function VehicleFitmentPanel() {
   const vehicleSelection = useAppStore(state => state.vehicleSelection);
@@ -10,6 +12,16 @@ function VehicleFitmentPanel() {
   const wiringEstimateSource = useAppStore(state => state.wiringEstimateSource);
   const setWiringEstimate = useAppStore(state => state.setWiringEstimate);
   const restoreAutoWiringEstimate = useAppStore(state => state.restoreAutoWiringEstimate);
+  const [savedManual, setSavedManual] = useState(() => {
+    if (typeof window === 'undefined') return null;
+    try {
+      const raw = window.localStorage.getItem(WIRING_STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+      console.warn('Failed to parse stored wiring overrides', error);
+      return null;
+    }
+  });
 
   const effectiveEstimate = wiringEstimate ?? wiringEstimateAuto;
 
@@ -22,7 +34,16 @@ function VehicleFitmentPanel() {
     };
     const updated = { ...base, [field]: nextValue };
     setWiringEstimate(updated, { source: 'manual' });
+    setSavedManual(updated);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(WIRING_STORAGE_KEY, JSON.stringify(updated));
+    }
   };
+
+  useEffect(() => {
+    if (!savedManual) return;
+    setWiringEstimate(savedManual, { source: 'manual' });
+  }, [savedManual, setWiringEstimate, vehicleSelection.make, vehicleSelection.model]);
 
   const speakerSummary = useMemo(() => {
     if (!fitment?.speakers) return [] as { location: string; size: string }[];
@@ -118,7 +139,13 @@ function VehicleFitmentPanel() {
               <button
                 type="button"
                 className="reset-wiring-button"
-                onClick={restoreAutoWiringEstimate}
+                onClick={() => {
+                  restoreAutoWiringEstimate();
+                  setSavedManual(null);
+                  if (typeof window !== 'undefined') {
+                    window.localStorage.removeItem(WIRING_STORAGE_KEY);
+                  }
+                }}
                 disabled={!wiringEstimateAuto}
               >
                 Reset to vehicle estimate
