@@ -88,6 +88,11 @@ const estimateSpeakerWire = (speakers: { location: string }[], cabinLengthFeet?:
 
 const CORPORATION_MAP = corporationMapData as Record<string, string>;
 
+const formatMakeName = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/(^|[\s-\/])([a-z])/g, (_, boundary, letter) => `${boundary}${letter.toUpperCase()}`);
+
 const corporationFallbackList = buildCorporationList(CORPORATION_MAP);
 
 function buildCorporationList(mapping: Record<string, string>): VehicleCorporation[] {
@@ -109,11 +114,6 @@ function buildCorporationList(mapping: Record<string, string>): VehicleCorporati
     }))
     .sort((a, b) => a.corporation.localeCompare(b.corporation));
 }
-
-const formatMakeName = (value: string) =>
-  value
-    .toLowerCase()
-    .replace(/(^|[\s-\/])([a-z])/g, (_, boundary, letter) => `${boundary}${letter.toUpperCase()}`);
 
 function App() {
   const view = useAppStore(state => state.view);
