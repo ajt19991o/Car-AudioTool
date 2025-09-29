@@ -7,6 +7,7 @@
   box-shadow: var(--shadow-elevated, 0 18px 36px rgba(34, 52, 93, 0.15));
   color: var(--color-text, #1a2330);
   font-size: 0.9rem;
+  position: relative;
 }
 
 .custom-node-content {
@@ -14,6 +15,12 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
+}
+
+.custom-node-icon {
+  font-size: 1.2rem;
+  line-height: 1;
+  margin-top: 2px;
 }
 
 .custom-node-labels {
@@ -41,8 +48,24 @@
   border-radius: 8px;
 }
 
+.custom-node--power {
+  border-color: #ef4444;
+}
+
+.custom-node--ground {
+  border-color: #334155;
+}
+
+.custom-node--signal {
+  border-color: #0ea5e9;
+}
+
+.custom-node--remote {
+  border-color: #6366f1;
+}
+
 .custom-node-delete-button {
-  background-color: transparent;
+  background: transparent;
   color: var(--color-error, #ff6b6b);
   border: 1px solid var(--color-error, #ff6b6b);
   border-radius: 50%;
@@ -62,4 +85,8 @@
 .custom-node-delete-button:hover {
   background-color: var(--color-error, #ff6b6b);
   color: var(--color-card-bg, #ffffff);
+}
+
+.custom-node-delete-button {
+  border: 1px solid var(--color-error, #ff6b6b);
 }

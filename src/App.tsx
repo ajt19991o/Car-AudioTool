@@ -6,6 +6,7 @@ import {
   useEdgesState,
   addEdge,
   type Connection,
+  MarkerType,
 } from 'reactflow';
 import './App.css';
 import WiringDiagram from './components/WiringDiagram';
@@ -23,6 +24,8 @@ import corporationMapData from './data/corporationMap.json';
 import { fetchAllMakes, fetchModelsForMake } from './services/nhtsa';
 import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
 
+type NodeKind = 'power' | 'ground' | 'signal' | 'remote' | 'device' | 'accessory';
+
 const baseNodes: Node[] = [
   {
     id: 'battery',
@@ -31,6 +34,7 @@ const baseNodes: Node[] = [
       label: 'Battery +12V',
       subtitle: 'Engine bay, primary source',
       hint: 'Use 4 AWG OFC cable and a weatherproof grommet when routing into the cabin.',
+      kind: 'power',
     },
     position: { x: -320, y: 0 },
   },
@@ -41,6 +45,7 @@ const baseNodes: Node[] = [
       label: 'Main ANL Fuse Holder',
       subtitle: '150A within 18" of battery',
       hint: 'Mount solidly and crimp lugs with adhesive heat-shrink for corrosion protection.',
+      kind: 'power',
     },
     position: { x: -60, y: 20 },
   },
@@ -51,6 +56,7 @@ const baseNodes: Node[] = [
       label: 'Power Distribution Block',
       subtitle: 'Cabin mounting plate',
       hint: 'Split primary feed into equal-length leads for each amplifier.',
+      kind: 'power',
     },
     position: { x: 220, y: 120 },
   },
@@ -61,6 +67,7 @@ const baseNodes: Node[] = [
       label: 'Primary Amplifier',
       subtitle: 'Secured to amp rack',
       hint: 'Connect power/ground with 4 AWG, torque terminals, and keep airflow clear.',
+      kind: 'device',
     },
     position: { x: 220, y: 300 },
   },
@@ -71,6 +78,7 @@ const baseNodes: Node[] = [
       label: 'Head Unit / DSP',
       subtitle: 'Factory dash or aftermarket chassis',
       hint: 'Feed RCA / Toslink to amplifiers and provide ACC remote output.',
+      kind: 'device',
     },
     position: { x: -320, y: 260 },
   },
@@ -81,6 +89,7 @@ const baseNodes: Node[] = [
       label: 'Remote Turn-On Lead',
       subtitle: '18 AWG blue wire',
       hint: 'Route alongside signal cables; relay if multiple amplifiers are triggered.',
+      kind: 'remote',
     },
     position: { x: -40, y: 280 },
   },
@@ -91,67 +100,96 @@ const baseNodes: Node[] = [
       label: 'Chassis Ground',
       subtitle: 'Bare metal within 18" of amp',
       hint: 'Sand paint, use star washer, and torque bolt to spec.',
+      kind: 'ground',
     },
     position: { x: 220, y: 460 },
   },
 ];
+
+const EDGE_COLORS = {
+  power: '#ef4444',
+  distribution: '#f97316',
+  signal: '#0ea5e9',
+  remote: '#6366f1',
+  ground: '#334155',
+};
+
+const createEdgeStyle = (kind: keyof typeof EDGE_COLORS, dashed = false) => ({
+  stroke: EDGE_COLORS[kind],
+  strokeWidth: kind === 'signal' || kind === 'remote' ? 1.6 : 2.2,
+  strokeDasharray: dashed ? '6 3' : undefined,
+});
 
 const baseEdges: Edge[] = [
   {
     id: 'battery-main-fuse',
     source: 'battery',
     target: 'main-fuse',
-    label: '4 AWG OFC power feed',
-    labelStyle: { fill: '#f97316', fontWeight: 600 },
-    style: { stroke: '#f97316', strokeWidth: 2 },
+    label: '0/4 AWG OFC power feed',
+    labelStyle: { fill: EDGE_COLORS.distribution, fontWeight: 600 },
+    style: createEdgeStyle('distribution'),
+    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.distribution, width: 16, height: 16 },
+    data: { kind: 'power' },
   },
   {
     id: 'main-fuse-distribution',
     source: 'main-fuse',
     target: 'distribution',
     label: 'Run through firewall with grommet',
-    labelStyle: { fill: '#f97316', fontWeight: 600 },
-    style: { stroke: '#f97316', strokeWidth: 2 },
+    labelStyle: { fill: EDGE_COLORS.distribution, fontWeight: 600 },
+    style: createEdgeStyle('distribution'),
+    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.distribution, width: 16, height: 16 },
+    data: { kind: 'power' },
   },
   {
     id: 'distribution-amp',
     source: 'distribution',
     target: 'primary-amp',
     label: '4 AWG to amplifier',
-    labelStyle: { fill: '#ef4444', fontWeight: 600 },
-    style: { stroke: '#ef4444', strokeWidth: 2 },
+    labelStyle: { fill: EDGE_COLORS.power, fontWeight: 600 },
+    style: createEdgeStyle('power'),
+    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.power, width: 16, height: 16 },
+    data: { kind: 'power' },
   },
   {
     id: 'headunit-remote',
     source: 'head-unit',
     target: 'remote-lead',
     label: 'Remote turn-on (ACC)',
-    style: { stroke: '#6366f1', strokeDasharray: '6 3', strokeWidth: 1.5 },
-    labelStyle: { fill: '#6366f1', fontWeight: 600 },
+    style: createEdgeStyle('remote', true),
+    labelStyle: { fill: EDGE_COLORS.remote, fontWeight: 600 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.remote, width: 14, height: 14 },
+    data: { kind: 'remote' },
   },
   {
     id: 'remote-amp',
     source: 'remote-lead',
     target: 'primary-amp',
     label: '18 AWG remote lead',
-    style: { stroke: '#6366f1', strokeDasharray: '6 3', strokeWidth: 1.5 },
-    labelStyle: { fill: '#6366f1', fontWeight: 600 },
+    style: createEdgeStyle('remote', true),
+    labelStyle: { fill: EDGE_COLORS.remote, fontWeight: 600 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.remote, width: 14, height: 14 },
+    data: { kind: 'remote' },
   },
   {
     id: 'amp-ground',
     source: 'primary-amp',
     target: 'ground-point',
     label: '4 AWG chassis ground',
-    labelStyle: { fill: '#1f2937', fontWeight: 600 },
-    style: { stroke: '#1f2937', strokeWidth: 2 },
+    labelStyle: { fill: EDGE_COLORS.ground, fontWeight: 600 },
+    style: createEdgeStyle('ground'),
+    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.ground, width: 16, height: 16 },
+    data: { kind: 'ground' },
   },
   {
     id: 'headunit-amp-signal',
     source: 'head-unit',
     target: 'primary-amp',
     label: 'RCA / Fiber signal bundle',
-    style: { stroke: '#0ea5e9', strokeDasharray: '4 4', strokeWidth: 1.5 },
-    labelStyle: { fill: '#0ea5e9', fontWeight: 600 },
+    style: createEdgeStyle('signal', true),
+    labelStyle: { fill: EDGE_COLORS.signal, fontWeight: 600 },
+    markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLORS.signal, width: 14, height: 14 },
+    data: { kind: 'signal' },
   },
 ];
 
@@ -164,7 +202,7 @@ const createInitialNodes = () =>
 const createInitialEdges = () =>
   baseEdges.map(edge => ({ ...edge }));
 
-const getComponentNodeDetails = (component: AudioComponent) => {
+const getComponentNodeDetails = (component: AudioComponent): { subtitle?: string; hint?: string; kind: NodeKind } => {
   const subtitleParts: string[] = [];
   if (component.category) subtitleParts.push(component.category);
   if (component.specs?.size) subtitleParts.push(`${component.specs.size}"`);
@@ -174,26 +212,35 @@ const getComponentNodeDetails = (component: AudioComponent) => {
 
   const type = component.type?.toLowerCase() ?? '';
   let hint: string | undefined;
+  let kind: NodeKind = 'device';
 
   if (type.includes('amplifier')) {
     hint = 'Secure amp, ensure airflow, and torque power/ground lugs after crimping.';
+    kind = 'power';
   } else if (type.includes('subwoofer')) {
     hint = 'Confirm enclosure volume, use 12 AWG wire, and seal terminals against moisture.';
+    kind = 'signal';
   } else if (type.includes('speaker')) {
     hint = 'Use adapter brackets or foam gaskets to avoid air leaks and rattles.';
+    kind = 'signal';
   } else if (type.includes('head-unit')) {
     hint = 'Retain factory controls, secure the harness, and level-match outputs to the DSP/amp.';
+    kind = 'signal';
   } else if (type.includes('dsp')) {
     hint = 'Mount near amp rack, keep signal cables short, and document base tune files.';
+    kind = 'device';
   } else if (type.includes('wiring')) {
     hint = 'Route away from heat and moving parts, protect with loom, and anchor every 12 inches.';
+    kind = 'power';
   } else if (type.includes('accessory')) {
     hint = 'Mount within reach, use adhesive pads or screws, and dress the cable routing neatly.';
+    kind = 'accessory';
   }
 
   return {
     subtitle: subtitleParts.join(' • ') || undefined,
     hint,
+    kind,
   };
 };
 
@@ -551,7 +598,7 @@ function App() {
       x: 160 + (Math.random() * 240 - 120),
       y: 340 + Math.random() * 180,
     };
-    const { subtitle, hint } = getComponentNodeDetails(component);
+    const { subtitle, hint, kind } = getComponentNodeDetails(component);
     const label = component.brand ? `${component.brand} ${component.name}` : component.name;
     const newNode: Node = {
       id: newNodeId,
@@ -561,6 +608,7 @@ function App() {
         label,
         subtitle,
         hint,
+        kind,
         onRemove: handleRemoveComponent,
         nodeId: newNodeId,
         componentId: component.id,
