@@ -17,8 +17,8 @@ import { BudgetPlanner, TutorialsPanel, SafetyChecklistPanel } from './component
 import VehicleFitmentPanel from './components/VehicleFitmentPanel';
 import VehicleSetupControls from './components/VehicleSetupControls';
 import { useAppStore } from './state/useAppStore';
-import vehicleCorporationsData from './data/vehicleCorporations.json';
 import vehicleSpecsData from './data/vehicle_specs.json';
+import corporationMapData from './data/corporationMap.json';
 import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
 
 const initialNodes: Node[] = [
@@ -86,6 +86,35 @@ const estimateSpeakerWire = (speakers: { location: string }[], cabinLengthFeet?:
   return Math.round(total * adjustment);
 };
 
+const CORPORATION_MAP = corporationMapData as Record<string, string>;
+
+const corporationFallbackList = buildCorporationList(CORPORATION_MAP);
+
+function buildCorporationList(mapping: Record<string, string>): VehicleCorporation[] {
+  const grouped = new Map<string, Set<string>>();
+
+  Object.entries(mapping).forEach(([make, corporation]) => {
+    if (!corporation) return;
+    const key = corporation.trim();
+    if (!grouped.has(key)) {
+      grouped.set(key, new Set());
+    }
+    grouped.get(key)!.add(formatMakeName(make));
+  });
+
+  return Array.from(grouped.entries())
+    .map(([corporation, makes]) => ({
+      corporation,
+      makes: Array.from(makes).sort((a, b) => a.localeCompare(b)),
+    }))
+    .sort((a, b) => a.corporation.localeCompare(b.corporation));
+}
+
+const formatMakeName = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/(^|[\s-\/])([a-z])/g, (match, boundary, letter) => `${boundary}${letter.toUpperCase()}`);
+
 function App() {
   const view = useAppStore(state => state.view);
   const setView = useAppStore(state => state.setView);
@@ -104,6 +133,8 @@ function App() {
   const setSafetyChecks = useAppStore(state => state.setSafetyChecks);
 
   const [selectedCorp, setSelectedCorp] = useState<VehicleCorporation | null>(null);
+  const [vehicleLoading, setVehicleLoading] = useState<boolean>(true);
+  const [vehicleError, setVehicleError] = useState<string | null>(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -127,7 +158,68 @@ function App() {
   }, [vehicleSelection.make, vehicleSelection.model, vehicleSelection.year]);
 
   useEffect(() => {
-    setCorporations(vehicleCorporationsData as VehicleCorporation[]);
+    const allowedMakes = new Set(Object.keys(CORPORATION_MAP).map(name => name.toUpperCase()));
+    let cancelled = false;
+
+    const controller = new AbortController();
+
+    const load = async () => {
+      setVehicleLoading(true);
+      try {
+        const response = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/GetAllMakes?format=json', {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`NHTSA responded with ${response.status}`);
+        }
+
+        const data: { Results?: Array<{ Make_Name?: string }> } = await response.json();
+        if (cancelled) return;
+
+        const grouped = new Map<string, Set<string>>();
+
+        (data.Results ?? []).forEach((item) => {
+          const makeNameRaw = item.Make_Name?.trim();
+          if (!makeNameRaw) return;
+          const makeNameUpper = makeNameRaw.toUpperCase();
+          if (!allowedMakes.has(makeNameUpper)) return;
+
+          const corporation = CORPORATION_MAP[makeNameUpper];
+          if (!corporation) return;
+          if (!grouped.has(corporation)) {
+            grouped.set(corporation, new Set());
+          }
+          grouped.get(corporation)!.add(formatMakeName(makeNameRaw));
+        });
+
+        const corporationList: VehicleCorporation[] = grouped.size > 0
+          ? Array.from(grouped.entries())
+              .map(([corporation, makes]) => ({
+                corporation,
+                makes: Array.from(makes).sort((a, b) => a.localeCompare(b)),
+              }))
+              .sort((a, b) => a.corporation.localeCompare(b.corporation))
+          : corporationFallbackList;
+
+        setCorporations(corporationList);
+        setVehicleError(grouped.size > 0 ? null : 'Showing curated brand list while NHTSA data is limited.');
+      } catch (error) {
+        if (cancelled) return;
+        console.error('Failed to load vehicle list', error);
+        setCorporations(corporationFallbackList);
+        setVehicleError('Unable to reach NHTSA. Showing core brands.');
+      } finally {
+        if (!cancelled) setVehicleLoading(false);
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
   }, [setCorporations]);
 
   const loadModelOptions = useCallback(() => {
