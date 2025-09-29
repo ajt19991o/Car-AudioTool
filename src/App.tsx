@@ -56,6 +56,7 @@ function App() {
   const [vehicleData, setVehicleData] = useState<VehicleCorporation[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [view, setView] = useState<'home' | 'vehicle-selection' | 'project'>('home');
   const [selectedMake, setSelectedMake] = useState<string | null>(null);
   const [selectedComponents, setSelectedComponents] = useState<AudioComponent[]>([]);
   const [vehicleSpecs, setVehicleSpecs] = useState<any>(null);
@@ -111,28 +112,40 @@ function App() {
     setNodes(nds => nds.concat(newNode));
   };
 
-  return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Car Audio Web Tool</h1>
-        {selectedMake ? (
-          <p>System for a <strong>{selectedMake}</strong></p>
-        ) : (
-          <p>Select Your Vehicle</p>
-        )}
-      </header>
-      <main>
-        {loading && <p>Loading vehicle list...</p>}
-        {error && <p className="error">{error}</p>}
+  const handleSelectMake = (make: string) => {
+    setSelectedMake(make);
+    setView('project');
+  };
 
-        {!selectedMake ? (
+  const handleBackToVehicleList = () => {
+    setSelectedMake(null);
+    setVehicleSpecs(null);
+    setView('vehicle-selection');
+  };
+
+  const renderContent = () => {
+    switch (view) {
+      case 'home':
+        return (
+          <div className="home-view">
+            <h2>Design Your Perfect Car Audio System</h2>
+            <p>From wiring diagrams to component selection, we've got you covered.</p>
+            <button onClick={() => setView('vehicle-selection')} className="start-button">
+              Start Your Project
+            </button>
+          </div>
+        );
+      case 'vehicle-selection':
+        return (
           <div className="vehicle-list">
+            {loading && <p>Loading vehicle list...</p>}
+            {error && <p className="error">{error}</p>}
             {vehicleData.map(corp => (
               <details key={corp.corporation} className="corporation-item">
                 <summary>{corp.corporation}</summary>
                 <ul>
                   {corp.makes.map((make, index) => (
-                    <li key={index} onClick={() => setSelectedMake(make)}>
+                    <li key={index} onClick={() => handleSelectMake(make)}>
                       {make}
                     </li>
                   ))}
@@ -140,9 +153,11 @@ function App() {
               </details>
             ))}
           </div>
-        ) : (
+        );
+      case 'project':
+        return (
           <div>
-            <button onClick={() => setSelectedMake(null)} className="back-button">← Back to Vehicle List</button>
+            <button onClick={handleBackToVehicleList} className="back-button">← Back to Vehicle List</button>
             <div className="project-view">
               <div className="main-content">
                 <WiringDiagram 
@@ -159,7 +174,22 @@ function App() {
               </aside>
             </div>
           </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <h1>Car Audio Web Tool</h1>
+        {view === 'project' && selectedMake && (
+          <p>System for a <strong>{selectedMake}</strong></p>
         )}
+      </header>
+      <main>
+        {renderContent()}
       </main>
     </div>
   );
