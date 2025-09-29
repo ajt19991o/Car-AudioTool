@@ -1,7 +1,7 @@
 import { Handle, Position } from 'reactflow';
 import './CustomNode.css';
 
-type NodeKind = 'power' | 'ground' | 'signal' | 'remote' | 'device' | 'accessory';
+export type NodeKind = 'power' | 'ground' | 'signal' | 'remote' | 'device' | 'accessory';
 
 interface CustomNodeData {
   label: string;
@@ -11,6 +11,8 @@ interface CustomNodeData {
   subtitle?: string;
   hint?: string;
   kind?: NodeKind;
+  isEditable?: boolean;
+  onEditRequest?: (payload: { nodeId: string; componentId?: string }) => void;
 }
 
 const ICONS: Record<NodeKind, string> = {
@@ -35,12 +37,26 @@ function CustomNode({ data }: { data: CustomNodeData }) {
           <div className="custom-node-label">{data.label}</div>
           {data.subtitle && <div className="custom-node-subtitle">{data.subtitle}</div>}
         </div>
-        <button
-          className="custom-node-delete-button"
-          onClick={() => data.onRemove({ nodeId: data.nodeId, componentId: data.componentId })}
-        >
-          ×
-        </button>
+        <div className="custom-node-actions">
+          {data.isEditable && data.onEditRequest && (
+            <button
+              className="custom-node-edit-button"
+              onClick={() => data.onEditRequest?.({ nodeId: data.nodeId, componentId: data.componentId })}
+              type="button"
+              aria-label="Edit node"
+            >
+              ✎
+            </button>
+          )}
+          <button
+            className="custom-node-delete-button"
+            onClick={() => data.onRemove({ nodeId: data.nodeId, componentId: data.componentId })}
+            type="button"
+            aria-label="Remove node"
+          >
+            ×
+          </button>
+        </div>
       </div>
       {data.hint && <div className="custom-node-hint">{data.hint}</div>}
       <Handle type="source" position={Position.Bottom} />

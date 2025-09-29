@@ -1,82 +1,100 @@
-<<<<<<< HEAD
-# Car-AudioTool
-# Car-AudioTool
-# Car-AudioTool
-# Car-AudioTool
-# Car-AudioTool
-# Car-AudioTool
-=======
-# React + TypeScript + Vite
+# Car Audio Builder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a web-based application designed to help users plan and visualize their car audio system installations. Users can select their vehicle, browse a library of audio components, and create a custom wiring diagram. The application also provides helpful tools like a budget planner, wire gauge calculator, and safety checklist to guide users through the process.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Vehicle Selection:** Choose your vehicle's make, model, and year to get tailored fitment information.
+- **Component Browser:** Explore a comprehensive library of car audio components, including head units, amplifiers, speakers, and subwoofers.
+- **Wiring Diagram:** Visualize your audio system with an interactive wiring diagram. Add, remove, and connect components to create a custom setup.
+- **Project Summary:** Keep track of your selected components, total cost, and power requirements.
+- **Budget Planner:** Set a budget for your project and monitor your spending as you add components.
+- **Wire Gauge Calculator:** Determine the appropriate wire gauge for your power and ground cables based on your system's power requirements.
+- **Safety Checklist:** Get automated safety checks and recommendations to ensure a safe and reliable installation.
+- **Tutorials and Guides:** Access a collection of tutorials and guides to learn more about car audio installation.
+- **Light/Dark Theme:** Switch between light and dark themes for a comfortable viewing experience.
 
-## React Compiler
+## Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-username/car-audio-builder.git
+   ```
+2. Navigate to the project directory:
+   ```bash
+   cd car-audio-builder
+   ```
+3. Install the dependencies:
+   ```bash
+   npm install
+   ```
 
-## Expanding the ESLint configuration
+## Usage
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Start the development server:
+   ```bash
+   npm run dev
+   ```
+2. Open your browser and navigate to `http://localhost:5173`.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Dependencies
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- [React](https://reactjs.org/)
+- [React DOM](https://reactjs.org/docs/react-dom.html)
+- [ReactFlow](https://reactflow.dev/)
+- [Zustand](https://github.com/pmndrs/zustand)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Scripts
+
+- `dev`: Starts the development server.
+- `build`: Builds the application for production.
+- `lint`: Lints the source code.
+- `preview`: Previews the production build.
+
+## Folder Structure
+
+```
+/
+├── public/
+│   └── vite.svg
+├── src/
+│   ├── assets/
+│   │   └── react.svg
+│   ├── components/
+│   │   ├── ComponentBrowser.tsx
+│   │   ├── CustomNode.tsx
+│   │   ├── ProjectSummary.tsx
+│   │   ├── SidebarPanels.tsx
+│   │   ├── ThemeToggle.tsx
+│   │   ├── VehicleFitmentPanel.tsx
+│   │   ├── VehicleSetupControls.tsx
+│   │   ├── WireGaugeCalculator.tsx
+│   │   └── WiringDiagram.tsx
+│   ├── data/
+│   │   ├── components.json
+│   │   ├── corporationMap.json
+│   │   └── vehicle_specs.json
+│   ├── services/
+│   │   └── nhtsa.ts
+│   ├── state/
+│   │   └── useAppStore.ts
+│   ├── views/
+│   ├── App.css
+│   ├── App.tsx
+│   ├── index.css
+│   ├── main.tsx
+│   └── types.ts
+├── .gitignore
+├── index.html
+├── package.json
+├── README.md
+└── vite.config.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Contributing
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Contributions are welcome! Please feel free to submit a pull request or open an issue.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
->>>>>>> aecd8f6 (Initial commit of car audio web tool)
+## License
+
+This project is licensed under the MIT License.

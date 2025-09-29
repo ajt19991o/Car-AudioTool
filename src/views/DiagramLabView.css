@@ -1,0 +1,281 @@
+.diagram-lab-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.diagram-lab-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr 320px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.diagram-library,
+.diagram-workspace,
+.diagram-editor {
+  background: var(--color-card-bg, #ffffff);
+  border: 1px solid var(--color-card-border, #dfe4f3);
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-card, 0 18px 36px rgba(34, 52, 93, 0.12));
+}
+
+.diagram-library header h2,
+.diagram-workspace h2,
+.node-editor h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.diagram-library header p,
+.diagram-workspace p {
+  margin-top: 0.35rem;
+  color: var(--color-muted, #5f6c85);
+  font-size: 0.92rem;
+}
+
+.library-form {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  background: var(--color-subtle-bg, #f3f6ff);
+  border: 1px solid var(--color-subtle-border, #dfe4f3);
+}
+
+.library-form h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.field-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+}
+
+.field-grid input,
+.field-grid textarea,
+.node-editor input,
+.node-editor textarea,
+.node-editor select {
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-input-border, #cbd5f0);
+  background: var(--color-input-bg, #ffffff);
+  color: var(--color-input-text, #1a2330);
+  font-size: 0.9rem;
+}
+
+.field-grid textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+
+.field-grid .field-notes {
+  grid-column: 1 / -1;
+}
+
+.library-form button {
+  align-self: flex-start;
+  background: var(--color-primary, #4c82ff);
+  color: var(--color-on-primary, #ffffff);
+  border: none;
+  border-radius: 999px;
+  padding: 0.55rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.library-form button:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-hover, 0 16px 32px rgba(52, 84, 168, 0.18));
+  background: var(--color-primary-hover, #3563c9);
+}
+
+.library-list {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.library-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: 1px solid var(--color-subtle-border, #dfe4f3);
+  border-radius: 12px;
+  background: var(--color-card-hover-bg, #eef3ff);
+}
+
+body.theme-dark .library-item {
+  background: var(--color-card-hover-bg, #222d43);
+}
+
+.library-item__labels strong {
+  font-size: 1rem;
+}
+
+.library-item__labels span {
+  color: var(--color-muted, #5f6c85);
+  font-size: 0.83rem;
+}
+
+.library-item__labels p {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: var(--color-text, #1a2330);
+}
+
+.library-item__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.library-item__actions button {
+  flex: 1;
+  padding: 0.55rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-input-border, #cbd5f0);
+  background: var(--color-card-bg, #ffffff);
+  color: var(--color-text, #1a2330);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.library-item__actions button:hover:not(:disabled) {
+  background: var(--color-nav-button-hover-bg, rgba(76, 130, 255, 0.12));
+  border-color: var(--color-primary, #4c82ff);
+  transform: translateY(-1px);
+}
+
+.library-item__actions button.ghost {
+  background: transparent;
+  color: var(--color-muted, #5f6c85);
+}
+
+.library-item__actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.workspace-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.workspace-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.workspace-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-input-border, #cbd5f0);
+  background: transparent;
+  color: var(--color-text, #1a2330);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.workspace-actions button.ghost {
+  border-color: var(--color-error, #ff6b6b);
+  color: var(--color-error, #ff6b6b);
+}
+
+.workspace-actions button.ghost:hover {
+  background: var(--color-error, #ff6b6b);
+  color: var(--color-card-bg, #ffffff);
+}
+
+.diagram-canvas {
+  margin-top: 1.25rem;
+  border: 1px solid var(--color-subtle-border, #dfe4f3);
+  border-radius: 16px;
+  overflow: hidden;
+  height: 520px;
+  background: var(--color-subtle-bg, #f3f6ff);
+}
+
+.diagram-canvas .reactflow-wrapper,
+.diagram-canvas .react-flow {
+  height: 100%;
+}
+
+.node-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.node-editor__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.node-editor__header button {
+  border-radius: 999px;
+  border: 1px solid var(--color-error, #ff6b6b);
+  background: transparent;
+  color: var(--color-error, #ff6b6b);
+  padding: 0.45rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.node-editor__header button:hover {
+  background: var(--color-error, #ff6b6b);
+  color: var(--color-card-bg, #ffffff);
+}
+
+.node-editor label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 1180px) {
+  .diagram-lab-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .diagram-library,
+  .diagram-workspace,
+  .diagram-editor {
+    width: 100%;
+  }
+}
+
+@media (max-width: 720px) {
+  .field-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .workspace-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -19,6 +19,7 @@ import VehicleFitmentPanel from './components/VehicleFitmentPanel';
 import VehicleSetupControls from './components/VehicleSetupControls';
 import { useAppStore } from './state/useAppStore';
 import ThemeToggle from './components/ThemeToggle';
+import DiagramLabView from './views/DiagramLabView';
 import vehicleSpecsData from './data/vehicle_specs.json';
 import corporationMapData from './data/corporationMap.json';
 import { fetchAllMakes, fetchModelsForMake } from './services/nhtsa';
@@ -721,6 +722,8 @@ function App() {
     </div>
   );
 
+  const renderDiagramLab = () => <DiagramLabView />;
+
   let content: ReactNode = null;
   switch (view) {
     case 'home':
@@ -731,6 +734,9 @@ function App() {
       break;
     case 'learn':
       content = renderLearn();
+      break;
+    case 'diagram-lab':
+      content = renderDiagramLab();
       break;
     default:
       content = null;
@@ -757,6 +763,12 @@ function App() {
             onClick={() => setView('project')}
           >
             Project
+          </button>
+          <button
+            className={view === 'diagram-lab' ? 'active' : ''}
+            onClick={() => setView('diagram-lab')}
+          >
+            Diagram Lab
           </button>
           <button
             className={view === 'learn' ? 'active' : ''}

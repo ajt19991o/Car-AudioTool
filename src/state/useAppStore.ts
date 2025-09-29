@@ -1,9 +1,18 @@
 import { create } from 'zustand';
 import type { AudioComponent, VehicleCorporation, VehicleModelOption } from '../types';
 
-type AppView = 'home' | 'vehicle-selection' | 'project' | 'learn';
+type AppView = 'home' | 'vehicle-selection' | 'project' | 'learn' | 'diagram-lab';
 
 type Theme = 'light' | 'dark';
+
+export interface LibraryComponent {
+  id: string;
+  name: string;
+  type: string;
+  category: string;
+  notes?: string;
+  isCustom?: boolean;
+}
 
 interface VehicleSelection {
   corporation?: string;
@@ -57,6 +66,7 @@ interface AppState {
   corporations: VehicleCorporation[];
   makes: string[];
   modelOptions: VehicleModelOption[];
+  libraryComponents: LibraryComponent[];
   theme: Theme;
   fitment?: FitmentInfo;
   wiringEstimate?: WiringRunEstimate;
@@ -70,6 +80,9 @@ interface AppState {
   setCorporations: (data: VehicleCorporation[]) => void;
   setMakes: (makes: string[]) => void;
   setModelOptions: (options: VehicleModelOption[]) => void;
+  addLibraryComponent: (component: LibraryComponent) => void;
+  removeLibraryComponent: (id: string) => void;
+  updateLibraryComponent: (id: string, updates: Partial<Omit<LibraryComponent, 'id'>>) => void;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   setVehicleSelection: (selection: Partial<VehicleSelection>) => void;
@@ -91,6 +104,7 @@ export const useAppStore = create<AppState>((set) => ({
   corporations: [],
   makes: [],
   modelOptions: [],
+  libraryComponents: getInitialLibraryComponents(),
   theme: 'light',
   fitment: undefined,
   wiringEstimate: undefined,
@@ -109,6 +123,30 @@ export const useAppStore = create<AppState>((set) => ({
   setCorporations: (data) => set({ corporations: data }),
   setMakes: (makes) => set({ makes }),
   setModelOptions: (options) => set({ modelOptions: options }),
+  addLibraryComponent: (component) =>
+    set((state) => {
+      const next = [...state.libraryComponents, component];
+      persistLibrary(next);
+      return { libraryComponents: next };
+    }),
+  removeLibraryComponent: (id) =>
+    set((state) => {
+      const next = state.libraryComponents.filter(component => component.id !== id || !component.isCustom);
+      persistLibrary(next);
+      return { libraryComponents: next };
+    }),
+  updateLibraryComponent: (id, updates) =>
+    set((state) => {
+      const next = state.libraryComponents.map((component) => {
+        if (component.id !== id || !component.isCustom) {
+          return component;
+        }
+        const updated = { ...component, ...updates };
+        return updated;
+      });
+      persistLibrary(next);
+      return { libraryComponents: next };
+    }),
   setTheme: (theme) => set({ theme }),
   toggleTheme: () =>
     set((state) => ({ theme: state.theme === 'light' ? 'dark' : 'light' })),
@@ -192,6 +230,39 @@ export const useAppStore = create<AppState>((set) => ({
   setSafetyChecks: (issues) => set({ safetyChecks: issues }),
   updateBudget: (budget) => set((state) => ({ budget: { ...state.budget, ...budget } })),
 }));
+
+const LIBRARY_STORAGE_KEY = 'planner-component-library';
+
+const defaultLibrary: LibraryComponent[] = [
+  { id: 'lib-amp', name: 'Amplifier', type: 'amplifier', category: 'Power' },
+  { id: 'lib-sub', name: 'Subwoofer', type: 'subwoofer', category: 'Low Frequency' },
+  { id: 'lib-speaker', name: 'Door Speaker', type: 'speaker-set', category: 'Mid/High' },
+  { id: 'lib-dsp', name: 'DSP/Processor', type: 'dsp', category: 'Signal' },
+  { id: 'lib-wiring', name: 'Power Wiring Kit', type: 'wiring', category: 'Power Distribution' },
+];
+
+function getInitialLibraryComponents(): LibraryComponent[] {
+  if (typeof window !== 'undefined') {
+    try {
+      const stored = window.localStorage.getItem(LIBRARY_STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored) as LibraryComponent[];
+      }
+    } catch (error) {
+      console.warn('Failed to read component library from storage', error);
+    }
+  }
+  return defaultLibrary;
+}
+
+function persistLibrary(components: LibraryComponent[]) {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(LIBRARY_STORAGE_KEY, JSON.stringify(components));
+  } catch (error) {
+    console.warn('Failed to persist component library', error);
+  }
+}
 
 function calculateBudgetTotals(components: AudioComponent[]) {
   let componentTotal = 0;
