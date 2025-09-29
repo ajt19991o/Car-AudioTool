@@ -286,7 +286,7 @@ function App() {
   }, [setModelOptions, setVehicleSelection, vehicleSelection.make, vehicleSelection.model, vehicleSelection.year]);
 
   useEffect(() => {
-    loadModelOptions();
+    void loadModelOptions();
   }, [loadModelOptions]);
 
   useEffect(() => {

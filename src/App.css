@@ -156,7 +156,7 @@ body.theme-dark {
 .app-nav button:hover:not(:disabled) {
   background-color: var(--color-nav-button-hover-bg, rgba(76, 130, 255, 0.12));
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(35, 52, 87, 0.2);
+  box-shadow: var(--shadow-hover);
 }
 
 .app-nav button.active {

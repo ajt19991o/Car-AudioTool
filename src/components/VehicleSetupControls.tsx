@@ -58,8 +58,8 @@ function VehicleSetupControls({ loading, error, onRetry }: VehicleSetupControlsP
       <div className="vehicle-selectors">
         <label>
           <span>Model</span>
-          <select value={vehicleSelection.model ?? ''} onChange={handleModelChange} disabled={modelOptions.length === 0}>
-            {modelOptions.length === 0 && <option value="">Select a model</option>}
+          <select value={vehicleSelection.model ?? ''} onChange={handleModelChange} disabled={modelOptions.length === 0 || loading}>
+            {(modelOptions.length === 0 || loading) && <option value="">{loading ? 'Loading…' : 'Select a model'}</option>}
             {modelOptions.map(option => (
               <option key={option.model} value={option.model}>{option.model}</option>
             ))}
@@ -67,22 +67,23 @@ function VehicleSetupControls({ loading, error, onRetry }: VehicleSetupControlsP
         </label>
         <label>
           <span>Year</span>
-          <select value={vehicleSelection.year ?? ''} onChange={handleYearChange} disabled={yearOptions.length === 0}>
+          <select value={vehicleSelection.year ?? ''} onChange={handleYearChange} disabled={yearOptions.length === 0 || loading}>
             {yearOptions.length === 0 && <option value="">Select</option>}
             {yearOptions.map(year => (
               <option key={year} value={String(year)}>{year}</option>
             ))}
           </select>
         </label>
-        <label>
-          <span>Trim</span>
-          <select value={vehicleSelection.trim ?? ''} onChange={handleTrimChange} disabled={trimOptions.length === 0}>
-            {trimOptions.length === 0 && <option value="">Select</option>}
-            {trimOptions.map(trim => (
-              <option key={trim} value={trim}>{trim}</option>
-            ))}
-          </select>
-        </label>
+        {trimOptions.length > 0 && (
+          <label>
+            <span>Trim</span>
+            <select value={vehicleSelection.trim ?? ''} onChange={handleTrimChange}>
+              {trimOptions.map(trim => (
+                <option key={trim} value={trim}>{trim}</option>
+              ))}
+            </select>
+          </label>
+        )}
       </div>
     </div>
   );
