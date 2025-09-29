@@ -4,6 +4,20 @@ import { useAppStore } from '../state/useAppStore';
 
 const WIRING_STORAGE_KEY = 'car-audio-wiring-overrides';
 
+type WiringOverride = {
+  powerRunFeet: number;
+  speakerRunFeet: number;
+  remoteTurnOnFeet: number;
+};
+
+type WiringOverridesMap = Record<string, WiringOverride>;
+
+const createDefaultWiring = (): WiringOverride => ({
+  powerRunFeet: 16,
+  speakerRunFeet: 40,
+  remoteTurnOnFeet: 14,
+});
+
 function VehicleFitmentPanel() {
   const vehicleSelection = useAppStore(state => state.vehicleSelection);
   const fitment = useAppStore(state => state.fitment);

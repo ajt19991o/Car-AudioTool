@@ -37,6 +37,8 @@ const tagOptions = [
   'silk-tweeter'
 ];
 
+const componentCatalog = componentsData as AudioComponent[];
+
 const formatSpecsSummary = (component: AudioComponent) => {
   if (!component.specs) return null;
   const { specs } = component;
@@ -54,9 +56,6 @@ const formatSpecsSummary = (component: AudioComponent) => {
 };
 
 function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
-  const [components, setComponents] = useState<AudioComponent[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [minPrice, setMinPrice] = useState('');
@@ -74,52 +73,60 @@ function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
     return sizes;
   }, [fitment]);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const params = new URLSearchParams();
-    if (selectedCategory !== 'All') {
-      params.set('category', selectedCategory);
-    }
-    if (searchTerm.trim()) {
-      params.set('q', searchTerm.trim());
-    }
-    if (allowedSpeakerSizes.length > 0) {
-      params.set('fits', allowedSpeakerSizes.join(','));
-    }
-    if (minPrice.trim()) {
-      params.set('minPrice', minPrice.trim());
-    }
-    if (maxPrice.trim()) {
-      params.set('maxPrice', maxPrice.trim());
-    }
-    if (selectedTags.length > 0) {
-      params.set('tag', selectedTags.join(','));
-    }
-    params.set('limit', '60');
+  const filteredComponents = useMemo(() => {
+    const searchTerms = searchTerm
+      .toLowerCase()
+      .split(/\s+/)
+      .map(term => term.trim())
+      .filter(Boolean);
 
-    setLoading(true);
-    setError(null);
+    const min = minPrice.trim() ? Number(minPrice) : undefined;
+    const max = maxPrice.trim() ? Number(maxPrice) : undefined;
+    const tagFilters = selectedTags.map(tag => tag.toLowerCase());
 
-    fetch(`http://localhost:3001/api/components?${params.toString()}`, { signal: controller.signal })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
+    return componentCatalog
+      .filter((component) => {
+        if (selectedCategory !== 'All' && component.category !== selectedCategory) {
+          return false;
         }
-        return response.json();
-      })
-      .then((data: AudioComponent[]) => {
-        setComponents(data);
-        setLoading(false);
-      })
-      .catch(fetchError => {
-        if (controller.signal.aborted) return;
-        console.error('Error fetching components:', fetchError);
-        setError('Failed to load components.');
-        setLoading(false);
-      });
 
-    return () => controller.abort();
-  }, [selectedCategory, searchTerm, allowedSpeakerSizes, minPrice, maxPrice, selectedTags]);
+        if (allowedSpeakerSizes.length > 0 && component.category.toLowerCase().includes('speaker')) {
+          const size = component.specs?.size?.toLowerCase();
+          if (!size || !allowedSpeakerSizes.includes(size)) {
+            return false;
+          }
+        }
+
+        if (typeof min === 'number' && !Number.isNaN(min) && component.price < min) {
+          return false;
+        }
+
+        if (typeof max === 'number' && !Number.isNaN(max) && component.price > max) {
+          return false;
+        }
+
+        if (tagFilters.length > 0) {
+          const componentTags = (component.tags || []).map(tag => tag.toLowerCase());
+          if (!tagFilters.some(tag => componentTags.includes(tag))) {
+            return false;
+          }
+        }
+
+        if (searchTerms.length > 0) {
+          const haystack = [component.name, component.brand, component.description, ...(component.tags || [])]
+            .map(value => (value || '').toString().toLowerCase())
+            .join(' ');
+          const matchesAll = searchTerms.every(term => haystack.includes(term));
+          if (!matchesAll) {
+            return false;
+          }
+        }
+
+        return true;
+      })
+      .sort((a, b) => a.price - b.price)
+      .slice(0, 60);
+  }, [allowedSpeakerSizes, maxPrice, minPrice, searchTerm, selectedCategory, selectedTags]);
 
   const toggleTag = (tag: string) => {
     setSelectedTags((current) =>
@@ -189,10 +196,8 @@ function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
           Matching speaker sizes: {allowedSpeakerSizes.join(', ').toUpperCase()}
         </p>
       )}
-      {loading && <p>Loading catalog...</p>}
-      {error && <p className="error">{error}</p>}
       <div className="component-list">
-        {components.map(comp => {
+        {filteredComponents.map(comp => {
           const specSummary = formatSpecsSummary(comp);
           const fitmentDetails = comp.fitment?.speakerSizes?.join(', ');
           const primaryLink = comp.purchase_links?.[0];
@@ -235,7 +240,7 @@ function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
             </div>
           );
         })}
-        {!loading && components.length === 0 && !error && (
+        {filteredComponents.length === 0 && (
           <p className="empty-message">No components match your filters yet.</p>
         )}
       </div>
