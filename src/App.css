@@ -155,7 +155,7 @@ body {
   margin: 1rem auto;
   background-color: rgba(76, 130, 255, 0.12);
   border: 1px solid rgba(76, 130, 255, 0.35);
-  color: #dbe6ff;
+  color: #3654b3;
   padding: 0.85rem 1rem;
   border-radius: 8px;
   text-align: center;
@@ -602,16 +602,16 @@ body {
 
 .fitment-wiring-adjust label {
   font-size: 0.8rem;
-  color: #b8b8b8;
+  color: #5f6c85;
 }
 
 .fitment-wiring-adjust input {
   margin-top: 0.3rem;
-  background-color: #3a3a3a;
-  border: 1px solid #555;
-  color: #fff;
-  padding: 0.4rem;
-  border-radius: 6px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5f0;
+  color: #1a2330;
+  padding: 0.45rem;
+  border-radius: 8px;
   width: 100%;
 }
 
@@ -622,7 +622,7 @@ body {
   align-items: center;
   gap: 0.75rem;
   font-size: 0.8rem;
-  color: #bdbdbd;
+  color: #5f6c85;
 }
 
 .fitment-wiring-source {
@@ -826,7 +826,7 @@ body {
   display: flex;
   justify-content: space-between;
   font-size: 0.95rem;
-  color: #ddd;
+  color: #495570;
 }
 
 /* Tutorials */
@@ -845,9 +845,10 @@ body {
 }
 
 .tutorials-panel li {
-  background-color: #343434;
-  padding: 0.85rem;
-  border-radius: 6px;
+  background-color: #f7f9ff;
+  padding: 0.95rem;
+  border-radius: 12px;
+  border: 1px solid #e1e5f3;
 }
 
 .tutorials-panel li strong {
@@ -856,7 +857,7 @@ body {
 }
 
 .tutorials-panel a {
-  color: #8ec4ff;
+  color: #3654b3;
   font-size: 0.9rem;
 }
 
