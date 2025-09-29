@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { AudioComponent } from '../types';
 import { useAppStore } from '../state/useAppStore';
+import componentsData from '../data/components.json';
 
 interface ComponentBrowserProps {
   onComponentAdd?: (component: AudioComponent) => void;
