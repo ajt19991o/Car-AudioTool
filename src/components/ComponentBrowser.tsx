@@ -11,6 +11,7 @@ interface AudioComponent {
   specs?: {
     size?: string;
   };
+  purchase_links?: { vendor: string; url: string }[];
 }
 
 interface ComponentBrowserProps {
@@ -87,10 +88,21 @@ function ComponentBrowser({ onAddComponent, vehicleSpecs }: ComponentBrowserProp
       <div className="component-list">
         {filteredComponents.map(comp => (
           <div key={comp.id} className="component-item">
-            <strong>{comp.name}</strong>
-            <span>{comp.category}</span>
-            <span>${comp.price.toFixed(2)}</span>
-            <button onClick={() => onAddComponent(comp)}>Add</button>
+            <div className="component-info">
+              <strong>{comp.name}</strong>
+              <span>{comp.category}</span>
+            </div>
+            <div className="component-actions">
+              <span>${comp.price.toFixed(2)}</span>
+              <button 
+                className="shop-button"
+                disabled={!comp.purchase_links || comp.purchase_links.length === 0}
+                onClick={() => window.open(comp.purchase_links[0].url, '_blank')}
+              >
+                Shop
+              </button>
+              <button onClick={() => onAddComponent(comp)}>Add</button>
+            </div>
           </div>
         ))}
       </div>

@@ -247,20 +247,65 @@
 }
 
 .component-item {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 0.5rem;
+  display: flex; /* Use flexbox for alignment */
+  justify-content: space-between;
   align-items: center;
   background-color: #3a3a3a;
-  padding: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+}
+
+.component-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.component-info strong {
+  font-size: 1.1rem;
+}
+
+.component-info span {
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.component-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.component-actions span {
+  font-weight: bold;
+  font-size: 1.1rem;
+  min-width: 70px; /* Align prices */
+  text-align: right;
+}
+
+.shop-button {
+  background-color: #28a745; /* Green color for shopping */
+  color: white;
+  border: none;
+  padding: 8px 12px;
   border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.shop-button:hover:not(:disabled) {
+  background-color: #218838;
+}
+
+.shop-button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
 }
 
 .component-item button {
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 8px 12px; /* Standardized padding */
   border-radius: 4px;
   cursor: pointer;
 }
