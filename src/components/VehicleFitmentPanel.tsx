@@ -5,6 +5,23 @@ function VehicleFitmentPanel() {
   const vehicleSelection = useAppStore(state => state.vehicleSelection);
   const fitment = useAppStore(state => state.fitment);
   const wiringEstimate = useAppStore(state => state.wiringEstimate);
+  const wiringEstimateAuto = useAppStore(state => state.wiringEstimateAuto);
+  const wiringEstimateSource = useAppStore(state => state.wiringEstimateSource);
+  const setWiringEstimate = useAppStore(state => state.setWiringEstimate);
+  const restoreAutoWiringEstimate = useAppStore(state => state.restoreAutoWiringEstimate);
+
+  const effectiveEstimate = wiringEstimate ?? wiringEstimateAuto;
+
+  const handleManualChange = (field: 'powerRunFeet' | 'speakerRunFeet' | 'remoteTurnOnFeet') => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const nextValue = Math.max(1, Math.round(Number(event.target.value) || 0));
+    const base = {
+      powerRunFeet: effectiveEstimate?.powerRunFeet ?? 16,
+      speakerRunFeet: effectiveEstimate?.speakerRunFeet ?? 40,
+      remoteTurnOnFeet: effectiveEstimate?.remoteTurnOnFeet ?? 14,
+    };
+    const updated = { ...base, [field]: nextValue };
+    setWiringEstimate(updated, { source: 'manual' });
+  };
 
   const speakerSummary = useMemo(() => {
     if (!fitment?.speakers) return [] as { location: string; size: string }[];
@@ -45,30 +62,67 @@ function VehicleFitmentPanel() {
           <p className="fitment-empty">Add factory speaker data to see required sizes.</p>
         )}
 
-        {wiringEstimate && (
+        {effectiveEstimate && (
           <div className="fitment-wiring">
             <h4>Estimated Wiring Runs</h4>
             <dl>
-              {typeof wiringEstimate.powerRunFeet === 'number' && (
-                <div>
-                  <dt>Power Wire</dt>
-                  <dd>{wiringEstimate.powerRunFeet} ft</dd>
-                </div>
-              )}
-              {typeof wiringEstimate.speakerRunFeet === 'number' && (
-                <div>
-                  <dt>Speaker Wire</dt>
-                  <dd>{wiringEstimate.speakerRunFeet} ft</dd>
-                </div>
-              )}
-              {typeof wiringEstimate.remoteTurnOnFeet === 'number' && (
-                <div>
-                  <dt>Remote Turn-On</dt>
-                  <dd>{wiringEstimate.remoteTurnOnFeet} ft</dd>
-                </div>
-              )}
+              <div>
+                <dt>Power Wire</dt>
+                <dd>{effectiveEstimate.powerRunFeet} ft</dd>
+              </div>
+              <div>
+                <dt>Speaker Wire</dt>
+                <dd>{effectiveEstimate.speakerRunFeet} ft</dd>
+              </div>
+              <div>
+                <dt>Remote Turn-On</dt>
+                <dd>{effectiveEstimate.remoteTurnOnFeet} ft</dd>
+              </div>
             </dl>
             {fitment?.wiringRunNotes && <p className="fitment-note">{fitment.wiringRunNotes}</p>}
+            <div className="fitment-wiring-adjust">
+              <div>
+                <label htmlFor="power-run-input">Power (ft)</label>
+                <input
+                  id="power-run-input"
+                  type="number"
+                  min={1}
+                  value={wiringEstimate?.powerRunFeet ?? effectiveEstimate.powerRunFeet}
+                  onChange={handleManualChange('powerRunFeet')}
+                />
+              </div>
+              <div>
+                <label htmlFor="speaker-run-input">Speaker (ft)</label>
+                <input
+                  id="speaker-run-input"
+                  type="number"
+                  min={1}
+                  value={wiringEstimate?.speakerRunFeet ?? effectiveEstimate.speakerRunFeet}
+                  onChange={handleManualChange('speakerRunFeet')}
+                />
+              </div>
+              <div>
+                <label htmlFor="remote-run-input">Remote (ft)</label>
+                <input
+                  id="remote-run-input"
+                  type="number"
+                  min={1}
+                  value={wiringEstimate?.remoteTurnOnFeet ?? effectiveEstimate.remoteTurnOnFeet}
+                  onChange={handleManualChange('remoteTurnOnFeet')}
+                />
+              </div>
+            </div>
+            <div className="fitment-wiring-controls">
+              <span className="fitment-wiring-source">{wiringEstimateSource === 'manual' ? 'Custom lengths applied' : 'Using vehicle estimate'}</span>
+              <button
+                type="button"
+                className="reset-wiring-button"
+                onClick={restoreAutoWiringEstimate}
+                disabled={!wiringEstimateAuto}
+              >
+                Reset to vehicle estimate
+              </button>
+            </div>
           </div>
         )}
       </div>

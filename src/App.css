@@ -227,6 +227,7 @@ body {
   gap: 1.5rem;
 }
 
+.vehicle-setup-section,
 .diagram-section,
 .component-section,
 .project-summary,
@@ -247,6 +248,59 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
+}
+
+.vehicle-setup {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.vehicle-setup-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.vehicle-setup-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.vehicle-setup-status {
+  font-size: 0.85rem;
+  color: #a0a0a0;
+}
+
+.vehicle-setup-error {
+  background: none;
+  border: 1px solid rgba(255, 153, 0, 0.6);
+  color: #ffcc66;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.vehicle-selectors {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.vehicle-selectors label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.vehicle-selectors select {
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 0.5rem;
+  border-radius: 6px;
 }
 
 .section-header h2 {
