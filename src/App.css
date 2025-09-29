@@ -298,3 +298,24 @@
   background-color: #0056b3;
   transform: translateY(-2px);
 }
+
+/* Wire Gauge Calculator Styles */
+.slider-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.length-slider {
+  flex-grow: 1;
+}
+
+.length-input, .wattage-input {
+  width: 70px; /* Fixed width for number inputs */
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+}
