@@ -347,3 +347,60 @@
   padding: 10px;
   border-radius: 6px;
 }
+
+/* Budget Section Styles */
+.budget-section {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #555;
+  padding-bottom: 1.5rem;
+}
+
+.budget-section h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  margin-top: 0;
+}
+
+.budget-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.budget-input-group span {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.budget-input-group input {
+  width: 120px;
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.budget-progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #242424;
+  border: 1px solid #555;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #007bff;
+  transition: width 0.3s ease-in-out;
+}
+
+.budget-summary {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #ccc;
+}
