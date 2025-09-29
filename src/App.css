@@ -698,19 +698,20 @@ body {
   justify-content: space-between;
   align-items: center;
   font-size: 1rem;
-  background-color: #3a3a3a;
-  padding: 0.75rem;
-  border-radius: 6px;
+  background-color: #f7f9ff;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: 1px solid #dfe4f3;
 }
 
 .summary-item strong {
-  color: #fff;
-  font-weight: bold;
+  color: #1a2330;
+  font-weight: 600;
 }
 
 .summary-item.over-budget {
-  background-color: rgba(255, 99, 99, 0.2);
-  border: 1px solid rgba(255, 99, 99, 0.4);
+  background-color: rgba(255, 122, 122, 0.18);
+  border: 1px solid rgba(255, 122, 122, 0.45);
 }
 
 .selected-components-list h4 {
