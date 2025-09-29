@@ -12,9 +12,10 @@ interface AudioComponent {
 
 interface ComponentBrowserProps {
   onAddComponent: (component: AudioComponent) => void;
+  vehicleSpecs: any;
 }
 
-function ComponentBrowser({ onAddComponent }: ComponentBrowserProps) {
+function ComponentBrowser({ onAddComponent, vehicleSpecs }: ComponentBrowserProps) {
   const [components, setComponents] = useState<AudioComponent[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,13 +37,25 @@ function ComponentBrowser({ onAddComponent }: ComponentBrowserProps) {
       });
   }, []);
 
+  const allowedSpeakerSizes = vehicleSpecs ? Object.values(vehicleSpecs.speakers) : null;
+
+  const filteredComponents = components.filter(comp => {
+    if (comp.type !== 'speaker-set' || !allowedSpeakerSizes) {
+      return true; // Always show non-speakers or if no specs are loaded
+    }
+    return allowedSpeakerSizes.includes(comp.specs?.size);
+  });
+
   return (
     <div className="component-browser">
       <h3>Component Library</h3>
+      {allowedSpeakerSizes && (
+        <p className="filter-info">Showing speakers that fit your vehicle.</p>
+      )}
       {loading && <p>Loading...</p>}
       {error && <p className="error">{error}</p>}
       <div className="component-list">
-        {components.map(comp => (
+        {filteredComponents.map(comp => (
           <div key={comp.id} className="component-item">
             <strong>{comp.name}</strong>
             <span>{comp.category}</span>

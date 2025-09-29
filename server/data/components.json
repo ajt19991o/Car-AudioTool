@@ -35,13 +35,28 @@
     "type": "speaker-set",
     "category": "Component Speakers",
     "specs": {
-      "size": 6.5,
+      "size": "6.5",
       "rms_wattage": 100,
       "peak_wattage": 180
     },
     "price": 250,
     "purchase_links": [
       { "vendor": "Amazon", "url": "https://www.amazon.com/Morel-Maximo-Ultra-602-Component/dp/B07955C4B4" }
+    ]
+  },
+  {
+    "id": "spk-002",
+    "name": "JL Audio C1-525x",
+    "type": "speaker-set",
+    "category": "Coaxial Speakers",
+    "specs": {
+      "size": "5.25",
+      "rms_wattage": 50,
+      "peak_wattage": 150
+    },
+    "price": 150,
+    "purchase_links": [
+      { "vendor": "Crutchfield", "url": "https://www.crutchfield.com/p_136C1525X/JL-Audio-C1-525x.html" }
     ]
   }
 ]

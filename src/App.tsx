@@ -21,6 +21,7 @@ interface AudioComponent {
   specs: {
     rms_wattage?: number;
     peak_wattage?: number;
+    size?: string;
   };
 }
 
@@ -57,9 +58,28 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [selectedMake, setSelectedMake] = useState<string | null>(null);
   const [selectedComponents, setSelectedComponents] = useState<AudioComponent[]>([]);
+  const [vehicleSpecs, setVehicleSpecs] = useState<any>(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  // Fetch vehicle specs when a make is selected
+  useEffect(() => {
+    if (!selectedMake) return;
+
+    // TODO: Replace this with real model selection
+    const model = selectedMake === 'Ford' ? 'F-150' : 'Tacoma';
+
+    fetch(`http://localhost:3001/api/specs/${selectedMake}/${model}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.speakers) {
+          setVehicleSpecs(data);
+        }
+      })
+      .catch(err => console.error('Failed to fetch specs', err));
+
+  }, [selectedMake]);
 
   useEffect(() => {
     fetch('http://localhost:3001/api/vehicles')
@@ -135,7 +155,7 @@ function App() {
               <aside className="sidebar">
                 <ProjectSummary selectedComponents={selectedComponents} />
                 <WireGaugeCalculator totalRms={totalRms} />
-                <ComponentBrowser onAddComponent={handleAddComponent} />
+                <ComponentBrowser onAddComponent={handleAddComponent} vehicleSpecs={vehicleSpecs} />
               </aside>
             </div>
           </div>
