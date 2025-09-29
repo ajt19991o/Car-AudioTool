@@ -319,3 +319,7 @@
   border-radius: 4px;
   text-align: center;
 }
+
+.fuse-result {
+  margin-top: 0.75rem;
+}
