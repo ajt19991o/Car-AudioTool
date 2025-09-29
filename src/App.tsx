@@ -20,7 +20,7 @@ import { useAppStore } from './state/useAppStore';
 import ThemeToggle from './components/ThemeToggle';
 import vehicleSpecsData from './data/vehicle_specs.json';
 import corporationMapData from './data/corporationMap.json';
-import { fetchModelsForMake } from './services/nhtsa';
+import { fetchAllMakes, fetchModelsForMake } from './services/nhtsa';
 import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
 
 const baseNodes: Node[] = [
@@ -269,8 +269,8 @@ function buildCorporationList(mapping: Record<string, string>): VehicleCorporati
 function App() {
   const view = useAppStore(state => state.view);
   const setView = useAppStore(state => state.setView);
-  const corporations = useAppStore(state => state.corporations);
   const setCorporations = useAppStore(state => state.setCorporations);
+  const setMakes = useAppStore(state => state.setMakes);
   const vehicleSelection = useAppStore(state => state.vehicleSelection);
   const setVehicleSelection = useAppStore(state => state.setVehicleSelection);
   const resetVehicleSelection = useAppStore(state => state.resetVehicleSelection);
@@ -285,7 +285,6 @@ function App() {
   const setSafetyChecks = useAppStore(state => state.setSafetyChecks);
   const theme = useAppStore(state => state.theme);
 
-  const [selectedCorp, setSelectedCorp] = useState<VehicleCorporation | null>(null);
   const [vehicleLoading, setVehicleLoading] = useState<boolean>(true);
   const [vehicleError, setVehicleError] = useState<string | null>(null);
   const [modelLoading, setModelLoading] = useState<boolean>(false);
@@ -318,59 +317,63 @@ function App() {
   }, [theme]);
 
   useEffect(() => {
-    const allowedMakes = new Set(Object.keys(CORPORATION_MAP).map(name => name.toUpperCase()));
     let cancelled = false;
-
-    const controller = new AbortController();
 
     const load = async () => {
       setVehicleLoading(true);
+      setVehicleError(null);
+
       try {
-        const response = await fetch('https://vpic.nhtsa.dot.gov/api/vehicles/GetAllMakes?format=json', {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) {
-          throw new Error(`NHTSA responded with ${response.status}`);
-        }
-
-        const data: { Results?: Array<{ Make_Name?: string }> } = await response.json();
+        const makesFromApi = await fetchAllMakes();
         if (cancelled) return;
 
+        setMakes(makesFromApi);
+        const makesFromApiSet = new Set(makesFromApi.map(make => make.toUpperCase()));
         const grouped = new Map<string, Set<string>>();
 
-        (data.Results ?? []).forEach((item) => {
-          const makeNameRaw = item.Make_Name?.trim();
-          if (!makeNameRaw) return;
-          const makeNameUpper = makeNameRaw.toUpperCase();
-          if (!allowedMakes.has(makeNameUpper)) return;
-
-          const corporation = CORPORATION_MAP[makeNameUpper];
+        Object.entries(CORPORATION_MAP).forEach(([make, corporation]) => {
           if (!corporation) return;
+          if (!makesFromApiSet.has(make.toUpperCase())) return;
           if (!grouped.has(corporation)) {
             grouped.set(corporation, new Set());
           }
-          grouped.get(corporation)!.add(formatMakeName(makeNameRaw));
+          grouped.get(corporation)!.add(formatMakeName(make));
         });
 
         const corporationList: VehicleCorporation[] = grouped.size > 0
           ? Array.from(grouped.entries())
-              .map(([corporation, makes]) => ({
-                corporation,
+              .map(([corpName, makes]) => ({
+                corporation: corpName,
                 makes: Array.from(makes).sort((a, b) => a.localeCompare(b)),
               }))
               .sort((a, b) => a.corporation.localeCompare(b.corporation))
           : corporationFallbackList;
 
         setCorporations(corporationList);
-        setVehicleError(grouped.size > 0 ? null : 'Showing curated brand list while NHTSA data is limited.');
+        if (grouped.size === 0) {
+          setVehicleError('Showing curated brand list while NHTSA data is limited.');
+        }
+
+        if (corporationList.length > 0 && !vehicleSelection.corporation) {
+          const firstCorp = corporationList[0];
+          setVehicleSelection({
+            corporation: firstCorp.corporation,
+            make: firstCorp.makes[0] ?? undefined,
+            model: undefined,
+            year: undefined,
+            trim: undefined,
+          });
+        }
       } catch (error) {
-        if (cancelled) return;
-        console.error('Failed to load vehicle list', error);
-        setCorporations(corporationFallbackList);
-        setVehicleError('Unable to reach NHTSA. Showing core brands.');
+        if (!cancelled) {
+          console.error('Failed to load vehicle list', error);
+          setCorporations(corporationFallbackList);
+          setVehicleError('Unable to reach NHTSA. Showing core brands.');
+        }
       } finally {
-        if (!cancelled) setVehicleLoading(false);
+        if (!cancelled) {
+          setVehicleLoading(false);
+        }
       }
     };
 
@@ -378,9 +381,8 @@ function App() {
 
     return () => {
       cancelled = true;
-      controller.abort();
     };
-  }, [setCorporations]);
+  }, [setCorporations, setMakes, setVehicleSelection, vehicleSelection.corporation]);
 
   const loadModelOptions = useCallback(async () => {
     if (!vehicleSelection.make) {
@@ -559,21 +561,6 @@ function App() {
     setNodes(nds => nds.concat(newNode));
   }, [handleRemoveComponent, setNodes]);
 
-  const handleSelectMake = useCallback((corp: VehicleCorporation, make: string) => {
-    setVehicleSelection({ corporation: corp.corporation, make, model: undefined, year: undefined, trim: undefined });
-    setModelOptions([]);
-    setSelectedCorp(corp);
-    setView('project');
-  }, [setModelOptions, setVehicleSelection, setView]);
-
-  const handleBackToVehicleList = useCallback(() => {
-    resetVehicleSelection();
-    setSelectedCorp(null);
-    setView('vehicle-selection');
-    setNodes(createInitialNodes());
-    setEdges(createInitialEdges());
-  }, [resetVehicleSelection, setEdges, setNodes, setView]);
-
   const fetchVehicleSpecs = useCallback((make?: string, model?: string) => {
     if (!make || !model) {
       return;
@@ -624,49 +611,18 @@ function App() {
         Pick your vehicle, explore components that fit, and build a wiring plan with confidence. Tutorials and safety checks guide you every step of the way.
       </p>
       <div className="home-actions">
-        <button onClick={() => setView('vehicle-selection')} className="start-button">Start a New Build</button>
+        <button onClick={() => setView('project')} className="start-button">Start a New Build</button>
         <button onClick={() => setView('learn')} className="secondary-button">Browse Tutorials</button>
       </div>
     </div>
   );
 
-  const renderVehicleSelection = () => {
-    if (vehicleLoading) {
-      return <p>Loading vehicle list...</p>;
-    }
-
-    return selectedCorp ? (
-      <div className="make-list">
-        <button onClick={() => setSelectedCorp(null)} className="back-button">← Back to Brands</button>
-        <h3>{selectedCorp.corporation}</h3>
-        <ul>
-          {selectedCorp.makes.map(make => (
-            <li key={make} onClick={() => handleSelectMake(selectedCorp, make)}>
-              {make}
-            </li>
-          ))}
-        </ul>
-      </div>
-    ) : (
-      <>
-        {vehicleError && <p className="vehicle-info">{vehicleError}</p>}
-        <div className="vehicle-grid">
-          {corporations.map(corp => (
-            <div key={corp.corporation} className="corp-card" onClick={() => setSelectedCorp(corp)}>
-              <span>{corp.corporation}</span>
-              <small>{corp.makes.slice(0, 4).join(', ')}{corp.makes.length > 4 ? '…' : ''}</small>
-            </div>
-          ))}
-        </div>
-      </>
-    );
-  };
-
   const renderProject = () => (
     <div>
-      <button onClick={handleBackToVehicleList} className="back-button">← Change Vehicle</button>
       <div className="project-view">
         <div className="main-content">
+          {vehicleLoading && <p className="vehicle-info">Loading brand list…</p>}
+          {vehicleError && !vehicleLoading && <p className="vehicle-info">{vehicleError}</p>}
           <section className="vehicle-setup-section">
             <VehicleSetupControls loading={modelLoading} error={modelError} onRetry={loadModelOptions} />
           </section>
@@ -705,7 +661,7 @@ function App() {
       <h2>Learn the Essentials</h2>
       <p>Prep for your install with curated guides on planning, wiring, tuning, and safety.</p>
       <TutorialsPanel />
-      <button onClick={() => setView('vehicle-selection')} className="start-button">Start Building</button>
+      <button onClick={() => setView('project')} className="start-button">Start Building</button>
     </div>
   );
 
@@ -713,9 +669,6 @@ function App() {
   switch (view) {
     case 'home':
       content = renderHome();
-      break;
-    case 'vehicle-selection':
-      content = renderVehicleSelection();
       break;
     case 'project':
       content = renderProject();
@@ -744,15 +697,8 @@ function App() {
             Home
           </button>
           <button
-            className={view === 'vehicle-selection' ? 'active' : ''}
-            onClick={() => setView('vehicle-selection')}
-          >
-            Vehicles
-          </button>
-          <button
             className={view === 'project' ? 'active' : ''}
             onClick={() => setView('project')}
-            disabled={!vehicleSelection.make}
           >
             Project
           </button>

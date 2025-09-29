@@ -9,17 +9,31 @@ interface VehicleSetupControlsProps {
 }
 
 function VehicleSetupControls({ loading, error, onRetry }: VehicleSetupControlsProps) {
+  const corporations = useAppStore(state => state.corporations);
   const vehicleSelection = useAppStore(state => state.vehicleSelection);
   const setVehicleSelection = useAppStore(state => state.setVehicleSelection);
   const modelOptions = useAppStore(state => state.modelOptions);
 
-  const currentModelEntry = useMemo(() => {
-    if (!vehicleSelection.model) return undefined;
-    return modelOptions.find(option => option.model.toLowerCase() === vehicleSelection.model?.toLowerCase());
-  }, [modelOptions, vehicleSelection.model]);
+  const handleCorporationChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const corpName = event.target.value;
+    setVehicleSelection({
+      corporation: corpName,
+      make: undefined,
+      model: undefined,
+      year: undefined,
+      trim: undefined,
+    });
+  };
 
-  const yearOptions = useMemo(() => currentModelEntry?.years ?? [], [currentModelEntry]);
-  const trimOptions = useMemo(() => currentModelEntry?.trims ?? [], [currentModelEntry]);
+  const handleMakeChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const make = event.target.value;
+    setVehicleSelection({
+      make,
+      model: undefined,
+      year: undefined,
+      trim: undefined,
+    });
+  };
 
   const handleModelChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const model = event.target.value;
@@ -36,19 +50,24 @@ function VehicleSetupControls({ loading, error, onRetry }: VehicleSetupControlsP
     setVehicleSelection({ year: event.target.value || undefined });
   };
 
-  const handleTrimChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setVehicleSelection({ trim: event.target.value || undefined });
-  };
+  const makeOptions = useMemo(() => {
+    if (!vehicleSelection.corporation) return [];
+    const corp = corporations.find(c => c.corporation === vehicleSelection.corporation);
+    return corp?.makes ?? [];
+  }, [corporations, vehicleSelection.corporation]);
 
-  if (!vehicleSelection.make) {
-    return null;
-  }
+  const currentModelEntry = useMemo(() => {
+    if (!vehicleSelection.model) return undefined;
+    return modelOptions.find(option => option.model.toLowerCase() === vehicleSelection.model?.toLowerCase());
+  }, [modelOptions, vehicleSelection.model]);
+
+  const yearOptions = useMemo(() => currentModelEntry?.years ?? [], [currentModelEntry]);
 
   return (
     <div className="vehicle-setup">
       <div className="vehicle-setup-header">
         <h2>Vehicle Setup</h2>
-        {loading && <span className="vehicle-setup-status">Loading models…</span>}
+        {loading && <span className="vehicle-setup-status">Loading...</span>}
         {error && (
           <button type="button" className="vehicle-setup-error" onClick={onRetry}>
             {error} — Retry
@@ -57,8 +76,26 @@ function VehicleSetupControls({ loading, error, onRetry }: VehicleSetupControlsP
       </div>
       <div className="vehicle-selectors">
         <label>
+          <span>Corporation</span>
+          <select value={vehicleSelection.corporation ?? ''} onChange={handleCorporationChange} disabled={corporations.length === 0}>
+            <option value="">Select Corporation</option>
+            {corporations.map(corp => (
+              <option key={corp.corporation} value={corp.corporation}>{corp.corporation}</option>
+            ))}
+          </select>
+        </label>
+        <label>
+          <span>Make</span>
+          <select value={vehicleSelection.make ?? ''} onChange={handleMakeChange} disabled={!vehicleSelection.corporation}>
+            <option value="">Select Make</option>
+            {makeOptions.map(make => (
+              <option key={make} value={make}>{make}</option>
+            ))}
+          </select>
+        </label>
+        <label>
           <span>Model</span>
-          <select value={vehicleSelection.model ?? ''} onChange={handleModelChange} disabled={modelOptions.length === 0 || loading}>
+          <select value={vehicleSelection.model ?? ''} onChange={handleModelChange} disabled={modelOptions.length === 0 || loading || !vehicleSelection.make}>
             {(modelOptions.length === 0 || loading) && <option value="">{loading ? 'Loading…' : 'Select a model'}</option>}
             {modelOptions.map(option => (
               <option key={option.model} value={option.model}>{option.model}</option>
@@ -74,16 +111,6 @@ function VehicleSetupControls({ loading, error, onRetry }: VehicleSetupControlsP
             ))}
           </select>
         </label>
-        {trimOptions.length > 0 && (
-          <label>
-            <span>Trim</span>
-            <select value={vehicleSelection.trim ?? ''} onChange={handleTrimChange}>
-              {trimOptions.map(trim => (
-                <option key={trim} value={trim}>{trim}</option>
-              ))}
-            </select>
-          </label>
-        )}
       </div>
     </div>
   );

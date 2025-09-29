@@ -55,6 +55,7 @@ interface AppState {
   view: AppView;
   vehicleSelection: VehicleSelection;
   corporations: VehicleCorporation[];
+  makes: string[];
   modelOptions: VehicleModelOption[];
   theme: Theme;
   fitment?: FitmentInfo;
@@ -67,6 +68,7 @@ interface AppState {
   budget: BudgetState;
   setView: (view: AppView) => void;
   setCorporations: (data: VehicleCorporation[]) => void;
+  setMakes: (makes: string[]) => void;
   setModelOptions: (options: VehicleModelOption[]) => void;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
@@ -87,6 +89,7 @@ export const useAppStore = create<AppState>((set) => ({
   view: 'home',
   vehicleSelection: {},
   corporations: [],
+  makes: [],
   modelOptions: [],
   theme: 'light',
   fitment: undefined,
@@ -104,6 +107,7 @@ export const useAppStore = create<AppState>((set) => ({
   },
   setView: (view) => set({ view }),
   setCorporations: (data) => set({ corporations: data }),
+  setMakes: (makes) => set({ makes }),
   setModelOptions: (options) => set({ modelOptions: options }),
   setTheme: (theme) => set({ theme }),
   toggleTheme: () =>
