@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { AudioComponent, VehicleCorporation } from '../types';
+import type { AudioComponent, VehicleCorporation, VehicleModelOption } from '../types';
 
 type AppView = 'home' | 'vehicle-selection' | 'project' | 'learn';
 
@@ -53,18 +53,23 @@ interface AppState {
   view: AppView;
   vehicleSelection: VehicleSelection;
   corporations: VehicleCorporation[];
+  modelOptions: VehicleModelOption[];
   fitment?: FitmentInfo;
   wiringEstimate?: WiringRunEstimate;
+  wiringEstimateAuto?: WiringRunEstimate;
+  wiringEstimateSource: 'auto' | 'manual';
   selectedComponents: AudioComponent[];
   tutorials: TutorialEntry[];
   safetyChecks: SafetyCheckIssue[];
   budget: BudgetState;
   setView: (view: AppView) => void;
   setCorporations: (data: VehicleCorporation[]) => void;
+  setModelOptions: (options: VehicleModelOption[]) => void;
   setVehicleSelection: (selection: Partial<VehicleSelection>) => void;
   resetVehicleSelection: () => void;
   setFitment: (fitment?: FitmentInfo) => void;
-  setWiringEstimate: (estimate?: WiringRunEstimate) => void;
+  setWiringEstimate: (estimate?: WiringRunEstimate, options?: { source?: 'auto' | 'manual' }) => void;
+  restoreAutoWiringEstimate: () => void;
   addComponent: (component: AudioComponent) => void;
   removeComponent: (id: string) => void;
   setComponents: (components: AudioComponent[]) => void;
@@ -77,8 +82,11 @@ export const useAppStore = create<AppState>((set) => ({
   view: 'home',
   vehicleSelection: {},
   corporations: [],
+  modelOptions: [],
   fitment: undefined,
   wiringEstimate: undefined,
+  wiringEstimateAuto: undefined,
+  wiringEstimateSource: 'auto',
   selectedComponents: [],
   tutorials: [],
   safetyChecks: [],
@@ -90,6 +98,7 @@ export const useAppStore = create<AppState>((set) => ({
   },
   setView: (view) => set({ view }),
   setCorporations: (data) => set({ corporations: data }),
+  setModelOptions: (options) => set({ modelOptions: options }),
   setVehicleSelection: (selection) =>
     set((state) => ({ vehicleSelection: { ...state.vehicleSelection, ...selection } })),
   resetVehicleSelection: () =>
@@ -97,6 +106,8 @@ export const useAppStore = create<AppState>((set) => ({
       vehicleSelection: {},
       fitment: undefined,
       wiringEstimate: undefined,
+      wiringEstimateAuto: undefined,
+      wiringEstimateSource: 'auto',
       selectedComponents: [],
       safetyChecks: [],
       budget: {
@@ -105,9 +116,35 @@ export const useAppStore = create<AppState>((set) => ({
         wiringTotal: 0,
         accessoriesTotal: 0,
       },
+      modelOptions: [],
     }),
   setFitment: (fitment) => set({ fitment }),
-  setWiringEstimate: (estimate) => set({ wiringEstimate: estimate }),
+  setWiringEstimate: (estimate, options) =>
+    set((state) => {
+      const source = options?.source ?? 'auto';
+      if (!estimate) {
+        return {
+          wiringEstimate: undefined,
+          wiringEstimateAuto: source === 'auto' ? undefined : state.wiringEstimateAuto,
+          wiringEstimateSource: 'auto',
+        };
+      }
+      return {
+        wiringEstimate: estimate,
+        wiringEstimateAuto: source === 'auto' ? estimate : state.wiringEstimateAuto,
+        wiringEstimateSource: source,
+      };
+    }),
+  restoreAutoWiringEstimate: () =>
+    set((state) => {
+      if (!state.wiringEstimateAuto) {
+        return state;
+      }
+      return {
+        wiringEstimate: state.wiringEstimateAuto,
+        wiringEstimateSource: 'auto',
+      };
+    }),
   addComponent: (component) =>
     set((state) => {
       const nextComponents = [...state.selectedComponents, component];

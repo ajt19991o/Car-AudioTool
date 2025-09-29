@@ -15,6 +15,7 @@ import WireGaugeCalculator from './components/WireGaugeCalculator';
 import CustomNode from './components/CustomNode';
 import { BudgetPlanner, TutorialsPanel, SafetyChecklistPanel } from './components/SidebarPanels';
 import VehicleFitmentPanel from './components/VehicleFitmentPanel';
+import VehicleSetupControls from './components/VehicleSetupControls';
 import { useAppStore } from './state/useAppStore';
 import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
 
@@ -99,6 +100,8 @@ function App() {
   const vehicleSelection = useAppStore(state => state.vehicleSelection);
   const setVehicleSelection = useAppStore(state => state.setVehicleSelection);
   const resetVehicleSelection = useAppStore(state => state.resetVehicleSelection);
+  const modelOptions = useAppStore(state => state.modelOptions);
+  const setModelOptions = useAppStore(state => state.setModelOptions);
   const fitment = useAppStore(state => state.fitment);
   const setFitment = useAppStore(state => state.setFitment);
   const setWiringEstimate = useAppStore(state => state.setWiringEstimate);
@@ -110,6 +113,8 @@ function App() {
   const [vehicleLoading, setVehicleLoading] = useState<boolean>(true);
   const [vehicleError, setVehicleError] = useState<string | null>(null);
   const [selectedCorp, setSelectedCorp] = useState<VehicleCorporation | null>(null);
+  const [modelLoading, setModelLoading] = useState<boolean>(false);
+  const [modelError, setModelError] = useState<string | null>(null);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -123,6 +128,14 @@ function App() {
     () => selectedComponents.reduce((total, comp) => total + (comp.specs?.peak_wattage || 0), 0),
     [selectedComponents],
   );
+
+  const vehicleDescriptor = useMemo(() => {
+    if (!vehicleSelection.make) return null;
+    const parts = [vehicleSelection.make];
+    if (vehicleSelection.model) parts.push(vehicleSelection.model);
+    if (vehicleSelection.year) parts.push(`(${vehicleSelection.year})`);
+    return parts.join(' ');
+  }, [vehicleSelection.make, vehicleSelection.model, vehicleSelection.year]);
 
   useEffect(() => {
     fetch('http://localhost:3001/api/vehicles')
@@ -142,6 +155,68 @@ function App() {
         setVehicleLoading(false);
       });
   }, [setCorporations]);
+
+  const loadModelOptions = useCallback(async () => {
+    if (!vehicleSelection.make) {
+      setModelOptions([]);
+      return;
+    }
+
+    setModelLoading(true);
+    setModelError(null);
+    try {
+      const response = await fetch(`http://localhost:3001/api/specs/${encodeURIComponent(vehicleSelection.make)}`);
+      if (!response.ok) {
+        throw new Error('Failed to load model list');
+      }
+
+      const data: { make: string; models: { model: string; years?: number[]; trims?: string[] }[] } = await response.json();
+      const models = data.models ?? [];
+      setModelOptions(models);
+
+      if (models.length === 0) {
+        return;
+      }
+
+      const currentModelEntry = models.find(item => item.model.toLowerCase() === (vehicleSelection.model ?? '').toLowerCase());
+      let nextSelection: Partial<typeof vehicleSelection> = {};
+
+      if (!currentModelEntry) {
+        const fallback = models[0];
+        nextSelection = {
+          model: fallback.model,
+          year: fallback.years && fallback.years.length > 0 ? String(fallback.years[0]) : undefined,
+          trim: fallback.trims && fallback.trims.length > 0 ? fallback.trims[0] : undefined,
+        };
+      } else {
+        if (currentModelEntry.years && currentModelEntry.years.length > 0) {
+          const numericYear = vehicleSelection.year ? Number(vehicleSelection.year) : undefined;
+          if (!numericYear || !currentModelEntry.years.includes(numericYear)) {
+            nextSelection.year = String(currentModelEntry.years[0]);
+          }
+        }
+        if (currentModelEntry.trims && currentModelEntry.trims.length > 0) {
+          if (!vehicleSelection.trim || !currentModelEntry.trims.includes(vehicleSelection.trim)) {
+            nextSelection.trim = currentModelEntry.trims[0];
+          }
+        }
+      }
+
+      if (Object.keys(nextSelection).length > 0) {
+        setVehicleSelection(nextSelection);
+      }
+    } catch (error) {
+      console.error(error);
+      setModelError('Unable to load models for this make.');
+      setModelOptions([]);
+    } finally {
+      setModelLoading(false);
+    }
+  }, [setModelOptions, setVehicleSelection, vehicleSelection.make, vehicleSelection.model, vehicleSelection.year, vehicleSelection.trim]);
+
+  useEffect(() => {
+    loadModelOptions();
+  }, [loadModelOptions]);
 
   useEffect(() => {
     upsertTutorials([
@@ -227,10 +302,11 @@ function App() {
   }, [handleRemoveComponent, setNodes]);
 
   const handleSelectMake = useCallback((corp: VehicleCorporation, make: string) => {
-    setVehicleSelection({ corporation: corp.corporation, make });
+    setVehicleSelection({ corporation: corp.corporation, make, model: undefined, year: undefined, trim: undefined });
+    setModelOptions([]);
     setSelectedCorp(corp);
     setView('project');
-  }, [setVehicleSelection, setView]);
+  }, [setModelOptions, setVehicleSelection, setView]);
 
   const handleBackToVehicleList = useCallback(() => {
     resetVehicleSelection();
@@ -240,14 +316,12 @@ function App() {
     setEdges(initialEdges);
   }, [resetVehicleSelection, setEdges, setNodes, setView]);
 
-  const fetchVehicleSpecs = useCallback(async (make?: string) => {
-    if (!make) return;
-    const defaultModel = defaultModelByMake[make] ?? 'F-150';
-    setVehicleSelection({ model: defaultModel });
+  const fetchVehicleSpecs = useCallback(async (make?: string, model?: string) => {
+    if (!make || !model) return;
     try {
-      const response = await fetch(`http://localhost:3001/api/specs/${encodeURIComponent(make)}/${encodeURIComponent(defaultModel)}`);
+      const response = await fetch(`http://localhost:3001/api/specs/${encodeURIComponent(make)}/${encodeURIComponent(model)}`);
       if (!response.ok) {
-        throw new Error(`No specs found for ${make}`);
+        throw new Error(`No specs found for ${make} ${model}`);
       }
       const specs: VehicleSpecs = await response.json();
       const speakers = Object.entries(specs.speakers || {}).map(([location, size]) => ({
@@ -263,18 +337,18 @@ function App() {
       const speakerRunFeet = estimateSpeakerWire(speakers, cabinLengthFeet);
       const remoteTurnOnFeet = Math.max(10, Math.round(powerRunFeet * 0.9));
 
-      setWiringEstimate({ powerRunFeet, speakerRunFeet, remoteTurnOnFeet });
+      setWiringEstimate({ powerRunFeet, speakerRunFeet, remoteTurnOnFeet }, { source: 'auto' });
     } catch (error) {
       console.warn(error);
       setFitment(undefined);
-      setWiringEstimate({ powerRunFeet: 16, speakerRunFeet: 40, remoteTurnOnFeet: 14 });
+      setWiringEstimate({ powerRunFeet: 16, speakerRunFeet: 40, remoteTurnOnFeet: 14 }, { source: 'auto' });
     }
-  }, [setFitment, setVehicleSelection, setWiringEstimate]);
+  }, [setFitment, setWiringEstimate]);
 
   useEffect(() => {
-    if (!vehicleSelection.make) return;
-    fetchVehicleSpecs(vehicleSelection.make);
-  }, [fetchVehicleSpecs, vehicleSelection.make]);
+    if (!vehicleSelection.make || !vehicleSelection.model) return;
+    fetchVehicleSpecs(vehicleSelection.make, vehicleSelection.model);
+  }, [fetchVehicleSpecs, vehicleSelection.make, vehicleSelection.model]);
 
   const renderHome = () => (
     <div className="home-view">
@@ -326,10 +400,13 @@ function App() {
       <button onClick={handleBackToVehicleList} className="back-button">← Change Vehicle</button>
       <div className="project-view">
         <div className="main-content">
+          <section className="vehicle-setup-section">
+            <VehicleSetupControls loading={modelLoading} error={modelError} onRetry={loadModelOptions} />
+          </section>
           <section className="diagram-section">
             <div className="section-header">
               <h2>Wiring Diagram</h2>
-              {vehicleSelection.make && <span className="vehicle-tag">{vehicleSelection.make}</span>}
+              {vehicleDescriptor && <span className="vehicle-tag">{vehicleDescriptor}</span>}
             </div>
             <WiringDiagram
               nodes={nodes}
@@ -388,8 +465,8 @@ function App() {
       <header className="App-header">
         <div className="header-primary">
           <h1>Car Audio Builder</h1>
-          {vehicleSelection.make && view === 'project' && (
-            <p>System planning for a <strong>{vehicleSelection.make}</strong></p>
+          {vehicleDescriptor && view === 'project' && (
+            <p>System planning for <strong>{vehicleDescriptor}</strong></p>
           )}
         </div>
         <nav className="app-nav">

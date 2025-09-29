@@ -1,27 +1,107 @@
-
 {
   "Ford": {
     "F-150": {
-      "years": [2015, 2020],
+      "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021],
+      "trims": ["XL", "XLT", "Lariat", "Platinum"],
+      "cabinDimensions": {
+        "frontToRearLength": 3.7,
+        "width": 1.5,
+        "height": 1.2
+      },
       "speakers": {
         "front_door": "6x9",
-        "rear_door": "6.5"
+        "rear_door": "6.5",
+        "dash": "3.5",
+        "rear_pillar": "6.5"
       }
     },
     "Mustang": {
-      "years": [2018, 2022],
+      "years": [2018, 2019, 2020, 2021, 2022],
+      "trims": ["EcoBoost", "GT", "Mach 1"],
+      "cabinDimensions": {
+        "frontToRearLength": 2.9,
+        "width": 1.4,
+        "height": 1.1
+      },
       "speakers": {
         "front_door": "6.5",
-        "rear_deck": "6.5"
+        "rear_deck": "6.5",
+        "dash": "3.5"
+      }
+    },
+    "Explorer": {
+      "years": [2016, 2017, 2018, 2019, 2020, 2021],
+      "trims": ["Base", "XLT", "Limited", "ST"],
+      "cabinDimensions": {
+        "frontToRearLength": 3.2,
+        "width": 1.5,
+        "height": 1.2
+      },
+      "speakers": {
+        "front_door": "6.5",
+        "rear_door": "6.5",
+        "rear_pillar": "5.25"
       }
     }
   },
   "Toyota": {
     "Tacoma": {
-      "years": [2016, 2023],
+      "years": [2016, 2017, 2018, 2019, 2020, 2021, 2022],
+      "trims": ["SR", "SR5", "TRD Off-Road", "TRD Pro"],
+      "cabinDimensions": {
+        "frontToRearLength": 3.1,
+        "width": 1.4,
+        "height": 1.2
+      },
       "speakers": {
         "front_door": "6x9",
-        "rear_door": "6.5"
+        "rear_door": "6.5",
+        "dash": "3.5"
+      }
+    },
+    "4Runner": {
+      "years": [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
+      "trims": ["SR5", "TRD Off-Road", "Limited", "TRD Pro"],
+      "cabinDimensions": {
+        "frontToRearLength": 3.3,
+        "width": 1.4,
+        "height": 1.2
+      },
+      "speakers": {
+        "front_door": "6.5",
+        "rear_door": "6.5",
+        "rear_pillar": "6.5"
+      }
+    }
+  },
+  "Honda": {
+    "Civic": {
+      "years": [2016, 2017, 2018, 2019, 2020, 2021],
+      "trims": ["LX", "EX", "Sport", "Touring"],
+      "cabinDimensions": {
+        "frontToRearLength": 2.8,
+        "width": 1.4,
+        "height": 1.1
+      },
+      "speakers": {
+        "front_door": "6.5",
+        "rear_door": "6.5",
+        "dash": "3.5"
+      }
+    },
+    "Accord": {
+      "years": [2018, 2019, 2020, 2021, 2022],
+      "trims": ["LX", "Sport", "EX-L", "Touring"],
+      "cabinDimensions": {
+        "frontToRearLength": 3.0,
+        "width": 1.5,
+        "height": 1.15
+      },
+      "speakers": {
+        "front_door": "6.5",
+        "rear_door": "6.5",
+        "dash": "3.5",
+        "rear_deck": "6.5"
       }
     }
   }

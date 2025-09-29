@@ -30,8 +30,17 @@ export interface AudioComponent {
   purchase_links?: { vendor: string; url: string }[];
 }
 
+export interface VehicleModelOption {
+  model: string;
+  years?: number[];
+  trims?: string[];
+}
+
 export interface VehicleSpecs {
+  make?: string;
+  model?: string;
   years: number[];
+  trims?: string[];
   speakers: Record<string, string>;
   cabinDimensions?: {
     frontToRearLength?: number;
