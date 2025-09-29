@@ -1,4 +1,3 @@
-
 [
   {
     "id": "hu-001",
@@ -12,7 +11,7 @@
     },
     "price": 300,
     "purchase_links": [
-      { "vendor": "Amazon", "url": "https://www.amazon.com/Pioneer-DMH-1770NEX-Digital-Receiver-Bluetooth/dp/B0B21L5L9Z" }
+      { "vendor": "Amazon", "url": "https://example.com/pioneer-dmh-1770nex" }
     ]
   },
   {
@@ -26,7 +25,21 @@
     },
     "price": 200,
     "purchase_links": [
-      { "vendor": "Crutchfield", "url": "https://www.crutchfield.com/p_20646CXA41/Kicker-46CXA400-1T.html" }
+      { "vendor": "Crutchfield", "url": "https://example.com/kicker-cxa4001" }
+    ]
+  },
+  {
+    "id": "amp-002",
+    "name": "Kicker KEY200.4",
+    "type": "amplifier",
+    "category": "Amplifier",
+    "specs": {
+      "rms_wattage": 200,
+      "channels": 4
+    },
+    "price": 330,
+    "purchase_links": [
+      { "vendor": "Kicker", "url": "https://example.com/kicker-key2004" }
     ]
   },
   {
@@ -41,7 +54,7 @@
     },
     "price": 250,
     "purchase_links": [
-      { "vendor": "Amazon", "url": "https://www.amazon.com/Morel-Maximo-Ultra-602-Component/dp/B07955C4B4" }
+      { "vendor": "Amazon", "url": "https://example.com/morel-maximo-ultra-602" }
     ]
   },
   {
@@ -56,7 +69,65 @@
     },
     "price": 150,
     "purchase_links": [
-      { "vendor": "Crutchfield", "url": "https://www.crutchfield.com/p_136C1525X/JL-Audio-C1-525x.html" }
+      { "vendor": "Crutchfield", "url": "https://example.com/jl-audio-c1-525x" }
+    ]
+  },
+  {
+    "id": "spk-003",
+    "name": "Kicker 43DSC69304",
+    "type": "speaker-set",
+    "category": "Coaxial Speakers",
+    "specs": {
+      "size": "6x9",
+      "rms_wattage": 90,
+      "peak_wattage": 360
+    },
+    "price": 120,
+    "purchase_links": [
+      { "vendor": "Creative Audio", "url": "https://example.com/kicker-43dsc69304" }
+    ]
+  },
+  {
+    "id": "sub-001",
+    "name": "JL Audio 10W0v3-4",
+    "type": "subwoofer",
+    "category": "Subwoofer",
+    "specs": {
+      "size": "10",
+      "rms_wattage": 300,
+      "peak_wattage": 600
+    },
+    "price": 140,
+    "purchase_links": [
+      { "vendor": "Crutchfield", "url": "https://example.com/jl-audio-10w0v3-4" }
+    ]
+  },
+  {
+    "id": "sub-002",
+    "name": "Rockford Fosgate P3D4-12",
+    "type": "subwoofer",
+    "category": "Subwoofer",
+    "specs": {
+      "size": "12",
+      "rms_wattage": 600,
+      "peak_wattage": 1200
+    },
+    "price": 280,
+    "purchase_links": [
+      { "vendor": "Rockford Fosgate", "url": "https://example.com/rockford-fosgate-p3d4-12" }
+    ]
+  },
+  {
+    "id": "dsp-001",
+    "name": "AudioControl DM-608",
+    "type": "dsp",
+    "category": "DSP",
+    "specs": {
+      "channels": 8
+    },
+    "price": 650,
+    "purchase_links": [
+      { "vendor": "AudioControl", "url": "https://example.com/audiocontrol-dm-608" }
     ]
   }
 ]
