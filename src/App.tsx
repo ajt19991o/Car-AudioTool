@@ -19,12 +19,28 @@ interface AudioComponent {
 }
 
 const initialNodes: Node[] = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: 'Car Battery' }, type: 'input' },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: 'Head Unit' } },
+  { id: '1', type: 'input', data: { label: 'Car Battery' }, position: { x: 250, y: 0 } },
+  { id: '2', data: { label: 'Head Unit' }, position: { x: 250, y: 150 } },
+  { id: '3', type: 'output', data: { label: 'Chassis Ground' }, position: { x: 250, y: 300 } },
 ];
 
 const initialEdges: Edge[] = [
-  { id: 'e1-2', source: '1', target: '2', label: '12V Power' },
+  {
+    id: 'e1-2',
+    source: '1',
+    target: '2',
+    label: '12V Constant (+12V)',
+    labelStyle: { fill: '#f00', fontWeight: 700 },
+    style: { stroke: '#f00' },
+  },
+  {
+    id: 'e2-3',
+    source: '2',
+    target: '3',
+    label: 'Ground (-)',
+    labelStyle: { fill: '#000', fontWeight: 700 },
+    style: { stroke: '#000' },
+  },
 ];
 
 let nodeId = 3;
