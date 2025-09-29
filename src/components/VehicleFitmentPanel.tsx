@@ -91,7 +91,7 @@ function VehicleFitmentPanel() {
   }, [overrideKey, overrides, wiringEstimateSource, setWiringEstimate]);
 
   const speakerSummary = useMemo(() => {
-    if (!fitment?.speakers) return [] as { location: string; size: string }[];
+    if (!fitment?.speakers) return [];
     return fitment.speakers.map(spec => ({
       location: spec.location,
       size: spec.size,
@@ -162,7 +162,7 @@ function VehicleFitmentPanel() {
                 type="text"
                 value={customSpeakerSize}
                 onChange={(event) => setCustomSpeakerSize(event.target.value)}
-                placeholder="6.5\""
+                placeholder='6.5"'
                 required
               />
             </label>

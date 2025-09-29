@@ -12,11 +12,7 @@ import GuideHub from './views/GuideHub';
 import vehicleSpecsData from './data/vehicle_specs.json';
 import corporationMapData from './data/corporationMap.json';
 import { fetchAllMakes, fetchModelsForMake } from './services/nhtsa';
-import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
-
-const nodeTypes = {
-  custom: CustomNode,
-};
+import type { VehicleCorporation, VehicleSpecs } from './types';
 
 const LOCATION_BASELINE_FEET: Record<string, number> = {
   front_door: 28,
@@ -96,7 +92,6 @@ function App() {
   const setWiringEstimate = useAppStore(state => state.setWiringEstimate);
   const wiringEstimate = useAppStore(state => state.wiringEstimate);
   const selectedComponents = useAppStore(state => state.selectedComponents);
-  const removeComponent = useAppStore(state => state.removeComponent);
   const setSafetyChecks = useAppStore(state => state.setSafetyChecks);
   const theme = useAppStore(state => state.theme);
   const budget = useAppStore(state => state.budget);
