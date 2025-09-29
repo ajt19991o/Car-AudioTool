@@ -1,0 +1,47 @@
+
+[
+  {
+    "id": "hu-001",
+    "name": "Pioneer DMH-1770NEX",
+    "type": "head-unit",
+    "category": "Head Unit",
+    "specs": {
+      "rms_wattage": 22,
+      "peak_wattage": 50,
+      "channels": 4
+    },
+    "price": 300,
+    "purchase_links": [
+      { "vendor": "Amazon", "url": "https://www.amazon.com/Pioneer-DMH-1770NEX-Digital-Receiver-Bluetooth/dp/B0B21L5L9Z" }
+    ]
+  },
+  {
+    "id": "amp-001",
+    "name": "Kicker CXA400.1",
+    "type": "amplifier",
+    "category": "Amplifier",
+    "specs": {
+      "rms_wattage": 400,
+      "channels": 1
+    },
+    "price": 200,
+    "purchase_links": [
+      { "vendor": "Crutchfield", "url": "https://www.crutchfield.com/p_20646CXA41/Kicker-46CXA400-1T.html" }
+    ]
+  },
+  {
+    "id": "spk-001",
+    "name": "Morel Maximo Ultra 602 MkII",
+    "type": "speaker-set",
+    "category": "Component Speakers",
+    "specs": {
+      "size": 6.5,
+      "rms_wattage": 100,
+      "peak_wattage": 180
+    },
+    "price": 250,
+    "purchase_links": [
+      { "vendor": "Amazon", "url": "https://www.amazon.com/Morel-Maximo-Ultra-602-Component/dp/B07955C4B4" }
+    ]
+  }
+]
