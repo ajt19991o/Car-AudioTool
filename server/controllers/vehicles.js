@@ -4,15 +4,21 @@ const fetch = require('node-fetch');
 const NHTSA_API_BASE = 'https://vpic.nhtsa.dot.gov/api/vehicles';
 
 const getVehicleData = async (req, res) => {
-  // Pre-defined list of major manufacturer IDs for simplicity
+  // Expanded list of major manufacturer IDs
   const manufacturers = [
-    { id: 987, name: 'Ford Motor Company' },
     { id: 955, name: 'General Motors' },
-    { id: 982, name: 'Honda' },
+    { id: 956, name: 'BMW' },
     { id: 959, name: 'Toyota' },
+    { id: 962, name: 'Hyundai' },
+    { id: 967, name: 'Mazda' },
+    { id: 969, name: 'Nissan' },
+    { id: 970, name: 'Mercedes-Benz' },
+    { id: 977, name: 'Subaru' },
+    { id: 982, name: 'Honda' },
+    { id: 987, name: 'Ford Motor Company' },
     { id: 988, name: 'Stellantis (Chrysler/FCA)' },
     { id: 992, name: 'Volkswagen Group' },
-    { id: 969, name: 'Nissan' },
+    { id: 1029, name: 'Tesla' },
   ];
 
   try {
