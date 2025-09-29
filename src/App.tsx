@@ -3,7 +3,7 @@ import { Node, Edge, useNodesState, useEdgesState } from 'reactflow';
 import './App.css';
 import WiringDiagram from './components/WiringDiagram';
 import ComponentBrowser from './components/ComponentBrowser';
-import Budget from './components/Budget';
+import ProjectSummary from './components/ProjectSummary';
 
 // Define data structures
 interface VehicleCorporation {
@@ -16,6 +16,10 @@ interface AudioComponent {
   type: string;
   category: string;
   price: number;
+  specs: {
+    rms_wattage?: number;
+    peak_wattage?: number;
+  };
 }
 
 const initialNodes: Node[] = [
@@ -125,7 +129,7 @@ function App() {
                 />
               </div>
               <aside className="sidebar">
-                <Budget selectedComponents={selectedComponents} />
+                <ProjectSummary selectedComponents={selectedComponents} />
                 <ComponentBrowser onAddComponent={handleAddComponent} />
               </aside>
             </div>
