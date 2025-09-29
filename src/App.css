@@ -47,6 +47,10 @@
   --color-highlight-bg: #f3f6ff;
   --color-highlight-border: #dfe4f3;
   --color-warning-text: #9f5e00;
+  --color-warning-bg: rgba(255, 210, 96, 0.18);
+  --color-warning-border: rgba(255, 174, 0, 0.6);
+  --color-critical-bg: rgba(255, 112, 112, 0.18);
+  --color-critical-border: rgba(255, 112, 112, 0.45);
   --color-warning-border: rgba(255, 174, 0, 0.6);
   --color-critical-border: rgba(255, 112, 112, 0.45);
 }
@@ -103,7 +107,9 @@ body.theme-dark {
   --color-highlight-bg: #222d43;
   --color-highlight-border: #2a3346;
   --color-warning-text: #ffdca6;
+  --color-warning-bg: rgba(255, 183, 77, 0.24);
   --color-warning-border: rgba(255, 183, 77, 0.6);
+  --color-critical-bg: rgba(255, 120, 120, 0.26);
   --color-critical-border: rgba(255, 120, 120, 0.5);
 }
 

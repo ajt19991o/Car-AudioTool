@@ -23,30 +23,179 @@ import corporationMapData from './data/corporationMap.json';
 import { fetchModelsForMake } from './services/nhtsa';
 import type { AudioComponent, VehicleCorporation, VehicleSpecs } from './types';
 
-const initialNodes: Node[] = [
-  { id: '1', type: 'input', data: { label: 'Battery (+12V)' }, position: { x: 250, y: 0 } },
-  { id: '2', data: { label: 'Head Unit' }, position: { x: 250, y: 150 } },
-  { id: '3', type: 'output', data: { label: 'Chassis Ground (-)' }, position: { x: 250, y: 300 } },
+const baseNodes: Node[] = [
+  {
+    id: 'battery',
+    type: 'custom',
+    data: {
+      label: 'Battery +12V',
+      subtitle: 'Engine bay, primary source',
+      hint: 'Use 4 AWG OFC cable and a weatherproof grommet when routing into the cabin.',
+    },
+    position: { x: -320, y: 0 },
+  },
+  {
+    id: 'main-fuse',
+    type: 'custom',
+    data: {
+      label: 'Main ANL Fuse Holder',
+      subtitle: '150A within 18" of battery',
+      hint: 'Mount solidly and crimp lugs with adhesive heat-shrink for corrosion protection.',
+    },
+    position: { x: -60, y: 20 },
+  },
+  {
+    id: 'distribution',
+    type: 'custom',
+    data: {
+      label: 'Power Distribution Block',
+      subtitle: 'Cabin mounting plate',
+      hint: 'Split primary feed into equal-length leads for each amplifier.',
+    },
+    position: { x: 220, y: 120 },
+  },
+  {
+    id: 'primary-amp',
+    type: 'custom',
+    data: {
+      label: 'Primary Amplifier',
+      subtitle: 'Secured to amp rack',
+      hint: 'Connect power/ground with 4 AWG, torque terminals, and keep airflow clear.',
+    },
+    position: { x: 220, y: 300 },
+  },
+  {
+    id: 'head-unit',
+    type: 'custom',
+    data: {
+      label: 'Head Unit / DSP',
+      subtitle: 'Factory dash or aftermarket chassis',
+      hint: 'Feed RCA / Toslink to amplifiers and provide ACC remote output.',
+    },
+    position: { x: -320, y: 260 },
+  },
+  {
+    id: 'remote-lead',
+    type: 'custom',
+    data: {
+      label: 'Remote Turn-On Lead',
+      subtitle: '18 AWG blue wire',
+      hint: 'Route alongside signal cables; relay if multiple amplifiers are triggered.',
+    },
+    position: { x: -40, y: 280 },
+  },
+  {
+    id: 'ground-point',
+    type: 'custom',
+    data: {
+      label: 'Chassis Ground',
+      subtitle: 'Bare metal within 18" of amp',
+      hint: 'Sand paint, use star washer, and torque bolt to spec.',
+    },
+    position: { x: 220, y: 460 },
+  },
 ];
 
-const initialEdges: Edge[] = [
+const baseEdges: Edge[] = [
   {
-    id: 'e1-2',
-    source: '1',
-    target: '2',
-    label: 'Constant 12V Feed',
-    labelStyle: { fill: '#f00', fontWeight: 700 },
-    style: { stroke: '#f00' },
+    id: 'battery-main-fuse',
+    source: 'battery',
+    target: 'main-fuse',
+    label: '4 AWG OFC power feed',
+    labelStyle: { fill: '#f97316', fontWeight: 600 },
+    style: { stroke: '#f97316', strokeWidth: 2 },
   },
   {
-    id: 'e2-3',
-    source: '2',
-    target: '3',
-    label: 'Ground Return',
-    labelStyle: { fill: '#000', fontWeight: 700 },
-    style: { stroke: '#000' },
+    id: 'main-fuse-distribution',
+    source: 'main-fuse',
+    target: 'distribution',
+    label: 'Run through firewall with grommet',
+    labelStyle: { fill: '#f97316', fontWeight: 600 },
+    style: { stroke: '#f97316', strokeWidth: 2 },
+  },
+  {
+    id: 'distribution-amp',
+    source: 'distribution',
+    target: 'primary-amp',
+    label: '4 AWG to amplifier',
+    labelStyle: { fill: '#ef4444', fontWeight: 600 },
+    style: { stroke: '#ef4444', strokeWidth: 2 },
+  },
+  {
+    id: 'headunit-remote',
+    source: 'head-unit',
+    target: 'remote-lead',
+    label: 'Remote turn-on (ACC)',
+    style: { stroke: '#6366f1', strokeDasharray: '6 3', strokeWidth: 1.5 },
+    labelStyle: { fill: '#6366f1', fontWeight: 600 },
+  },
+  {
+    id: 'remote-amp',
+    source: 'remote-lead',
+    target: 'primary-amp',
+    label: '18 AWG remote lead',
+    style: { stroke: '#6366f1', strokeDasharray: '6 3', strokeWidth: 1.5 },
+    labelStyle: { fill: '#6366f1', fontWeight: 600 },
+  },
+  {
+    id: 'amp-ground',
+    source: 'primary-amp',
+    target: 'ground-point',
+    label: '4 AWG chassis ground',
+    labelStyle: { fill: '#1f2937', fontWeight: 600 },
+    style: { stroke: '#1f2937', strokeWidth: 2 },
+  },
+  {
+    id: 'headunit-amp-signal',
+    source: 'head-unit',
+    target: 'primary-amp',
+    label: 'RCA / Fiber signal bundle',
+    style: { stroke: '#0ea5e9', strokeDasharray: '4 4', strokeWidth: 1.5 },
+    labelStyle: { fill: '#0ea5e9', fontWeight: 600 },
   },
 ];
+
+const createInitialNodes = () =>
+  baseNodes.map(node => ({
+    ...node,
+    data: { ...(typeof node.data === 'object' ? node.data : {}) },
+  }));
+
+const createInitialEdges = () =>
+  baseEdges.map(edge => ({ ...edge }));
+
+const getComponentNodeDetails = (component: AudioComponent) => {
+  const subtitleParts: string[] = [];
+  if (component.category) subtitleParts.push(component.category);
+  if (component.specs?.size) subtitleParts.push(`${component.specs.size}"`);
+  if (component.specs?.channels && !subtitleParts.some(part => part.includes('ch'))) {
+    subtitleParts.push(`${component.specs.channels}ch`);
+  }
+
+  const type = component.type?.toLowerCase() ?? '';
+  let hint: string | undefined;
+
+  if (type.includes('amplifier')) {
+    hint = 'Secure amp, ensure airflow, and torque power/ground lugs after crimping.';
+  } else if (type.includes('subwoofer')) {
+    hint = 'Confirm enclosure volume, use 12 AWG wire, and seal terminals against moisture.';
+  } else if (type.includes('speaker')) {
+    hint = 'Use adapter brackets or foam gaskets to avoid air leaks and rattles.';
+  } else if (type.includes('head-unit')) {
+    hint = 'Retain factory controls, secure the harness, and level-match outputs to the DSP/amp.';
+  } else if (type.includes('dsp')) {
+    hint = 'Mount near amp rack, keep signal cables short, and document base tune files.';
+  } else if (type.includes('wiring')) {
+    hint = 'Route away from heat and moving parts, protect with loom, and anchor every 12 inches.';
+  } else if (type.includes('accessory')) {
+    hint = 'Mount within reach, use adhesive pads or screws, and dress the cable routing neatly.';
+  }
+
+  return {
+    subtitle: subtitleParts.join(' • ') || undefined,
+    hint,
+  };
+};
 
 const nodeTypes = {
   custom: CustomNode,
@@ -129,6 +278,7 @@ function App() {
   const fitment = useAppStore(state => state.fitment);
   const setFitment = useAppStore(state => state.setFitment);
   const setWiringEstimate = useAppStore(state => state.setWiringEstimate);
+  const wiringEstimate = useAppStore(state => state.wiringEstimate);
   const selectedComponents = useAppStore(state => state.selectedComponents);
   const removeComponent = useAppStore(state => state.removeComponent);
   const upsertTutorials = useAppStore(state => state.upsertTutorials);
@@ -141,9 +291,9 @@ function App() {
   const [modelLoading, setModelLoading] = useState<boolean>(false);
   const [modelError, setModelError] = useState<string | null>(null);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const nodeCounter = useRef(initialNodes.length + 1);
+  const [nodes, setNodes, onNodesChange] = useNodesState(createInitialNodes());
+  const [edges, setEdges, onEdgesChange] = useEdgesState(createInitialEdges());
+  const nodeCounter = useRef(baseNodes.length + 1);
 
   const totalRms = useMemo(
     () => selectedComponents.reduce((total, comp) => total + (comp.specs?.rms_wattage || 0), 0),
@@ -316,11 +466,30 @@ function App() {
 
   useEffect(() => {
     const safetyIssues = [];
+    const estimatedCurrentDraw = totalRms > 0 ? Math.round(totalRms / 12) : 0;
+    const hasAmplifier = selectedComponents.some(comp => comp.type.toLowerCase().includes('amplifier'));
+    const hasSubwoofer = selectedComponents.some(comp => comp.type.toLowerCase().includes('subwoofer'));
+    const hasWiringKit = selectedComponents.some(comp => comp.type.toLowerCase().includes('wiring'));
+
     if (totalRms > 2000) {
       safetyIssues.push({
         id: 'high-rms',
         message: 'Total RMS exceeds 2000W. Confirm your power wiring and alternator can support this load.',
         severity: 'warning' as const,
+      });
+    }
+    if (estimatedCurrentDraw > 150) {
+      safetyIssues.push({
+        id: 'fuse-capacity',
+        message: `Estimated current draw is about ${estimatedCurrentDraw}A. Upgrade main fuse and power wire sizing beyond the default 150A/4 AWG plan.`,
+        severity: 'warning' as const,
+      });
+    }
+    if (hasAmplifier && wiringEstimate?.powerRunFeet && wiringEstimate.powerRunFeet > 20) {
+      safetyIssues.push({
+        id: 'long-power-run',
+        message: `Power run is roughly ${wiringEstimate.powerRunFeet}ft. Verify voltage drop and consider thicker gauge or auxiliary battery.`,
+        severity: 'info' as const,
       });
     }
     if (selectedComponents.some(comp => comp.category.toLowerCase().includes('amplifier')) && !fitment) {
@@ -337,8 +506,22 @@ function App() {
         severity: 'info' as const,
       });
     }
+    if (hasSubwoofer && !hasAmplifier) {
+      safetyIssues.push({
+        id: 'no-amp-for-sub',
+        message: 'Subwoofers added without a dedicated amplifier. Add an amp or powered enclosure to drive them safely.',
+        severity: 'warning' as const,
+      });
+    }
+    if (hasAmplifier && !hasWiringKit) {
+      safetyIssues.push({
+        id: 'missing-wiring-kit',
+        message: 'Add a wiring kit or power/ground accessories to complete the amplifier installation.',
+        severity: 'info' as const,
+      });
+    }
     setSafetyChecks(safetyIssues);
-  }, [fitment, selectedComponents, totalPeak, totalRms, setSafetyChecks]);
+  }, [fitment, selectedComponents, totalPeak, totalRms, setSafetyChecks, wiringEstimate]);
 
   const onConnect = useCallback((params: Connection) => {
     setEdges(eds => addEdge(params, eds));
@@ -355,15 +538,19 @@ function App() {
   const handleAddComponentNode = useCallback((component: AudioComponent) => {
     const newNodeId = `node-${nodeCounter.current++}`;
     const position = {
-      x: 100 + Math.random() * 300,
-      y: 200 + Math.random() * 200,
+      x: 160 + (Math.random() * 240 - 120),
+      y: 340 + Math.random() * 180,
     };
+    const { subtitle, hint } = getComponentNodeDetails(component);
+    const label = component.brand ? `${component.brand} ${component.name}` : component.name;
     const newNode: Node = {
       id: newNodeId,
       type: 'custom',
       position,
       data: {
-        label: component.name,
+        label,
+        subtitle,
+        hint,
         onRemove: handleRemoveComponent,
         nodeId: newNodeId,
         componentId: component.id,
@@ -383,8 +570,8 @@ function App() {
     resetVehicleSelection();
     setSelectedCorp(null);
     setView('vehicle-selection');
-    setNodes(initialNodes);
-    setEdges(initialEdges);
+    setNodes(createInitialNodes());
+    setEdges(createInitialEdges());
   }, [resetVehicleSelection, setEdges, setNodes, setView]);
 
   const fetchVehicleSpecs = useCallback((make?: string, model?: string) => {

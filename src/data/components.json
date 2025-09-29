@@ -457,5 +457,212 @@
     "purchase_links": [
       { "vendor": "SoundSkins", "url": "https://example.com/soundskins-pro" }
     ]
+  },
+  {
+    "id": "amp-005",
+    "brand": "Rockford Fosgate",
+    "name": "T1500-1bdCP Power Series Amplifier",
+    "type": "amplifier",
+    "category": "Amplifier",
+    "price": 699.99,
+    "description": "1,500W mono amplifier with Constant Power technology for demanding sub stages.",
+    "specs": {
+      "rms_wattage": 1500,
+      "channels": 1,
+      "impedance": "1Ω stable"
+    },
+    "tags": ["mono", "high-output", "bass"],
+    "purchase_links": [
+      { "vendor": "Rockford Fosgate", "url": "https://rockfordfosgate.com/products/details/t1500-1bdcp/" }
+    ]
+  },
+  {
+    "id": "dsp-003",
+    "brand": "JL Audio",
+    "name": "TwK-88 System Tuning Processor",
+    "type": "dsp",
+    "category": "DSP",
+    "price": 799.99,
+    "description": "8-channel DSP with 10-band parametric EQ per channel and time alignment.",
+    "specs": {
+      "channels": 8
+    },
+    "tags": ["dsp", "tuning", "eq"],
+    "purchase_links": [
+      { "vendor": "JL Audio", "url": "https://www.jlaudio.com/products/twk-88" }
+    ]
+  },
+  {
+    "id": "spk-007",
+    "brand": "Infinity",
+    "name": "Kappa 93ix 6x9 Coaxial Speakers",
+    "type": "speaker-set",
+    "category": "Coaxial Speakers",
+    "price": 329.95,
+    "description": "Edge-driven textile dome coaxials that handle high power with clarity.",
+    "specs": {
+      "size": "6x9",
+      "rms_wattage": 110,
+      "peak_wattage": 330,
+      "impedance": "3Ω"
+    },
+    "fitment": {
+      "speakerSizes": ["6x9"],
+      "locations": ["front door", "rear deck"]
+    },
+    "tags": ["coaxial", "high-power"],
+    "purchase_links": [
+      { "vendor": "Crutchfield", "url": "https://www.crutchfield.com/p_108K93IX/Infinity-Kappa-93ix.html" }
+    ]
+  },
+  {
+    "id": "spk-008",
+    "brand": "JBL",
+    "name": "Stadium GTO620 Component Speakers",
+    "type": "speaker-set",
+    "category": "Component Speakers",
+    "price": 349.95,
+    "description": "6.5\" component set with edge-driven tweeters and adjustable tweeter level.",
+    "specs": {
+      "size": "6.5",
+      "rms_wattage": 100,
+      "peak_wattage": 300,
+      "impedance": "3Ω"
+    },
+    "fitment": {
+      "speakerSizes": ["6.5"],
+      "locations": ["front door", "rear door"]
+    },
+    "tags": ["component", "factory-integration"],
+    "purchase_links": [
+      { "vendor": "Amazon", "url": "https://www.amazon.com/dp/B07Q45M6L6" }
+    ]
+  },
+  {
+    "id": "spk-009",
+    "brand": "Focal",
+    "name": "ISU 570 Component Kit",
+    "type": "speaker-set",
+    "category": "Component Speakers",
+    "price": 399.99,
+    "description": "Component kit sized for 5x7 and 6x8 Ford/Mazda door openings.",
+    "specs": {
+      "size": "5x7",
+      "rms_wattage": 70,
+      "peak_wattage": 140,
+      "impedance": "4Ω"
+    },
+    "fitment": {
+      "speakerSizes": ["5x7", "6x8"],
+      "locations": ["front door", "rear door"]
+    },
+    "tags": ["component", "ford"],
+    "purchase_links": [
+      { "vendor": "Focal", "url": "https://www.focal.com/en/car-audio/car-audio-kits-integration/plugplay/ism-isu/isu-570" }
+    ]
+  },
+  {
+    "id": "spk-010",
+    "brand": "Kicker",
+    "name": "46KSS365 3-Way Component Set",
+    "type": "speaker-set",
+    "category": "Component Speakers",
+    "price": 459.99,
+    "description": "6.5-inch woofer with separate mid and tweeter for custom active front stages.",
+    "specs": {
+      "size": "6.5",
+      "rms_wattage": 125,
+      "peak_wattage": 250,
+      "impedance": "4Ω"
+    },
+    "fitment": {
+      "speakerSizes": ["6.5"],
+      "locations": ["front door"]
+    },
+    "tags": ["active-ready", "3-way"],
+    "purchase_links": [
+      { "vendor": "Kicker", "url": "https://www.kicker.com/46kss365" }
+    ]
+  },
+  {
+    "id": "sub-004",
+    "brand": "Kicker",
+    "name": "L7T 12 Thin Subwoofer",
+    "type": "subwoofer",
+    "category": "Subwoofer",
+    "price": 379.99,
+    "description": "12-inch square Solo-Baric shallow sub ideal for crew cab truck enclosures.",
+    "specs": {
+      "size": "12",
+      "rms_wattage": 600,
+      "peak_wattage": 1200,
+      "impedance": "Dual 2Ω"
+    },
+    "tags": ["shallow", "truck", "high-output"],
+    "purchase_links": [
+      { "vendor": "Crutchfield", "url": "https://www.crutchfield.com/p_20646L7T12/Kicker-46L7T122.html" }
+    ]
+  },
+  {
+    "id": "wire-004",
+    "brand": "Stinger",
+    "name": "6000 Series 2-Channel RCA",
+    "type": "wiring",
+    "category": "Wiring & Installation",
+    "price": 59.99,
+    "description": "Twisted-pair RCA cables with locking ends for low noise signal runs.",
+    "specs": {
+      "length": "17ft"
+    },
+    "tags": ["rca", "low-noise", "twisted-pair"],
+    "purchase_links": [
+      { "vendor": "Stinger", "url": "https://stingerelectronics.com/products/si626" }
+    ]
+  },
+  {
+    "id": "acc-004",
+    "brand": "Metra",
+    "name": "95-6511 Double-DIN Dash Kit",
+    "type": "accessory",
+    "category": "Accessories",
+    "price": 29.99,
+    "description": "Installation kit for select Chrysler, Dodge, and Jeep vehicles.",
+    "specs": {},
+    "tags": ["dash-kit", "installation"],
+    "purchase_links": [
+      { "vendor": "Metra", "url": "https://metraonline.com/part/95-6511" }
+    ]
+  },
+  {
+    "id": "acc-005",
+    "brand": "PAC",
+    "name": "LP7-4 Line Output Converter",
+    "type": "accessory",
+    "category": "Accessories",
+    "price": 54.99,
+    "description": "Adjustable 4-channel LOC with remote turn-on trigger for integrating factory radios.",
+    "specs": {},
+    "tags": ["loc", "factory-integration"],
+    "purchase_links": [
+      { "vendor": "PAC", "url": "https://catalog.pac-audio.com/catalog/locs-lvds/lp7-4" }
+    ]
+  },
+  {
+    "id": "amp-006",
+    "brand": "AudioControl",
+    "name": "LC-1.1500 Mono Amplifier",
+    "type": "amplifier",
+    "category": "Amplifier",
+    "price": 799.00,
+    "description": "1,500W mono amp with AccuBASS and active crossover for subwoofer systems.",
+    "specs": {
+      "rms_wattage": 1500,
+      "channels": 1,
+      "impedance": "1Ω stable"
+    },
+    "tags": ["mono", "integration", "high-output"],
+    "purchase_links": [
+      { "vendor": "AudioControl", "url": "https://www.audiocontrol.com/product/lc-1-1500/" }
+    ]
   }
 ]
