@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import type { ChangeEvent } from 'react';
 import { useAppStore } from '../state/useAppStore';
 
 function VehicleFitmentPanel() {
@@ -12,7 +13,7 @@ function VehicleFitmentPanel() {
 
   const effectiveEstimate = wiringEstimate ?? wiringEstimateAuto;
 
-  const handleManualChange = (field: 'powerRunFeet' | 'speakerRunFeet' | 'remoteTurnOnFeet') => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleManualChange = (field: 'powerRunFeet' | 'speakerRunFeet' | 'remoteTurnOnFeet') => (event: ChangeEvent<HTMLInputElement>) => {
     const nextValue = Math.max(1, Math.round(Number(event.target.value) || 0));
     const base = {
       powerRunFeet: effectiveEstimate?.powerRunFeet ?? 16,

@@ -18,6 +18,24 @@ const categories = [
   'Accessories',
 ];
 
+const tagOptions = [
+  'budget',
+  'hi-res',
+  'carplay',
+  'android-auto',
+  'factory-integration',
+  'integration',
+  'maestro',
+  'component',
+  'coaxial',
+  'dsp',
+  'shallow',
+  'truck',
+  'sound-deadening',
+  'remote',
+  'silk-tweeter'
+];
+
 const formatSpecsSummary = (component: AudioComponent) => {
   if (!component.specs) return null;
   const { specs } = component;
@@ -40,6 +58,9 @@ function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const addComponent = useAppStore(state => state.addComponent);
   const fitment = useAppStore(state => state.fitment);
   const vehicleSelection = useAppStore(state => state.vehicleSelection);
@@ -63,6 +84,15 @@ function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
     }
     if (allowedSpeakerSizes.length > 0) {
       params.set('fits', allowedSpeakerSizes.join(','));
+    }
+    if (minPrice.trim()) {
+      params.set('minPrice', minPrice.trim());
+    }
+    if (maxPrice.trim()) {
+      params.set('maxPrice', maxPrice.trim());
+    }
+    if (selectedTags.length > 0) {
+      params.set('tag', selectedTags.join(','));
     }
     params.set('limit', '60');
 
@@ -88,7 +118,13 @@ function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
       });
 
     return () => controller.abort();
-  }, [selectedCategory, searchTerm, allowedSpeakerSizes]);
+  }, [selectedCategory, searchTerm, allowedSpeakerSizes, minPrice, maxPrice, selectedTags]);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags((current) =>
+      current.includes(tag) ? current.filter(item => item !== tag) : [...current, tag]
+    );
+  };
 
   return (
     <div className="component-browser">
@@ -106,6 +142,46 @@ function ComponentBrowser({ onComponentAdd }: ComponentBrowserProps) {
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
+      </div>
+      <div className="filters filters--secondary">
+        <div className="price-filter">
+          <label>
+            <span>Min Price</span>
+            <input
+              type="number"
+              min={0}
+              value={minPrice}
+              onChange={(event) => setMinPrice(event.target.value)}
+            />
+          </label>
+          <label>
+            <span>Max Price</span>
+            <input
+              type="number"
+              min={0}
+              value={maxPrice}
+              onChange={(event) => setMaxPrice(event.target.value)}
+            />
+          </label>
+        </div>
+        <div className="tag-filter">
+          <span>Tags</span>
+          <div className="tag-chips">
+            {tagOptions.map(tag => {
+              const isActive = selectedTags.includes(tag);
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  className={`tag-chip ${isActive ? 'tag-chip--active' : ''}`}
+                  onClick={() => toggleTag(tag)}
+                >
+                  #{tag}
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
       {allowedSpeakerSizes.length > 0 && (
         <p className="filter-info">

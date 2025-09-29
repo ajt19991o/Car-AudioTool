@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import type { ChangeEvent } from 'react';
 import { useAppStore } from '../state/useAppStore';
 
 interface VehicleSetupControlsProps {
@@ -20,7 +21,7 @@ function VehicleSetupControls({ loading, error, onRetry }: VehicleSetupControlsP
   const yearOptions = useMemo(() => currentModelEntry?.years ?? [], [currentModelEntry]);
   const trimOptions = useMemo(() => currentModelEntry?.trims ?? [], [currentModelEntry]);
 
-  const handleModelChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleModelChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const model = event.target.value;
     const matching = modelOptions.find(option => option.model === model);
     setVehicleSelection({
@@ -30,11 +31,11 @@ function VehicleSetupControls({ loading, error, onRetry }: VehicleSetupControlsP
     });
   };
 
-  const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleYearChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setVehicleSelection({ year: event.target.value || undefined });
   };
 
-  const handleTrimChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleTrimChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setVehicleSelection({ trim: event.target.value || undefined });
   };
 

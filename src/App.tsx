@@ -48,14 +48,6 @@ const nodeTypes = {
   custom: CustomNode,
 };
 
-const defaultModelByMake: Record<string, string> = {
-  Ford: 'F-150',
-  Toyota: 'Tacoma',
-  Honda: 'Civic',
-  Nissan: 'Altima',
-  Subaru: 'Outback',
-};
-
 const LOCATION_BASELINE_FEET: Record<string, number> = {
   front_door: 28,
   rear_door: 36,
@@ -100,7 +92,6 @@ function App() {
   const vehicleSelection = useAppStore(state => state.vehicleSelection);
   const setVehicleSelection = useAppStore(state => state.setVehicleSelection);
   const resetVehicleSelection = useAppStore(state => state.resetVehicleSelection);
-  const modelOptions = useAppStore(state => state.modelOptions);
   const setModelOptions = useAppStore(state => state.setModelOptions);
   const fitment = useAppStore(state => state.fitment);
   const setFitment = useAppStore(state => state.setFitment);

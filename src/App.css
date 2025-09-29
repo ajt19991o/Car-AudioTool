@@ -323,6 +323,14 @@ body {
   margin-bottom: 1rem;
 }
 
+.filters--secondary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  align-items: flex-end;
+}
+
 .search-input,
 .category-select,
 .budget-form input,
@@ -340,6 +348,58 @@ body {
 
 .category-select {
   min-width: 160px;
+}
+
+.price-filter {
+  display: flex;
+  gap: 1rem;
+}
+
+.price-filter label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.price-filter input {
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 6px;
+  width: 140px;
+}
+
+.tag-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: #ccc;
+}
+
+.tag-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag-chip {
+  background-color: transparent;
+  border: 1px solid #555;
+  color: #e4edff;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.tag-chip--active {
+  background-color: rgba(76, 130, 255, 0.2);
+  border-color: #4c82ff;
+  color: #ffffff;
 }
 
 .filter-info {
@@ -492,6 +552,56 @@ body {
   font-size: 0.85rem;
   color: #d7d7d7;
   line-height: 1.4;
+}
+
+.fitment-wiring-adjust {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.fitment-wiring-adjust label {
+  font-size: 0.8rem;
+  color: #b8b8b8;
+}
+
+.fitment-wiring-adjust input {
+  margin-top: 0.3rem;
+  background-color: #3a3a3a;
+  border: 1px solid #555;
+  color: #fff;
+  padding: 0.4rem;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.fitment-wiring-controls {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  color: #bdbdbd;
+}
+
+.fitment-wiring-source {
+  font-size: 0.8rem;
+}
+
+.reset-wiring-button {
+  background: none;
+  border: 1px solid #4c82ff;
+  color: #e4edff;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.reset-wiring-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .component-actions {
